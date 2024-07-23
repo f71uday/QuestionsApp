@@ -91,8 +91,17 @@ class _QuizPageState extends State<QuizPage> {
             ),
             SizedBox(height: 20.0),
             ...currentQuestion.options.asMap().entries.map((option) {
+              final isSelected = option.key == selectedOptionIndex;
+              final isCorrect =
+                  option.key == currentQuestion.correctAnswerIndex;
+              final color = isSelected
+                  ? (isCorrect ? Colors.green : Colors.red)
+                  : Colors.black;
               return ListTile(
-                title: Text(option.value),
+                title: Text(
+                  option.value,
+                  style: TextStyle(color: color),
+                ),
                 leading: Radio<int>(
                   value: option.key,
                   groupValue: selectedOptionIndex,
@@ -112,7 +121,7 @@ class _QuizPageState extends State<QuizPage> {
                   child: ElevatedButton(
                     onPressed:
                         selectedOptionIndex == null ? null : _nextQuestion,
-                    child: Text('Select'),
+                    child: Text('Next'),
                   ),
                 ),
                 Padding(padding: EdgeInsets.all(10.0)),
