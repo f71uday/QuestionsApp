@@ -1,6 +1,5 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/signin_page.dart';
 import 'question.dart'; // Import the Question model
 
 void main() {
@@ -11,7 +10,11 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: QuizPage(),
+      initialRoute: '/signin',
+      routes: {
+        '/signin': (context) => SignInPage(),
+        '/quiz': (context) => QuizPage()
+      },
     );
   }
 }
@@ -73,7 +76,10 @@ class _QuizPageState extends State<QuizPage> {
     Question currentQuestion = questions[currentQuestionIndex];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Quiz App')),
+      appBar: AppBar(
+        title: Text('Quiz App'),
+        // Use theme color
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -100,15 +106,23 @@ class _QuizPageState extends State<QuizPage> {
             }).toList(),
             Spacer(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: selectedOptionIndex == null ? null : _nextQuestion,
-                  child: Text('Select'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed:
+                        selectedOptionIndex == null ? null : _nextQuestion,
+                    child: Text('Select'),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: _skipQuestion,
-                  child: Text('Skip'),
+                Padding(padding: EdgeInsets.all(10.0)),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _skipQuestion,
+                    child: Text(
+                      'Skip',
+                    ),
+                  ),
                 ),
               ],
             ),
