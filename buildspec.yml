@@ -2,7 +2,6 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      android: 29
       java: openjdk8
     commands:
       - pwd
@@ -21,7 +20,3 @@ build:
   post_build:
     commands:
       - echo Build completed on `date`
-artifacts:
-  files:
-    - build/app/outputs/apk/release/*.apk
-  discard-paths: yes

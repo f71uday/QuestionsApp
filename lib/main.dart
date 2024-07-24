@@ -44,6 +44,14 @@ class _QuizPageState extends State<QuizPage> {
     // Add more questions here
   ];
 
+  void _goToQuestion(int index) {
+    setState(() {
+      currentQuestionIndex = index;
+      selectedOptionIndex = null;
+    });
+    Navigator.pop(context); // Close the drawer
+  }
+
   void _nextQuestion() {
     if (selectedOptionIndex != null &&
         questions[currentQuestionIndex].correctAnswerIndex ==
@@ -68,7 +76,46 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (currentQuestionIndex >= questions.length) {
       return Scaffold(
-        appBar: AppBar(title: Text('Quiz App')),
+        appBar: AppBar(
+          title: Text('Quiz App'),
+          //backgroundColor: Theme.of(context).appBarTheme.color,
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              ),
+            ),
+          ],
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Text(
+                  'Quiz Navigation',
+                  style: TextStyle(fontSize: 24.0),
+                ),
+              ),
+              ListTile(
+                title: Text('Total Questions: ${questions.length}'),
+              ),
+              ListTile(
+                title: Text('Questions Attended: $currentQuestionIndex'),
+              ),
+              Divider(),
+              ...questions.asMap().entries.map((entry) {
+                int index = entry.key;
+                return ListTile(
+                  title: Text('Question ${index + 1}'),
+                  onTap: () => _goToQuestion(index),
+                );
+              }).toList(),
+            ],
+          ),
+        ),
         body: Center(child: Text('Your score: $score/${questions.length}')),
       );
     }
