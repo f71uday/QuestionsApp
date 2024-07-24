@@ -76,48 +76,10 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (currentQuestionIndex >= questions.length) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text('Quiz App'),
-          //backgroundColor: Theme.of(context).appBarTheme.color,
-          actions: [
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-              ),
-            ),
-          ],
-        ),
-        endDrawer: Drawer(
-          child: ListView(
-            children: [
-              DrawerHeader(
-                child: Text(
-                  'Quiz Navigation',
-                  style: TextStyle(fontSize: 24.0),
-                ),
-              ),
-              ListTile(
-                title: Text('Total Questions: ${questions.length}'),
-              ),
-              ListTile(
-                title: Text('Questions Attended: $currentQuestionIndex'),
-              ),
-              Divider(),
-              ...questions.asMap().entries.map((entry) {
-                int index = entry.key;
-                return ListTile(
-                  title: Text('Question ${index + 1}'),
-                  onTap: () => _goToQuestion(index),
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-        body: Center(child: Text('Your score: $score/${questions.length}')),
-      );
+          appBar: AppBar(
+        title: Text('Quiz App'),
+        //backgroundColor: Theme.of(context).appBarTheme.color,
+      ));
     }
 
     Question currentQuestion = questions[currentQuestionIndex];
@@ -126,6 +88,42 @@ class _QuizPageState extends State<QuizPage> {
       appBar: AppBar(
         title: Text('Quiz App'),
         // Use theme color
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Text(
+                'Quiz Navigation',
+                style: TextStyle(fontSize: 24.0),
+              ),
+            ),
+            ListTile(
+              title: Text('Total Questions: ${questions.length}'),
+            ),
+            ListTile(
+              title: Text('Questions Attended: $currentQuestionIndex'),
+            ),
+            Divider(),
+            ...questions.asMap().entries.map((entry) {
+              int index = entry.key;
+              return ListTile(
+                title: Text('Question ${index + 1}'),
+                onTap: () => _goToQuestion(index),
+              );
+            }).toList(),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
