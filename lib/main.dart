@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/signin_page.dart';
 import 'question.dart'; // Import the Question model
@@ -28,6 +30,57 @@ class _QuizPageState extends State<QuizPage> {
   int currentQuestionIndex = 0;
   int score = 0;
   int? selectedOptionIndex;
+
+  Timer? _timer;
+  Duration _remainingTime = Duration(minutes: 10);
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingTime.inSeconds > 0) {
+          _remainingTime = _remainingTime - Duration(seconds: 1);
+        } else {
+          timer.cancel();
+          _showTimeUpDialog();
+        }
+      });
+    });
+  }
+
+  void _showTimeUpDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Time is up!'),
+        content: Text('Your score: $score/${questions.length}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formattedTime(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
+  }
 
   // List of questions
   List<Question> questions = [
@@ -76,38 +129,31 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (currentQuestionIndex >= questions.length) {
       return Scaffold(
-          appBar: AppBar(
-        title: Text('Quiz App'),
-        //backgroundColor: Theme.of(context).appBarTheme.color,
-      ));
+        appBar: AppBar(title: Text('Quiz App')),
+        body: Center(child: Text('Your score: $score/${questions.length}')),
+       // backgroundColor: Color.fromARGB(248, 113, 228, 121),
+      );
     }
 
     Question currentQuestion = questions[currentQuestionIndex];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quiz App'),
+        title: Text(_formattedTime(_remainingTime),
+          style: TextStyle(fontSize: 24.0, color: Colors.red),),
         // Use theme color
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
-        ],
+
       ),
-      endDrawer: Drawer(
+      drawer: Drawer(
         child: ListView(
           children: [
             DrawerHeader(
-              child: Text(
-                'Quiz Navigation',
-                style: TextStyle(fontSize: 24.0),
-              ),
-            ),
+                child: Text(
+              'Quiz App',
+                  style: TextStyle(
+                    fontSize: 30.0
+                  ),
+            )),
             ListTile(
               title: Text('Total Questions: ${questions.length}'),
             ),
@@ -115,6 +161,7 @@ class _QuizPageState extends State<QuizPage> {
               title: Text('Questions Attended: $currentQuestionIndex'),
             ),
             Divider(),
+
             ...questions.asMap().entries.map((entry) {
               int index = entry.key;
               return ListTile(
