@@ -2,12 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:http/http.dart' as http;
-
 import '../Questions/Question.dart';
- // Ensure you have your model files in the correct directory
 
 
 class QuizPage extends StatefulWidget {
@@ -101,6 +97,7 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       currentQuestionIndex++;
       selectedOptionIndex = null;
+      //questions[currentQuestionIndex].isAnswered = true;
     });
   }
 
@@ -166,7 +163,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             drawer: Drawer(
-              child: ListView(
+              child: Column(
                 children: [
                   DrawerHeader(
                     child: Text(
@@ -181,13 +178,35 @@ class _QuizPageState extends State<QuizPage> {
                     title: Text('Questions Attended: $currentQuestionIndex'),
                   ),
                   Divider(),
-                  ...questions.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    return ListTile(
-                      title: Text('Question ${index + 1}'),
-                      onTap: () => _goToQuestion(index),
-                    );
-                  }).toList(),
+                  Expanded(
+                    child: GridView.builder(
+                      padding: EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        final color =  questions[currentQuestionIndex].isAnswered
+                            ? Colors.blue
+                            : Colors.white;
+                        return GestureDetector(
+                          onTap: () => _goToQuestion(index),
+                          child: Card(
+                            //TODO: update color of the card is it was attented
+                            color: color,
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -197,7 +216,7 @@ class _QuizPageState extends State<QuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${currentQuestionIndex +1}. ' + currentQuestion.text,
+                    '${currentQuestionIndex +1}. ' + currentQuestion.question,
                     style: TextStyle(fontSize: 24.0),
                   ),
                   SizedBox(height: 20.0),
@@ -229,6 +248,7 @@ class _QuizPageState extends State<QuizPage> {
                         child: ElevatedButton(
                           onPressed: selectedOptionIndex == null ? null : _nextQuestion,
                           child: Text('Next'),
+                          
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(10.0)),

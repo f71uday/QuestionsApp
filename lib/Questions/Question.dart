@@ -3,23 +3,24 @@ import 'Answer.dart';
 import 'Option.dart';
 
 class Question {
-  final String text;
+  final String question;
   final List<Option> options;
   final Answer answer;
-
+  bool isAnswered;
 
   Question({
-    required this.text,
+    this.isAnswered = false,
+    required this.question,
     required this.options,
     required this.answer,
 
   });
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
-      text: json['text'],
+      question: json['text'],
       options: (json['options'] as List).map((i) => Option.fromJson(i)).toList(),
       answer: Answer.fromJson(json['answer']),
-
+        isAnswered: false
     );
   }
 
