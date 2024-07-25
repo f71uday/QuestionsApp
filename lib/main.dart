@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_2/signin_page.dart';
 import 'package:http/http.dart' as http;
 import 'Questions/Question.dart';
 import 'config/Config.dart'; // Ensure you have your model files in the correct directory
@@ -20,9 +21,9 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/quiz',
+      initialRoute: '/signin',
       routes: {
-
+        '/signin': (context) => SignInPage(),
         '/quiz': (context) => QuizPage()
       },
     );
@@ -212,7 +213,7 @@ class _QuizPageState extends State<QuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    currentQuestion.text,
+                   '${currentQuestionIndex+1}. ' + currentQuestion.text,
                     style: TextStyle(fontSize: 24.0),
                   ),
                   SizedBox(height: 20.0),
