@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_2/pages/subject_list_page.dart';
 import 'package:flutter_application_2/signin_page.dart';
 import 'package:http/http.dart' as http;
 import 'Questions/Question.dart';
@@ -24,7 +25,8 @@ class QuizApp extends StatelessWidget {
       initialRoute: '/signin',
       routes: {
         '/signin': (context) => SignInPage(),
-        '/quiz': (context) => QuizPage()
+        '/quiz': (context) => QuizPage(),
+        '/subjects': (context) => SubjectListPage()
       },
     );
   }
@@ -213,7 +215,7 @@ class _QuizPageState extends State<QuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   '${currentQuestionIndex+1}. ' + currentQuestion.text,
+                   '${currentQuestionIndex}. ' + currentQuestion.text,
                     style: TextStyle(fontSize: 24.0),
                   ),
                   SizedBox(height: 20.0),

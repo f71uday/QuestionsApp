@@ -44,7 +44,7 @@ class SignInPage extends StatelessWidget {
               SizedBox(height: 20.0),
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/quiz');
+                  Navigator.pushReplacementNamed(context, '/subjects');
                 },
                 child: Text('Skip Sign In'),
               ),
