@@ -50,7 +50,7 @@ class _SubjectListPageState extends State<SubjectListPage> {
               itemBuilder: (context, index) {
                 final subject = snapshot.data![index];
                 return Card(
-                  margin: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.all(5.0),
                   elevation: 1.0,
                   child: Padding(
                     padding: EdgeInsets.all(15.0),
@@ -64,13 +64,13 @@ class _SubjectListPageState extends State<SubjectListPage> {
 
                           ),
                         ),
-                        SizedBox(height: 10.0),
+
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizPage(),
+                                builder: (context) => QuizPage(questionLink: subject.questionsLink,),
                               ),
                             );
                           },

@@ -12,6 +12,10 @@ import '../Questions/Question.dart';
 
 
 class QuizPage extends StatefulWidget {
+  final String questionLink ;
+
+  QuizPage({required this.questionLink});
+
   @override
   _QuizPageState createState() => _QuizPageState();
 }
@@ -109,7 +113,7 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Future<List<Question>> fetchQuestions() async {
-    final response = await http.get(Uri.parse('http://localhost/questions?page=0&size=20'));
+    final response = await http.get(Uri.parse(widget.questionLink));
 
     if (response.statusCode == 200) {
       return parseQuestions(response.body);
@@ -194,7 +198,7 @@ class _QuizPageState extends State<QuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${currentQuestionIndex}. ' + currentQuestion.text,
+                    '${currentQuestionIndex +1}. ' + currentQuestion.text,
                     style: TextStyle(fontSize: 24.0),
                   ),
                   SizedBox(height: 20.0),

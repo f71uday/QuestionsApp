@@ -16,7 +16,6 @@ class QuizApp extends StatelessWidget {
       initialRoute: '/signin',
       routes: {
         '/signin': (context) => SignInPage(),
-        '/quiz': (context) => QuizPage(),
         '/subjects': (context) => SubjectListPage()
       },
     );
