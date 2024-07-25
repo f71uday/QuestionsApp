@@ -1,8 +1,7 @@
 import 'dart:convert';
 
+import 'package:VetScholar/pages/quiz_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main.dart';
-import 'package:flutter_application_2/pages/quiz_page.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/subjects.dart';
