@@ -41,7 +41,8 @@ class _QuizPageState extends State<QuizPage> {
       setState(() {
         if (_remainingTime.inSeconds > 0) {
           _remainingTime = _remainingTime - Duration(seconds: 1);
-        } else {
+        }
+        else {
           timer.cancel();
           _showTimeUpDialog();
         }
@@ -95,9 +96,16 @@ class _QuizPageState extends State<QuizPage> {
 
   void _nextQuestion() {
     setState(() {
-      currentQuestionIndex++;
-      selectedOptionIndex = null;
-      //questions[currentQuestionIndex].isAnswered = true;
+      questions.then((questionList) {
+        questionList[currentQuestionIndex].isAnswered = true;
+        if (selectedOptionIndex != null &&
+            questionList[currentQuestionIndex].answer.text ==
+                questionList[currentQuestionIndex].options[selectedOptionIndex!].text) {
+          score++;
+        }
+        currentQuestionIndex++;
+        selectedOptionIndex = null;
+      });
     });
   }
 
@@ -166,7 +174,7 @@ class _QuizPageState extends State<QuizPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                      onPressed: () {  },
+                      onPressed: _confirmEnd,
                       style: ElevatedButton.styleFrom(
                        // primary: Colors.red,
                         backgroundColor: Colors.red// Background color
@@ -200,6 +208,8 @@ class _QuizPageState extends State<QuizPage> {
                   Expanded(
                     child: GridView.builder(
                       padding: EdgeInsets.all(10),
+                      shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         crossAxisSpacing: 10,
@@ -285,6 +295,23 @@ class _QuizPageState extends State<QuizPage> {
           );
         }
       },
+    );
+  }
+  void _confirmEnd() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm'),
+        content: Text('Are you sure want to end this quiz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('No'),
+          ),
+          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, '/subjects'),
+              child: Text('Yes'))
+        ],
+      ),
     );
   }
 }
