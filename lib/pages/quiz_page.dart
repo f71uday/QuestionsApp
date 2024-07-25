@@ -161,7 +161,26 @@ class _QuizPageState extends State<QuizPage> {
                 _formattedTime(_remainingTime),
                 style: TextStyle(fontSize: 24.0, color: Colors.red),
               ),
+              elevation: 5.0,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                      onPressed: () {  },
+                      style: ElevatedButton.styleFrom(
+                       // primary: Colors.red,
+                        backgroundColor: Colors.red// Background color
+                      ),
+                      child: Text ('End', style: TextStyle(  fontWeight: FontWeight.bold,color: Colors.white),)),
+                )
+              ],
             ),
+            // endDrawer: ElevatedButton(
+            //   onPressed: () {  },
+            //   child: Text ('End', style: TextStyle( backgroundColor: Colors.red, fontWeight: FontWeight.bold,color: Colors.white),),
+            //
+            // ),
+
             drawer: Drawer(
               child: Column(
                 children: [
