@@ -8,8 +8,13 @@ import '../Questions/Question.dart';
 
 class QuizPage extends StatefulWidget {
   final String questionLink ;
+  final String subjectName;
 
-  QuizPage({required this.questionLink});
+  QuizPage({
+    required this.questionLink,
+    required this.subjectName,
+
+  });
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -194,7 +199,7 @@ class _QuizPageState extends State<QuizPage> {
                 children: [
                   DrawerHeader(
                     child: Text(
-                      'Quiz App',
+                      '${widget.subjectName} Quiz',
                       style: TextStyle(fontSize: 30.0),
                     ),
                   ),

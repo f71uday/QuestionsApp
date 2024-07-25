@@ -35,7 +35,18 @@ class _SubjectListPageState extends State<SubjectListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Subjects')),
+      appBar: AppBar(title: Text('Home')),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile'
+          )
+        ],
+      ),
       body: FutureBuilder<List<Subject>>(
         future: subjects,
         builder: (context, snapshot) {
@@ -69,7 +80,7 @@ class _SubjectListPageState extends State<SubjectListPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizPage(questionLink: subject.questionsLink,),
+                                builder: (context) => QuizPage(questionLink: subject.questionsLink,subjectName: subject.name),
                               ),
                             );
                           },
