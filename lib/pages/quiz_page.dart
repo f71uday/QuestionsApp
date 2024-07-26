@@ -172,8 +172,51 @@ class _QuizPageState extends State<QuizPage> {
           List<Question> questions = snapshot.data!;
           if (currentQuestionIndex >= questions.length) {
             return Scaffold(
-              appBar: AppBar(title: Text('Quiz App')),
-              body: Center(child: Text('Your score: $score/${questions.length}')),
+              backgroundColor: true ? Colors.green : Colors.red,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      true ? Icons.thumb_up : Icons.thumb_down,
+                      size: 100,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      true
+                          ? 'Congratulations! You passed!'
+                          : 'Better luck next time!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      //'Your score: $score / $totalQuestions\n(${percentage.toStringAsFixed(2)}%)',
+                      'Your score 80%',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Go back to the previous screen
+                      },
+                      child: Text('Back to Home'),
+                      // style: ElevatedButton.styleFrom(
+                      //   primary: Colors.white, // Background color
+                      //   onPrimary: isPassed ? Colors.green : Colors.red, // Text color
+                      // ),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
 
