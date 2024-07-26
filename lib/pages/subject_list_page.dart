@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:VetScholar/pages/quiz_page.dart';
+import 'package:VetScholar/pages/view/home_view.dart';
+import 'package:VetScholar/pages/view/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,11 +26,30 @@ class SubjectListPage extends StatefulWidget {
 
 class _SubjectListPageState extends State<SubjectListPage> {
   late Future<List<Subject>> subjects;
-
+  int _selectedIndex = 0;
+  PageController _pageController = PageController();
+  static  List<Widget> _pages = <Widget>[
+    HomeView(),
+    //SearchView(),
+    ProfileView(),
+  ];
   @override
   void initState() {
     super.initState();
     subjects = fetchSubjects();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,53 +66,17 @@ class _SubjectListPageState extends State<SubjectListPage> {
               label: 'Profile'
           )
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        onTap: _onItemTapped,
       ),
-      body: FutureBuilder<List<Subject>>(
-        future: subjects,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data?.length ?? 0,
-              itemBuilder: (context, index) {
-                final subject = snapshot.data![index];
-                return Card(
-                  margin: EdgeInsets.all(5.0),
-                  elevation: 1.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          subject.name,
-                          style: TextStyle(
-                            fontSize: 20.0,
-
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QuizPage(questionLink: subject.questionsLink,subjectName: subject.name),
-                              ),
-                            );
-                          },
-                          child: Text('Start Quiz'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+      body: PageView(
+        controller: _pageController,
+        children: _pages,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
         },
       ),
     );
