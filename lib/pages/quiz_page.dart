@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Questions/Question.dart';
 
-
 class QuizPage extends StatefulWidget {
-  final String questionLink ;
+  final String questionLink;
   final String subjectName;
 
   QuizPage({
     required this.questionLink,
     required this.subjectName,
-
   });
 
   @override
@@ -27,6 +24,7 @@ class _QuizPageState extends State<QuizPage> {
   Timer? _timer;
   Duration _remainingTime = Duration(minutes: 10);
   late Future<List<Question>> questions;
+  bool isActive = true; // flag to check if the page is active
 
   @override
   void initState() {
@@ -37,25 +35,30 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   void dispose() {
+    isActive = false; // set the flag to false when disposing
     _timer?.cancel();
     super.dispose();
   }
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime.inSeconds > 0) {
-          _remainingTime = _remainingTime - Duration(seconds: 1);
-        }
-        else {
-          timer.cancel();
-          _showTimeUpDialog();
-        }
-      });
+      if (!isActive) {
+        timer.cancel();
+      } else {
+        setState(() {
+          if (_remainingTime.inSeconds > 0) {
+            _remainingTime = _remainingTime - Duration(seconds: 1);
+          } else {
+            timer.cancel();
+            _showTimeUpDialog();
+          }
+        });
+      }
     });
   }
 
   void _showTimeUpDialog() {
+    if (!mounted) return; // check if the widget is still in the tree
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -89,6 +92,10 @@ class _QuizPageState extends State<QuizPage> {
     String minutes = twoDigits(duration.inMinutes.remainder(60));
     String seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$minutes:$seconds';
+  }
+
+  Color _getTimerTextColor() {
+    return _remainingTime.inMinutes >= 2 ? Colors.green : Colors.red;
   }
 
   void _goToQuestion(int index) {
@@ -137,6 +144,10 @@ class _QuizPageState extends State<QuizPage> {
     return questionsJson.map((json) => Question.fromJson(json)).toList();
   }
 
+  bool isPageDisposed() {
+    return !mounted;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Question>>(
@@ -172,7 +183,7 @@ class _QuizPageState extends State<QuizPage> {
             appBar: AppBar(
               title: Text(
                 _formattedTime(_remainingTime),
-                style: TextStyle(fontSize: 24.0, color: Colors.red),
+                style: TextStyle(fontSize: 24.0, color: _getTimerTextColor()),
               ),
               elevation: 5.0,
               actions: [
@@ -181,19 +192,12 @@ class _QuizPageState extends State<QuizPage> {
                   child: ElevatedButton(
                       onPressed: _confirmEnd,
                       style: ElevatedButton.styleFrom(
-                       // primary: Colors.red,
-                        backgroundColor: Colors.red// Background color
+                        backgroundColor: Colors.red, // Background color
                       ),
-                      child: Text ('End', style: TextStyle(  fontWeight: FontWeight.bold,color: Colors.white),)),
+                      child: Text('End', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
                 )
               ],
             ),
-            // endDrawer: ElevatedButton(
-            //   onPressed: () {  },
-            //   child: Text ('End', style: TextStyle( backgroundColor: Colors.red, fontWeight: FontWeight.bold,color: Colors.white),),
-            //
-            // ),
-
             drawer: Drawer(
               child: Column(
                 children: [
@@ -222,13 +226,10 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
-                        final color =  questions[currentQuestionIndex].isAnswered
-                            ? Colors.blue
-                            : Colors.white;
+                        final color = questions[index].isAnswered ? Colors.blue : Colors.white;
                         return GestureDetector(
                           onTap: () => _goToQuestion(index),
                           child: Card(
-                            //TODO: update color of the card is it was attented
                             color: color,
                             child: Center(
                               child: Text(
@@ -250,7 +251,7 @@ class _QuizPageState extends State<QuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${currentQuestionIndex +1}. ' + currentQuestion.question,
+                    '${currentQuestionIndex + 1}. ' + currentQuestion.question,
                     style: TextStyle(fontSize: 24.0),
                   ),
                   SizedBox(height: 20.0),
@@ -282,7 +283,6 @@ class _QuizPageState extends State<QuizPage> {
                         child: ElevatedButton(
                           onPressed: selectedOptionIndex == null ? null : _nextQuestion,
                           child: Text('Next'),
-                          
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(10.0)),
@@ -302,6 +302,7 @@ class _QuizPageState extends State<QuizPage> {
       },
     );
   }
+
   void _confirmEnd() {
     showDialog(
       context: context,
@@ -313,7 +314,8 @@ class _QuizPageState extends State<QuizPage> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text('No'),
           ),
-          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, '/subjects'),
+          TextButton(
+              onPressed: () => Navigator.pushReplacementNamed(context, '/subjects'),
               child: Text('Yes'))
         ],
       ),
