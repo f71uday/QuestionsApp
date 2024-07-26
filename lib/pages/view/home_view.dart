@@ -18,13 +18,13 @@ Future<List<Subject>> fetchSubjects() async {
   }
 }
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatefulWidget  {
   @override
   _HomeViewPage createState() => _HomeViewPage();
 
 }
 
-class _HomeViewPage extends State<HomeView>
+class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin
 {
   late Future<List<Subject>> subjects;
 
@@ -86,5 +86,8 @@ class _HomeViewPage extends State<HomeView>
       );
 
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }
