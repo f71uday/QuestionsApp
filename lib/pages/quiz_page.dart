@@ -25,7 +25,7 @@ class _QuizPageState extends State<QuizPage> {
   Duration _remainingTime = Duration(minutes: 10);
   late Future<List<Question>> questions;
   bool isActive = true; // flag to check if the page is active
-
+  bool? isPassed;
   @override
   void initState() {
     super.initState();
@@ -171,20 +171,23 @@ class _QuizPageState extends State<QuizPage> {
         } else {
           List<Question> questions = snapshot.data!;
           if (currentQuestionIndex >= questions.length) {
+            double _percentage = (score/questions.length) * 100 ;
+            bool _ispassed  = false;
+            if (_percentage> 60) _ispassed =true;
             return Scaffold(
-              backgroundColor: true ? Colors.green : Colors.red,
+              backgroundColor: _ispassed ? Colors.green : Colors.red,
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      true ? Icons.thumb_up : Icons.thumb_down,
+                      _ispassed ? Icons.thumb_up : Icons.thumb_down,
                       size: 100,
                       color: Colors.white,
                     ),
                     SizedBox(height: 20),
                     Text(
-                      true
+                      _ispassed
                           ? 'Congratulations! You passed!'
                           : 'Better luck next time!',
                       style: TextStyle(
@@ -196,7 +199,7 @@ class _QuizPageState extends State<QuizPage> {
                     SizedBox(height: 20),
                     Text(
                       //'Your score: $score / $totalQuestions\n(${percentage.toStringAsFixed(2)}%)',
-                      'Your score 80%',
+                      'Your score ${_percentage.toStringAsFixed(2)}%',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
