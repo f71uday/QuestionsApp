@@ -1,3 +1,6 @@
+
+
+import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -37,14 +40,16 @@ class AuthService {
     }
     return null;
   }
-  static Future<void> logout() async {
+  static Future<bool> logout() async {
     try {
       await secureStorage.delete(key: 'authTokens'); // Adjust according to your key
       //TODO: IMplement Logout
       print('Logged out successfully');
+      return true;
     } catch (error) {
       print('Error logging out: $error');
     }
+    return false;
   }
   static Future<void> saveAuthorizationTokens(AuthorizationTokenResponse authState) async {
     try {

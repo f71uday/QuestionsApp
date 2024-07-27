@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/subjects.dart';
 
-Future<List<Subject>> fetchSubjects() async {
+Future<List<Subject>> fetchSubjects() async  {
   final response = await http.get(Uri.parse('http://localhost/subjects'));
 
   if (response.statusCode == 200) {
