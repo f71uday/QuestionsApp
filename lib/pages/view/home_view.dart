@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import '../../models/subjects.dart';
 import '../quiz_page.dart';
 import 'package:http/http.dart' as http;
@@ -18,14 +16,12 @@ Future<List<Subject>> fetchSubjects() async {
   }
 }
 
-class HomeView extends StatefulWidget  {
+class HomeView extends StatefulWidget {
   @override
   _HomeViewPage createState() => _HomeViewPage();
-
 }
 
-class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin
-{
+class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   late Future<List<Subject>> subjects;
 
   @override
@@ -36,15 +32,16 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder<List<Subject>>(
-        future: subjects,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
+    return FutureBuilder<List<Subject>>(
+      future: subjects,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Flexible(
+            child: ListView.builder(
               itemCount: snapshot.data?.length ?? 0,
               itemBuilder: (context, index) {
                 final subject = snapshot.data![index];
@@ -56,20 +53,24 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          subject.name,
-                          style: TextStyle(
-                            fontSize: 20.0,
-
+                        Flexible(
+                          child: Text(
+                            subject.name,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizPage(questionLink: subject.questionsLink,subjectName: subject.name),
+                                builder: (context) => QuizPage(
+                                  questionLink: subject.questionsLink,
+                                  subjectName: subject.name,
+                                ),
                               ),
                             );
                           },
@@ -80,14 +81,13 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin
                   ),
                 );
               },
-            );
-          }
-        },
-      );
-
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
   bool get wantKeepAlive => true;
-
 }
