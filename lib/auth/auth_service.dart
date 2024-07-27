@@ -51,7 +51,7 @@ class AuthService {
       await secureStorage.write(key: 'refresh_token', value: authState.refreshToken);
       await secureStorage.write(key: 'access_token', value: authState.accessToken);
       await secureStorage.write(key: 'id_token', value: authState.idToken);
-      //await secureStorage.write(key: 'access_token_expiration_date', value: authState.accessTokenExpirationDate?.toIso8601String());
+      await secureStorage.write(key: 'access_token_expiration_date', value: authState.accessTokenExpirationDateTime?.toIso8601String());
       print('Authorization tokens saved successfully');
     } catch (e) {
       print('Error saving authorization tokens: $e');
@@ -63,7 +63,7 @@ class AuthService {
       await secureStorage.write(key: 'refresh_token', value: tokenResponse.refreshToken);
       await secureStorage.write(key: 'access_token', value: tokenResponse.accessToken);
       await secureStorage.write(key: 'id_token', value: tokenResponse.idToken);
-      //await secureStorage.write(key: 'access_token_expiration_date', value: tokenResponse.accessTokenExpirationDate?.toIso8601String());
+      await secureStorage.write(key: 'access_token_expiration_date', value: tokenResponse.accessTokenExpirationDateTime?.toIso8601String());
       print('Token response saved successfully');
     } catch (e) {
       print('Error saving token response: $e');

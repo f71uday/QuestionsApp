@@ -20,7 +20,7 @@ Future<List<Subject>> fetchSubjects() async {
 }
 
 class SubjectListPage extends StatefulWidget  {
-  
+
   @override
   _SubjectListPageState createState() => _SubjectListPageState();
 }
