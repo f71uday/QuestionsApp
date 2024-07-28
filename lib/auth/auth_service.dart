@@ -42,7 +42,11 @@ class AuthService {
   }
   static Future<bool> logout() async {
     try {
-      await secureStorage.delete(key: 'authTokens'); // Adjust according to your key
+      await secureStorage.delete(key: 'id_token');
+      await secureStorage.delete(key: 'refresh_token');
+      await secureStorage.delete(key: 'access_token');
+      await secureStorage.delete(key: 'access_token_expiration_date');
+      // Adjust according to your key
       //TODO: IMplement Logout
       print('Logged out successfully');
       return true;
@@ -144,13 +148,13 @@ class AuthService {
       if (tokens != null && tokens['idToken'] != null) {
         final Map<String, dynamic> decodedToken = JwtDecoder.decode(tokens['idToken']);
         return decodedToken;
-      } else {
-        print('No idToken found, forcing login');
-        final Map<String, dynamic>? loginResult = await login();
-        if (loginResult != null && loginResult['idToken'] != null) {
-          return JwtDecoder.decode(loginResult['idToken']);
-        }
-      }
+      }// else {
+      //   print('No idToken found, forcing login');
+      //   final Map<String, dynamic>? loginResult = await login();
+      //   if (loginResult != null && loginResult['idToken'] != null) {
+      //     return JwtDecoder.decode(loginResult['idToken']);
+      //   }
+      // }
     } catch (e) {
       print('Error decoding idToken: $e');
     }
