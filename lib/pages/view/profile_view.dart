@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfileView> {
                       if (success) {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => SignInPage()),
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
                       }
                     },

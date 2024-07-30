@@ -23,9 +23,10 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: isLoggedIn? '/subjects':'/auth',
+      //initialRoute: isLoggedIn? '/subjects':'/auth',
+      initialRoute: '/signin',
       routes: {
-        '/signin': (context) => SignInPage(),
+        '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),
         '/auth': (context) => AuthPage()
       },
