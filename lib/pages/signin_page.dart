@@ -48,12 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushReplacementNamed(context, '/subjects');
             });
           }
-          else {
-            setState(() {
 
-              _showCustomToast();
-            });
-          }
         }
       } catch (error) {
         setState(() {
