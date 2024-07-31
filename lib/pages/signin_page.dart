@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/login_response.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -41,6 +45,13 @@ class _LoginPageState extends State<LoginPage> {
             },
           );
           if (loginResponse.statusCode == 200) {
+            final loginData = json.decode(loginResponse.body);
+            final loginResponseObject = LoginResponse.fromJson(loginData);
+
+            // Save session token in secure storage
+            await secureStorage.write(key: 'session_token', value: loginResponseObject.sessionToken);
+            await secureStorage.write(key: 'name', value :loginResponseObject.session?.identity?.traits?.name?.first);
+            await secureStorage.write(key: 'email', value :loginResponseObject.session?.identity?.traits?.email);
             setState(() {
               _isLoginSuccessful = true;
               _showCustomToast();
