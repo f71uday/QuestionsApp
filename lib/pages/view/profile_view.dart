@@ -111,10 +111,7 @@ class _ProfilePageState extends State<ProfileView> {
                         )
                     ),
               )
-
-
           ],
-
         ),
       ),
     );
