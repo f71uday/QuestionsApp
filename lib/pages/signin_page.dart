@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -10,14 +9,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late FToast fToast;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
   String baseURL = '127.0.0.1:4433';
- // bool _inCorrectPass = false;
+  bool _isLoginSuccessful = false;
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -44,58 +42,75 @@ class _LoginPageState extends State<LoginPage> {
           );
           if (loginResponse.statusCode == 200) {
             setState(() {
+              _isLoginSuccessful = true;
               _showCustomToast();
               Navigator.pushReplacementNamed(context, '/subjects');
             });
+          } else {
+            setState(() {
+              _isLoginSuccessful = false;
+              _errorMessage = 'Incorrect Username or Password';
+              _showErrorMessage(_errorMessage);
+            });
           }
-
+        } else {
+          setState(() {
+            _isLoginSuccessful = false;
+            _errorMessage = 'Server error. Please try again later.';
+            _showErrorMessage(_errorMessage);
+          });
         }
       } catch (error) {
         setState(() {
           _isLoading = false;
-          _errorMessage = error.toString();
+          _errorMessage = 'Network error. Please check your connection.';
+          _isLoginSuccessful = false;
+          _showErrorMessage(_errorMessage);
         });
       } finally {
         setState(() {
           _isLoading = false;
         });
-
       }
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fToast = FToast();
-    fToast.init(context);
+  void _showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Row(
+        children: [
+          Icon(Icons.error, color: Colors.white),
+          SizedBox(width: 10),
+          Expanded(child: Text(message)),
+          IconButton(
+            icon: Icon(Icons.close, color: Colors.white),
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ],
+      ),
+      backgroundColor: Colors.red,
+      duration: Duration(seconds: 4),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   _showCustomToast() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        //color: _inCorrectPass?Colors.lightGreen:Colors.redAccent,
-        color: Colors.lightGreen
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    final snackBar = SnackBar(
+      content: Row(
         children: [
-          //Icon(_inCorrectPass?Icons.close:Icons.check, color: Colors.white),
-          Icon(Icons.check,color: Colors.white,),
-          SizedBox(width: 12.0),
-          //Text(!_inCorrectPass?"Logged in Successfully":"Incorrect Username or Password"),
-          Text("Logged in Successfully")
+          Icon(Icons.check, color: Colors.white),
+          SizedBox(width: 10),
+          Text("Logged in Successfully"),
         ],
       ),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 2),
     );
 
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -160,18 +175,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 20),
-
             Spacer(),
             Column(
               children: [
                 if (!_isLoading)
-                SizedBox(
-                  width: double.infinity, // Make the button take the full width
-                  child: ElevatedButton(
-                    onPressed: _login,
-                    child: Text('Login'),
+                  SizedBox(
+                    width: double.infinity, // Make the button take the full width
+                    child: ElevatedButton(
+                      onPressed: _login,
+                      child: Text('Login'),
+                    ),
                   ),
-                ),
                 if (_isLoading)
                   LinearProgressIndicator(),
                 Row(
