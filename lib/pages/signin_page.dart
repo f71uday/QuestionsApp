@@ -3,6 +3,7 @@ import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 import '../models/login_response.dart';
 
@@ -20,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   String _errorMessage = '';
   String baseURL = '127.0.0.1:4433';
   bool _isLoginSuccessful = false;
+
+
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -52,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             await secureStorage.write(key: 'session_token', value: loginResponseObject.sessionToken);
             await secureStorage.write(key: 'name', value :loginResponseObject.session?.identity?.traits?.name?.first);
             await secureStorage.write(key: 'email', value :loginResponseObject.session?.identity?.traits?.email);
+
             setState(() {
               _isLoginSuccessful = true;
               _showCustomToast();
@@ -205,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text("Don't have an Account?"),
                     TextButton(
                       onPressed: () => {
-                        Navigator.pushReplacementNamed(context, '/subjects')
+                        Navigator.pushReplacementNamed(context, '/singup')
                       },
                       child: Text('SignUp'),
                     ),
