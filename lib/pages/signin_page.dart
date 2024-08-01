@@ -48,13 +48,12 @@ class _LoginPageState extends State<LoginPage> {
             },
           );
           if (loginResponse.statusCode == 200) {
-            final loginData = json.decode(loginResponse.body);
-            final loginResponseObject = LoginResponse.fromJson(loginData);
+            final loginData = jsonDecode(loginResponse.body);
 
             // Save session token in secure storage
-            await secureStorage.write(key: 'session_token', value: loginResponseObject.sessionToken);
-            await secureStorage.write(key: 'name', value :loginResponseObject.session?.identity?.traits?.name?.first);
-            await secureStorage.write(key: 'email', value :loginResponseObject.session?.identity?.traits?.email);
+            await secureStorage.write(key: 'session_token', value: loginData['session_token']);
+            // await secureStorage.write(key: 'name', value :loginResponseObject.session?.identity?.traits?.name?.first);
+            // await secureStorage.write(key: 'email', value :loginResponseObject.session?.identity?.traits?.email);
 
             setState(() {
               _isLoginSuccessful = true;

@@ -16,7 +16,10 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   String baseURL = '127.0.0.1:4433';
+  bool _acceptTerms = false;
 
   Future<void> _signup() async {
     if (_formKey.currentState!.validate()) {
@@ -35,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
 
         final initJson = jsonDecode(initResponse.body);
         final flowId = initJson['id'];
-        final csrfToken = initJson['csrf_token'];
+        //final csrfToken = initJson['csrf_token'];
 
         final response = await http.post(
           Uri.http(baseURL, '/self-service/registration', {'flow': flowId}),
@@ -44,7 +47,7 @@ class _SignupPageState extends State<SignupPage> {
             'traits.email': _emailController.text,
             'traits.name.first': _firstNameController.text,
             'traits.name.last': _lastNameController.text,
-            'csrf_token': csrfToken,
+            //'csrf_token': csrfToken,
             'method': 'password',
             'password': _passwordController.text,
           },
@@ -53,11 +56,11 @@ class _SignupPageState extends State<SignupPage> {
         if (response.statusCode == 200 || response.statusCode == 201) {
           _showSnackBar('Signup successful!', true);
           Future.delayed(Duration(seconds: 2), () {
-            Navigator.pushReplacementNamed(context, '/login');
+            Navigator.pushReplacementNamed(context, '/signin');
           });
         } else {
-          final errorResponse = jsonDecode(response.body);
-          _showSnackBar(errorResponse['message'] ?? 'Signup failed. Please try again.', false);
+          final errorResponse = json.decode(response.body);
+          _showSnackBar(errorResponse['ui']['messages'][0]['text'] ?? 'Signup failed. Please try again.', false);
         }
       } catch (error) {
         _showSnackBar('Network error. Please check your connection.', false);
@@ -102,6 +105,7 @@ class _SignupPageState extends State<SignupPage> {
         children: <Widget>[
           Center(
             child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
               padding: EdgeInsets.all(16.0),
               child: Center(
                 child: Column(
@@ -147,8 +151,21 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 20),
                           TextFormField(
                             controller: _passwordController,
-                            decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
-                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            obscureText: _obscurePassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your password';
@@ -159,8 +176,12 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 20),
                           TextFormField(
                             controller: _confirmPasswordController,
-                            decoration: InputDecoration(labelText: 'Confirm Password', border: OutlineInputBorder()),
-                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              border: OutlineInputBorder(),
+
+                            ),
+                            obscureText: _obscureConfirmPassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please confirm your password';
@@ -181,30 +202,43 @@ class _SignupPageState extends State<SignupPage> {
             ),
           ),
           Align(
+
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  if (_isLoading)
-                    CircularProgressIndicator(),
-                  if (!_isLoading)
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _signup,
-                        child: Text('Signup'),
-                      ),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    CheckboxListTile(
+                      title: Text("I accept the terms and conditions", style: TextStyle(fontSize: 14),),
+                      value: _acceptTerms,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _acceptTerms = newValue!;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
                     ),
-                  SizedBox(height: 10),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                    child: Text('Already have an account? Login'),
-                  ),
-                ],
+                      if(!_isLoading)
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _signup,
+                          child: Text('Signup'),
+                        ),
+                      ),
+                    if (_isLoading) LinearProgressIndicator(),
+                    SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/signin');
+                      },
+                      child: Text('Already have an account? Login'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

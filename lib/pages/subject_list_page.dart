@@ -56,7 +56,7 @@ class _SubjectListPageState extends State<SubjectListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
+      // appBar: AppBar(title: Text('Home')),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(

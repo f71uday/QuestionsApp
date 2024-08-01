@@ -4,6 +4,7 @@ import '../../models/subjects.dart';
 import '../quiz_page.dart';
 import 'package:http/http.dart' as http;
 
+// Function to fetch subjects from the server
 Future<List<Subject>> fetchSubjects() async {
   final response = await http.get(Uri.parse('http://localhost/subjects'));
 
@@ -16,6 +17,7 @@ Future<List<Subject>> fetchSubjects() async {
   }
 }
 
+// HomeView StatefulWidget
 class HomeView extends StatefulWidget {
   @override
   _HomeViewPage createState() => _HomeViewPage();
@@ -32,16 +34,20 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Subject>>(
-      future: subjects,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return Flexible(
-            child: ListView.builder(
+    super.build(context); // Ensure AutomaticKeepAliveClientMixin works correctly
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Subjects'),
+      ),
+      body: FutureBuilder<List<Subject>>(
+        future: subjects,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return ListView.builder(
               itemCount: snapshot.data?.length ?? 0,
               itemBuilder: (context, index) {
                 final subject = snapshot.data![index];
@@ -81,10 +87,10 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                   ),
                 );
               },
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
     );
   }
 

@@ -1,8 +1,14 @@
-import 'package:VetScholar/pages/signin_page.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import '../../auth/auth_service.dart';
-import '../../ui/circle_icon.dart';
-import '../auth_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../models/who_am_i.dart';
+import 'package:http/http.dart' as http;
+
+
 
 
 class ProfileView extends StatefulWidget {
@@ -11,106 +17,125 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfileView> {
-  Map<String, dynamic>? _userInfo;
-  bool _loading = true;
-
+  String _name = "Loading...";
+  String _email = "Loading...";
+  bool _isLoading = true;
+  String baseurl =  '127.0.0.1:4433';
+  String _appVersion = "";
+  static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
+    _fetchProfileData();
+    _getAppVersion();
   }
 
-  Future<void> _loadUserInfo() async {
-    try {
-      final userInfo = await AuthService.getUserInfo();
+  Future<void> _getAppVersion() async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = packageInfo.version;
+    });
+  }
+
+  Future<void> _fetchProfileData() async {
+    String? sessionToken = await secureStorage.read(key: 'session_token');
+    //final url = '${baseurl}/sessions/whoami';
+    final url = Uri.http(baseurl, '/sessions/whoami');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $sessionToken',
+        //'Cookie': 'csrf_token_806060ca5bf70dff3caa0e5c860002aade9d470a5a4dce73bcfa7ba10778f481=XMDTQOrSRRGmaYRwMk8SHE+hMTIoN+XxkXSfGVM2ayk=',
+      },
+
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final userSession = UserSession.fromJson(data);
+
       setState(() {
-        _userInfo = userInfo;
-        _loading = false;
+        _name = '${userSession.identity?.traits?.name?.first ?? ''} ${userSession.identity?.traits?.name?.last ?? ''}';
+        _email = userSession.identity?.traits?.email ?? '';
+        _isLoading = false;
       });
-    } catch (e) {
+    } else {
+      // Handle errors here
       setState(() {
-        _loading = false;
+        _name = 'Error loading name';
+        _email = 'Error loading email';
+        _isLoading = false;
       });
-      print('Error loading user info: $e');
     }
   }
 
-  Future<void> _logout() async {
-    await AuthService.logout();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => AuthPage()),
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Logout'),
+          content: Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Perform actual logout
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Profile'),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.logout),
-      //       onPressed: _logout,
-      //     ),
-      //   ],
-      // ),
-      body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : _userInfo == null
-          ? Center(child: Text('No user info available'))
-          : Padding(
+      appBar: AppBar(
+        title: Text('Profile'),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.logout),
+        //     onPressed: () {
+        //       _showLogoutDialog();
+        //     },
+        //   ),
+        // ],
+      ),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:  [
-            // Text('Name: ${_userInfo?['name'] ?? 'N/A'}', style: TextStyle(fontSize: 18)),
-            // SizedBox(height: 10),
-            // Text('Email: ${_userInfo?['email'] ?? 'N/A'}', style: TextStyle(fontSize: 18)),
-            // SizedBox(height: 10),
-            // Text('ID: ${_userInfo?['id'] ?? 'N/A'}', style: TextStyle(fontSize: 18)),
-            // Add more user info fields if available
-            Center(
-              child: CircleIcon(
-                icon: Icons.person,
-                backgroundColor: Colors.blue, // sky blue color
-                iconColor: Colors.white,
-                size: 100.0, // diameter of the circle
-              ),
+          children: [
+            Text(
+              'Name: $_name',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 0,height: 15,),
-            Center(
-                child:
-                 Text('Uday Singh',
-                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
-                )
-
+            SizedBox(height: 8),
+            Text(
+              'Email: $_email',
+              style: TextStyle(fontSize: 16),
             ),
             Spacer(),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () async {
-                      bool success = await AuthService.logout();
-                      if (success) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                      }
-                    },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('SignOut'),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(Icons.logout)
-                          ],
-                        )
-                    ),
-              )
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _showLogoutDialog();
+                },
+                child: Text('Logout'),
+              ),
+            ),
+            Center(child: Text('Version: $_appVersion')),
           ],
         ),
       ),
