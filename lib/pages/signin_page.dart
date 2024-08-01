@@ -3,7 +3,6 @@ import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
 
 import '../models/login_response.dart';
 
@@ -21,8 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   String _errorMessage = '';
   String baseURL = '127.0.0.1:4433';
   bool _isLoginSuccessful = false;
-
-
+  bool _obscureText = true;
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -52,8 +50,6 @@ class _LoginPageState extends State<LoginPage> {
 
             // Save session token in secure storage
             await secureStorage.write(key: 'session_token', value: loginData['session_token']);
-            // await secureStorage.write(key: 'name', value :loginResponseObject.session?.identity?.traits?.name?.first);
-            // await secureStorage.write(key: 'email', value :loginResponseObject.session?.identity?.traits?.email);
 
             setState(() {
               _isLoginSuccessful = true;
@@ -111,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  _showCustomToast() {
+  void _showCustomToast() {
     final snackBar = SnackBar(
       content: Row(
         children: [
@@ -148,12 +144,12 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
-                            labelText: 'Username', border: OutlineInputBorder()),
+                            labelText: 'Username',
+                            border: OutlineInputBorder()),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your username';
                           }
-
                           return null;
                         },
                       ),
@@ -161,13 +157,26 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
-                            labelText: 'Password', border: OutlineInputBorder()),
-                        obscureText: true,
+                          labelText: 'Password',
+                          border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
+                        ),
+                        obscureText: _obscureText,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
-
                           return null;
                         },
                       ),
@@ -176,10 +185,8 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                              onPressed: () => {
-                                Navigator.pushReplacementNamed(context, '/subjects')
-                              },
-                              child: Text('Forgot Password?')
+                            onPressed: () => Navigator.pushReplacementNamed(context, '/forgot-password'),
+                            child: Text('Forgot Password?'),
                           ),
                         ],
                       ),
@@ -207,9 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text("Don't have an Account?"),
                     TextButton(
-                      onPressed: () => {
-                        Navigator.pushReplacementNamed(context, '/singup')
-                      },
+                      onPressed: () => Navigator.pushReplacementNamed(context, '/signup'),
                       child: Text('SignUp'),
                     ),
                   ],
