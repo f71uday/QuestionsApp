@@ -4,12 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import '../../models/who_am_i.dart';
 import 'package:http/http.dart' as http;
 
-
-
+import '../../models/who_am_i.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -20,9 +17,10 @@ class _ProfilePageState extends State<ProfileView> {
   String _name = "Loading...";
   String _email = "Loading...";
   bool _isLoading = true;
-  String baseurl =  '127.0.0.1:4433';
+  String baseurl = '127.0.0.1:4433';
   String _appVersion = "";
   static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -39,15 +37,12 @@ class _ProfilePageState extends State<ProfileView> {
 
   Future<void> _fetchProfileData() async {
     String? sessionToken = await secureStorage.read(key: 'session_token');
-    //final url = '${baseurl}/sessions/whoami';
     final url = Uri.http(baseurl, '/sessions/whoami');
     final response = await http.get(
       url,
       headers: {
         'Authorization': 'Bearer $sessionToken',
-        //'Cookie': 'csrf_token_806060ca5bf70dff3caa0e5c860002aade9d470a5a4dce73bcfa7ba10778f481=XMDTQOrSRRGmaYRwMk8SHE+hMTIoN+XxkXSfGVM2ayk=',
       },
-
     );
 
     if (response.statusCode == 200) {
@@ -60,12 +55,36 @@ class _ProfilePageState extends State<ProfileView> {
         _isLoading = false;
       });
     } else {
-      // Handle errors here
       setState(() {
         _name = 'Error loading name';
         _email = 'Error loading email';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _logout() async {
+    String? sessionToken = await secureStorage.read(key: 'session_token');
+    final url = Uri.http(baseurl, '/sessions');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $sessionToken',
+      },
+      body: json.encode({
+        'session_token': sessionToken,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      await secureStorage.delete(key: 'session_token');
+      Navigator.of(context).pushReplacementNamed('/signin'); // Replace with your login route
+    } else {
+      // Handle errors here
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to logout')),
+      );
     }
   }
 
@@ -80,7 +99,7 @@ class _ProfilePageState extends State<ProfileView> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Perform actual logout
+                _logout();
               },
               child: Text('Yes'),
             ),
@@ -101,14 +120,14 @@ class _ProfilePageState extends State<ProfileView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.logout),
-        //     onPressed: () {
-        //       _showLogoutDialog();
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              _showLogoutDialog();
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
