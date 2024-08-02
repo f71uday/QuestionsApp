@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text("Don't have an Account?"),
                     TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(context, '/signup'),
+                      onPressed: () => Navigator.pushReplacementNamed(context, '/singup'),
                       child: Text('SignUp'),
                     ),
                   ],
