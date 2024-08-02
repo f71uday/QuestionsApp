@@ -1,5 +1,6 @@
 // signup_page.dart
 import 'dart:convert';
+import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,6 +16,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final EmailValidatorFlutter emailValidatorFlutter = EmailValidatorFlutter();
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -122,6 +124,9 @@ class _SignupPageState extends State<SignupPage> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
+                              }
+                              else if (emailValidatorFlutter.validateEmail(value)){
+                                return 'Enter a valid email';
                               }
                               return null;
                             },
