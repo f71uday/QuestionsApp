@@ -122,12 +122,10 @@ class _SignupPageState extends State<SignupPage> {
                             controller: _emailController,
                             decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
+                              if (value == null || value.isEmpty || !emailValidatorFlutter.validateEmail(value)) {
                                 return 'Please enter your email';
                               }
-                              else if (emailValidatorFlutter.validateEmail(value)){
-                                return 'Enter a valid email';
-                              }
+
                               return null;
                             },
                           ),
