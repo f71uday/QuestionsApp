@@ -7,17 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/subjects.dart';
 
-Future<List<Subject>> fetchSubjects() async  {
-  final response = await http.get(Uri.parse('http://localhost/subjects'));
 
-  if (response.statusCode == 200) {
-    final parsed = json.decode(response.body);
-    final subjectsJson = parsed['_embedded']['subjects'] as List;
-    return subjectsJson.map((json) => Subject.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load subjects');
-  }
-}
 
 class SubjectListPage extends StatefulWidget  {
 
@@ -37,7 +27,7 @@ class _SubjectListPageState extends State<SubjectListPage> {
   @override
   void initState() {
     super.initState();
-    subjects = fetchSubjects();
+    //subjects = fetchSubjects();
   }
 
   void _onItemTapped(int index) {

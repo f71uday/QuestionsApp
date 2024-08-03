@@ -129,7 +129,10 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Future<List<Question>> fetchQuestions() async {
-    final response = await http.get(Uri.parse(widget.questionLink));
+    final response = await http.get(Uri.parse(widget.questionLink),
+    headers: {
+      'X-User-ID': 'abc'
+    });
 
     if (response.statusCode == 200) {
       return parseQuestions(response.body);
@@ -140,7 +143,7 @@ class _QuizPageState extends State<QuizPage> {
 
   List<Question> parseQuestions(String jsonString) {
     final parsed = json.decode(jsonString);
-    final questionsJson = parsed['_embedded']['questions'] as List;
+    final questionsJson = parsed['questions'] as List;
     return questionsJson.map((json) => Question.fromJson(json)).toList();
   }
 

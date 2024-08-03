@@ -6,7 +6,10 @@ import 'package:http/http.dart' as http;
 
 // Function to fetch subjects from the server
 Future<List<Subject>> fetchSubjects() async {
-  final response = await http.get(Uri.parse('http://localhost/subjects'));
+  final response = await http.get(Uri.parse('http://localhost/api/subjects'),
+      headers: {
+        'X-User-ID': 'sbj'
+      });
 
   if (response.statusCode == 200) {
     final parsed = json.decode(response.body);

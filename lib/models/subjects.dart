@@ -9,7 +9,7 @@ class Subject {
     return Subject(
       name: json['name'],
       selfLink: json['_links']['self']['href'],
-      questionsLink: json['_links']['questions']['href'],
+      questionsLink: json['_links']['random-test']['href'],
     );
   }
 }
