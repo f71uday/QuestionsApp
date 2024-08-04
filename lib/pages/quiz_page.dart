@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
 import '../Questions/Question.dart';
+import '../service/question_service.dart';
 
 class QuizPage extends StatefulWidget {
   final String questionLink;
@@ -26,10 +27,13 @@ class _QuizPageState extends State<QuizPage> {
   late Future<List<Question>> questions;
   bool isActive = true; // flag to check if the page is active
   bool? isPassed;
+
+  final QuestionService _questionService = QuestionService();
+
   @override
   void initState() {
     super.initState();
-    questions = fetchQuestions();
+    questions = _questionService.fetchQuestions(widget.questionLink);
     _startTimer();
   }
 
@@ -112,7 +116,9 @@ class _QuizPageState extends State<QuizPage> {
         questionList[currentQuestionIndex].isAnswered = true;
         if (selectedOptionIndex != null &&
             questionList[currentQuestionIndex].answer.text ==
-                questionList[currentQuestionIndex].options[selectedOptionIndex!].text) {
+                questionList[currentQuestionIndex]
+                    .options[selectedOptionIndex!]
+                    .text) {
           score++;
         }
         currentQuestionIndex++;
@@ -126,25 +132,6 @@ class _QuizPageState extends State<QuizPage> {
       currentQuestionIndex++;
       selectedOptionIndex = null;
     });
-  }
-
-  Future<List<Question>> fetchQuestions() async {
-    final response = await http.get(Uri.parse(widget.questionLink),
-    headers: {
-      'X-User-ID': 'abc'
-    });
-
-    if (response.statusCode == 200) {
-      return parseQuestions(response.body);
-    } else {
-      throw Exception('Failed to load questions');
-    }
-  }
-
-  List<Question> parseQuestions(String jsonString) {
-    final parsed = json.decode(jsonString);
-    final questionsJson = parsed['questions'] as List;
-    return questionsJson.map((json) => Question.fromJson(json)).toList();
   }
 
   bool isPageDisposed() {
@@ -174,9 +161,9 @@ class _QuizPageState extends State<QuizPage> {
         } else {
           List<Question> questions = snapshot.data!;
           if (currentQuestionIndex >= questions.length) {
-            double _percentage = (score/questions.length) * 100 ;
-            bool _ispassed  = false;
-            if (_percentage> 60) _ispassed =true;
+            double _percentage = (score / questions.length) * 100;
+            bool _ispassed = false;
+            if (_percentage > 60) _ispassed = true;
             return Scaffold(
               backgroundColor: _ispassed ? Colors.green : Colors.red,
               body: Center(
@@ -212,7 +199,8 @@ class _QuizPageState extends State<QuizPage> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context); // Go back to the previous screen
+                        Navigator.pop(
+                            context); // Go back to the previous screen
                       },
                       child: Text('Back to Home'),
                       // style: ElevatedButton.styleFrom(
@@ -243,7 +231,10 @@ class _QuizPageState extends State<QuizPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red, // Background color
                       ),
-                      child: Text('End', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+                      child: Text('End',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white))),
                 )
               ],
             ),
@@ -275,7 +266,9 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
-                        final color = questions[index].isAnswered ? Colors.blue : Colors.white;
+                        final color = questions[index].isAnswered
+                            ? Colors.blue
+                            : Colors.white;
                         return GestureDetector(
                           onTap: () => _goToQuestion(index),
                           child: Card(
@@ -306,8 +299,11 @@ class _QuizPageState extends State<QuizPage> {
                   SizedBox(height: 20.0),
                   ...currentQuestion.options.asMap().entries.map((option) {
                     final isSelected = option.key == selectedOptionIndex;
-                    final isCorrect = option.value.text == currentQuestion.answer.text;
-                    final color = isSelected ? (isCorrect ? Colors.green : Colors.red) : Colors.black;
+                    final isCorrect =
+                        option.value.text == currentQuestion.answer.text;
+                    final color = isSelected
+                        ? (isCorrect ? Colors.green : Colors.red)
+                        : Colors.black;
                     return ListTile(
                       title: Text(
                         option.value.text,
@@ -330,7 +326,9 @@ class _QuizPageState extends State<QuizPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: selectedOptionIndex == null ? null : _nextQuestion,
+                          onPressed: selectedOptionIndex == null
+                              ? null
+                              : _nextQuestion,
                           child: Text('Next'),
                         ),
                       ),
@@ -364,7 +362,8 @@ class _QuizPageState extends State<QuizPage> {
             child: Text('No'),
           ),
           TextButton(
-              onPressed: () => Navigator.pushReplacementNamed(context, '/subjects'),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/subjects'),
               child: Text('Yes'))
         ],
       ),

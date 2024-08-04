@@ -1,24 +1,7 @@
-import 'dart:convert';
+import 'package:VetScholar/service/subject_service.dart';
 import 'package:flutter/material.dart';
 import '../../models/subjects.dart';
 import '../quiz_page.dart';
-import 'package:http/http.dart' as http;
-
-// Function to fetch subjects from the server
-Future<List<Subject>> fetchSubjects() async {
-  final response = await http.get(Uri.parse('http://localhost/api/subjects'),
-      headers: {
-        'X-User-ID': 'sbj'
-      });
-
-  if (response.statusCode == 200) {
-    final parsed = json.decode(response.body);
-    final subjectsJson = parsed['_embedded']['subjects'] as List;
-    return subjectsJson.map((json) => Subject.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load subjects');
-  }
-}
 
 // HomeView StatefulWidget
 class HomeView extends StatefulWidget {
@@ -28,16 +11,18 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   late Future<List<Subject>> subjects;
+  SubjectService _subjectService = SubjectService();
 
   @override
   void initState() {
     super.initState();
-    subjects = fetchSubjects();
+    subjects = _subjectService.fetchSubjects();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Ensure AutomaticKeepAliveClientMixin works correctly
+    super
+        .build(context); // Ensure AutomaticKeepAliveClientMixin works correctly
     return Scaffold(
       appBar: AppBar(
         title: Text('Subjects'),
