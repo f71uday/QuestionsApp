@@ -18,6 +18,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int currentQuestionIndex = 0;
   int score = 0;
   int? selectedOptionIndex;
@@ -26,6 +27,7 @@ class _QuizPageState extends State<QuizPage> {
   late Future<List<Question>> questions;
   bool isActive = true; // flag to check if the page is active
   bool? isPassed;
+  final List<String> tags = ["hello", "hi"];
   @override
   void initState() {
     super.initState();
@@ -229,23 +231,41 @@ class _QuizPageState extends State<QuizPage> {
           Question currentQuestion = questions[currentQuestionIndex];
 
           return Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
+
               title: Text(
                 _formattedTime(_remainingTime),
                 style: TextStyle(fontSize: 24.0, color: _getTimerTextColor()),
               ),
               elevation: 5.0,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                      onPressed: _confirmEnd,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red, // Background color
-                      ),
-                      child: Text('End', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
-                )
-              ],
+            actions: [
+              IconButton(
+                icon: Icon(Icons.info),
+                onPressed: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+              ),
+            ],
+            ),
+            endDrawer: Drawer(
+              child: Column(
+                children: [
+                  const Spacer(),
+                  Text('tags', style: TextStyle(fontSize: 20),),
+                  const Divider(),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: tags.map((tag) => Chip(
+                      label: Text(tag),
+                      backgroundColor: const Color.fromARGB(100, 213, 212, 212),
+                      labelStyle: TextStyle(color: Colors.black, ),
+                    )).toList(),
+                  ),
+                  const Padding(padding: EdgeInsets.all(20))
+                ],
+              ),
             ),
             drawer: Drawer(
               child: Column(
@@ -291,6 +311,19 @@ class _QuizPageState extends State<QuizPage> {
                       },
                     ),
                   ),
+                  Divider(),
+                  //Padding(padding: EdgeInsets.all(8)),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(onPressed:_confirmEnd,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red, // Background color
+                          ),
+                          child: Text('End', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white ),)),
+                    ),
+                  )
                 ],
               ),
             ),
