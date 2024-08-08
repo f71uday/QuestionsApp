@@ -28,7 +28,7 @@ class _QuizPageState extends State<QuizPage> {
   late Future<List<Question>> questions;
   bool isActive = true; // flag to check if the page is active
   bool? isPassed;
-  final List<String> tags = ["hello", "hi"];
+  final List<String> tags = ["no tags"];
 
   final QuestionService _questionService = QuestionService();
 
@@ -247,9 +247,9 @@ class _QuizPageState extends State<QuizPage> {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: tags
+                    children: currentQuestion.topics
                         .map((tag) => Chip(
-                              label: Text(tag),
+                              label: Text(tag.name),
                               backgroundColor:
                                   const Color.fromARGB(100, 213, 212, 212),
                               labelStyle: TextStyle(
