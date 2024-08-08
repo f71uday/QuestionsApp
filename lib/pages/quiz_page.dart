@@ -124,9 +124,13 @@ class _QuizPageState extends State<QuizPage> {
                     .options[selectedOptionIndex!]
                     .text) {
           score++;
-        response.add(QuestionResponse(questionId: questionList[currentQuestionIndex].id, answer: questionList[currentQuestionIndex]
-            .options[selectedOptionIndex!]
-            .text));
+
+          insertOrReplace(response,currentQuestionIndex,QuestionResponse(
+              questionId: questionList[currentQuestionIndex].id,
+              answer: questionList[currentQuestionIndex]
+                  .options[selectedOptionIndex!]
+                  .text));
+
         }
         currentQuestionIndex++;
         selectedOptionIndex = null;
@@ -140,7 +144,13 @@ class _QuizPageState extends State<QuizPage> {
       selectedOptionIndex = null;
     });
   }
-
+  void insertOrReplace(List<QuestionResponse> list, int index, QuestionResponse value) {
+    if (index < list.length) {
+      list[index] = value; // Replace
+    } else {
+      list.add(value); // Insert at the end
+    }
+  }
   bool isPageDisposed() {
     return !mounted;
   }
@@ -175,7 +185,9 @@ class _QuizPageState extends State<QuizPage> {
             return ColorAnimationPage(
               isRed: !_isPassed,
               percentage: _percentage,
-              responses: response,
+              response: response,
+              link: _questionService.fetchResponseLink(),
+
             );
           }
 

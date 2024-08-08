@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../../Questions/QuestionResponse.dart';
+import '../../service/authorized_client.dart'; // Import your HttpService
 
 class ColorAnimationPage extends StatefulWidget {
   final bool isRed; // Determines whether the color is red or green
   final double percentage;
-  final List<QuestionResponse> responses;
+  final List<QuestionResponse> response;
+  final String link;
 
   ColorAnimationPage({
     required this.isRed,
     required this.percentage,
-    required this.responses,
+    required this.response,
+    required this.link,
   });
 
   @override
@@ -21,6 +26,8 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late List<QuestionResponse> _responses;
+  bool _isLoading = true; // To track loading state
 
   @override
   void initState() {
@@ -35,7 +42,34 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
       curve: Curves.easeInOut,
     ));
 
-    _controller.forward();
+    _fetchTestResponse();
+  }
+
+  Future<void> _fetchTestResponse() async {
+    try {
+      final response = await HttpService().authorizedPost(Uri.parse(widget.link),jsonEncode(TestResponse(questionResponses:  widget.response).toJson() ));
+
+      if (response.statusCode == 200) {
+        final parsedJson = json.decode(response.body);
+        setState(() {
+          // _responses = (parsedJson['responses'] as List)
+          //     .map((data) => QuestionResponse.fromJson(data))
+          //     .toList();
+          //
+          _isLoading = false;
+          _controller.forward(); // Start animation after loading
+        });
+      } else {
+      print(jsonEncode(TestResponse(questionResponses:  widget.response).toJson() ));
+        throw Exception('Failed to load responses');
+
+      }
+    } catch (error) {
+      print('Error fetching test response: $error');
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -47,7 +81,9 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBuilder(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
           return Container(
