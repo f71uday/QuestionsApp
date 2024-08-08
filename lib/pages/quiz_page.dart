@@ -4,6 +4,7 @@ import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 
 import '../Questions/Question.dart';
+import '../Questions/QuestionResponse.dart';
 import '../service/question_service.dart';
 
 class QuizPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _QuizPageState extends State<QuizPage> {
   final List<String> tags = ["no tags"];
 
   final QuestionService _questionService = QuestionService();
-
+  List<QuestionResponse> response = [];
   @override
   void initState() {
     super.initState();
@@ -123,6 +124,9 @@ class _QuizPageState extends State<QuizPage> {
                     .options[selectedOptionIndex!]
                     .text) {
           score++;
+        response.add(QuestionResponse(questionId: questionList[currentQuestionIndex].id, answer: questionList[currentQuestionIndex]
+            .options[selectedOptionIndex!]
+            .text));
         }
         currentQuestionIndex++;
         selectedOptionIndex = null;
@@ -171,6 +175,7 @@ class _QuizPageState extends State<QuizPage> {
             return ColorAnimationPage(
               isRed: !_isPassed,
               percentage: _percentage,
+              responses: response,
             );
           }
 

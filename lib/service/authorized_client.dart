@@ -12,4 +12,19 @@ class HttpService {
       },
     );
   }
+  Future<Response> authorizedPost(Uri url, String body) async {
+    String sessionToken = await AuthService.getAccessToken();
+
+    // Combine the provided headers with the Authorization header
+    final Map<String, String> combinedHeaders = {
+      'Authorization': 'Bearer $sessionToken',
+
+    };
+
+    return await post(
+      url,
+      headers: combinedHeaders,
+      body: body,
+    );
+  }
 }

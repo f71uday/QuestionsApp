@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../Questions/QuestionResponse.dart';
+
 class ColorAnimationPage extends StatefulWidget {
   final bool isRed; // Determines whether the color is red or green
   final double percentage;
+  final List<QuestionResponse> responses;
 
   ColorAnimationPage({
     required this.isRed,
     required this.percentage,
+    required this.responses,
   });
 
   @override
@@ -26,7 +30,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
       duration: Duration(seconds: 2),
     );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0.0, end: 2.0).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
