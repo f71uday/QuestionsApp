@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 
 import '../Questions/Question.dart';
@@ -164,55 +165,12 @@ class _QuizPageState extends State<QuizPage> {
           List<Question> questions = snapshot.data!;
           if (currentQuestionIndex >= questions.length) {
             double _percentage = (score / questions.length) * 100;
-            bool _ispassed = false;
-            if (_percentage > 60) _ispassed = true;
-            return Scaffold(
-              backgroundColor: _ispassed ? Colors.green : Colors.red,
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _ispassed ? Icons.thumb_up : Icons.thumb_down,
-                      size: 100,
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      _ispassed
-                          ? 'Congratulations! You passed!'
-                          : 'Better luck next time!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      //'Your score: $score / $totalQuestions\n(${percentage.toStringAsFixed(2)}%)',
-                      'Your score ${_percentage.toStringAsFixed(2)}%',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(
-                            context); // Go back to the previous screen
-                      },
-                      child: Text('Back to Home'),
-                      // style: ElevatedButton.styleFrom(
-                      //   primary: Colors.white, // Background color
-                      //   onPrimary: isPassed ? Colors.green : Colors.red, // Text color
-                      // ),
-                    ),
-                  ],
-                ),
-              ),
+            bool _isPassed = _percentage > 60;
+
+            // Navigate to the ColorAnimationPage when the quiz ends
+            return ColorAnimationPage(
+              isRed: !_isPassed,
+              percentage: _percentage,
             );
           }
 

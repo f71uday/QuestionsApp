@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 class ColorAnimationPage extends StatefulWidget {
   final bool isRed; // Determines whether the color is red or green
   final double percentage;
+
   ColorAnimationPage({
     required this.isRed,
-    required this.percentage
-
+    required this.percentage,
   });
 
   @override
   _ColorAnimationPageState createState() => _ColorAnimationPageState();
 }
 
-class _ColorAnimationPageState extends State<ColorAnimationPage> with SingleTickerProviderStateMixin {
+class _ColorAnimationPageState extends State<ColorAnimationPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
 
   @override
   void initState() {
@@ -43,65 +43,62 @@ class _ColorAnimationPageState extends State<ColorAnimationPage> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Container(
-              child:  Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    widget.isRed ? Icons.thumb_up : Icons.thumb_down,
-                    size: 100,
+      body: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.center,
+                radius: 2.0 * _animation.value, // Animate the radius to fill the screen
+                colors: [
+                  widget.isRed ? Colors.red : Colors.green,
+                  Colors.transparent,
+                ],
+                stops: [_animation.value, _animation.value + 0.1],
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  widget.isRed ? Icons.thumb_down : Icons.thumb_up,
+                  size: 100,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  widget.isRed
+                      ? 'Better luck next time!'
+                      : 'Congratulations! You passed!',
+                  style: TextStyle(
+                    fontSize: 24,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    widget.isRed
-                        ? 'Congratulations! You passed!'
-                        : 'Better luck next time!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    //'Your score: $score / $totalQuestions\n(${percentage.toStringAsFixed(2)}%)',
-                    'Your score ${widget.percentage.toStringAsFixed(2)}%',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(
-                          context); // Go back to the previous screen
-                    },
-                    child: Text('Back to Home'),
-                    // style: ElevatedButton.styleFrom(
-                    //   primary: Colors.white, // Background color
-                    //   onPrimary: isPassed ? Colors.green : Colors.red, // Text color
-                    // ),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [Colors.red, Colors.red.withOpacity(0.0)],
-                  stops: [_animation.value, _animation.value],
-                  radius: 1.0,
-
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            );
-          },
-        ),
+                SizedBox(height: 20),
+                Text(
+                  'Your score: ${widget.percentage.toStringAsFixed(2)}%',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Go back to the previous screen
+                  },
+                  child: Text('Back to Home'),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
