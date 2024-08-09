@@ -184,8 +184,6 @@ class _QuizPageState extends State<QuizPage> {
 
             // Navigate to the ColorAnimationPage when the quiz ends
             return ColorAnimationPage(
-              isRed: !_isPassed,
-              percentage: _percentage,
               response: response,
               link: _questionService.fetchResponseLink(),
 

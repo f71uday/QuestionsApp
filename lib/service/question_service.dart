@@ -22,7 +22,6 @@ class QuestionService {
   String fetchResponseLink() {
 
     final parsed = json.decode(http_response.body);
-    print(parsed['_links']['response']['href'] as String);
     return parsed['_links']['response']['href'] as String;
   }
 }

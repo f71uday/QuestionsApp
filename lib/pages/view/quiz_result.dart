@@ -3,17 +3,17 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../Questions/QuestionResponse.dart';
+import '../../Questions/TestResult.dart';
 import '../../service/authorized_client.dart'; // Import your HttpService
 
 class ColorAnimationPage extends StatefulWidget {
-  final bool isRed; // Determines whether the color is red or green
-  final double percentage;
+ // Determines whether the color is red or green
+
   final List<QuestionResponse> response;
   final String link;
 
   ColorAnimationPage({
-    required this.isRed,
-    required this.percentage,
+
     required this.response,
     required this.link,
   });
@@ -28,7 +28,9 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
   late Animation<double> _animation;
   late List<QuestionResponse> _responses;
   bool _isLoading = true; // To track loading state
-
+  late TestResult testResult;
+  late double _percentage;
+  late bool _isPass;
   @override
   void initState() {
     super.initState();
@@ -41,26 +43,28 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
       parent: _controller,
       curve: Curves.easeInOut,
     ));
-
+    
+    _percentage = 0;
+    _isPass = false;
     _fetchTestResponse();
+    
   }
 
   Future<void> _fetchTestResponse() async {
     try {
-      final response = await HttpService().authorizedPost(Uri.parse(widget.link),jsonEncode(TestResponse(questionResponses:  widget.response).toJson() ));
+      final response = await HttpService().authorizedPost(Uri.parse(widget.link),jsonEncode(QuestionSubResponse(questionResponses:  widget.response).toJson() ));
 
       if (response.statusCode == 200) {
-        final parsedJson = json.decode(response.body);
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+         testResult = TestResult.fromJson(jsonData);
         setState(() {
-          // _responses = (parsedJson['responses'] as List)
-          //     .map((data) => QuestionResponse.fromJson(data))
-          //     .toList();
-          //
           _isLoading = false;
+          _percentage = testResult.percentage;
+          _isPass= (testResult.shortRemark == 'PASS') ? true : false;
           _controller.forward(); // Start animation after loading
         });
       } else {
-      print(jsonEncode(TestResponse(questionResponses:  widget.response).toJson() ));
+      print(jsonEncode(QuestionSubResponse(questionResponses:  widget.response).toJson() ));
       print(response.statusCode);
         throw Exception('Failed to load responses');
 
@@ -95,7 +99,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                 center: Alignment.center,
                 radius: 2.0 * _animation.value, // Animate the radius to fill the screen
                 colors: [
-                  widget.isRed ? Colors.red : Colors.green,
+                  !_isPass ? Colors.red : Colors.green,
                   Colors.transparent,
                 ],
                 stops: [_animation.value, _animation.value + 0.1],
@@ -105,13 +109,13 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  widget.isRed ? Icons.thumb_down : Icons.thumb_up,
+                  !_isPass ? Icons.thumb_down : Icons.thumb_up,
                   size: 100,
                   color: Colors.white,
                 ),
                 SizedBox(height: 20),
                 Text(
-                  widget.isRed
+                  !_isPass
                       ? 'Better luck next time!'
                       : 'Congratulations! You passed!',
                   style: TextStyle(
@@ -122,7 +126,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Your score: ${widget.percentage.toStringAsFixed(2)}%',
+                  'Your score: ${_percentage.toStringAsFixed(2)}%',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,

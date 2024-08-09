@@ -10,10 +10,10 @@ class QuestionResponse {
   };
 }
 
-class TestResponse {
+class QuestionSubResponse {
   final List<QuestionResponse> questionResponses;
 
-  TestResponse({required this.questionResponses});
+  QuestionSubResponse({required this.questionResponses});
 
   Map<String, dynamic> toJson() => {
     'questionResponses': questionResponses.map((qr) => qr.toJson()).toList(),
