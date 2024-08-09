@@ -125,13 +125,14 @@ class _QuizPageState extends State<QuizPage> {
                     .text) {
           score++;
 
-          insertOrReplace(response,currentQuestionIndex,QuestionResponse(
-              questionId: questionList[currentQuestionIndex].id,
-              answer: questionList[currentQuestionIndex]
-                  .options[selectedOptionIndex!]
-                  .text));
+
 
         }
+        insertOrReplace(response,currentQuestionIndex,QuestionResponse(
+            questionId: questionList[currentQuestionIndex].id,
+            answer: questionList[currentQuestionIndex]
+                .options[selectedOptionIndex!]
+                .text));
         currentQuestionIndex++;
         selectedOptionIndex = null;
       });

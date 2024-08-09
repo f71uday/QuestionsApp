@@ -61,6 +61,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
         });
       } else {
       print(jsonEncode(TestResponse(questionResponses:  widget.response).toJson() ));
+      print(response.statusCode);
         throw Exception('Failed to load responses');
 
       }

@@ -18,7 +18,7 @@ class HttpService {
     // Combine the provided headers with the Authorization header
     final Map<String, String> combinedHeaders = {
       'Authorization': 'Bearer $sessionToken',
-
+      'Content-Type': 'application/json'
     };
 
     return await post(
