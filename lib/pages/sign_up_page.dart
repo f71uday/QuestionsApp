@@ -1,7 +1,9 @@
 // signup_page.dart
 import 'dart:convert';
+import 'dart:developer';
 import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
@@ -20,7 +22,9 @@ class _SignupPageState extends State<SignupPage> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  String baseURL = '127.0.0.1';
+  String? baseURL = dotenv.env['BASE_URL_IP'];
+  String? signUpPath = dotenv.env['REGISTRATION_INITIALIZATION_PATH'];
+  String? signUp = dotenv.env['REGISTRATION_PATH'];
   bool _acceptTerms = false;
 
   Future<void> _signup() async {
@@ -31,8 +35,11 @@ class _SignupPageState extends State<SignupPage> {
       try {
         // Start the registration flow to get the CSRF token and flow ID
         final initResponse = await http.get(
-          Uri.http(baseURL, '/idp/self-service/registration/api'),
+          Uri.http(baseURL!, signUpPath!),
         );
+
+        log(initResponse.toString());
+
         if (initResponse.statusCode != 200) {
           _showSnackBar('Failed to initialize registration. Please try again.', false);
           return;
@@ -43,22 +50,21 @@ class _SignupPageState extends State<SignupPage> {
         //final csrfToken = initJson['csrf_token'];
 
         final response = await http.post(
-          Uri.http(baseURL, '/idp/self-service/registration', {'flow': flowId}),
+          Uri.http(baseURL!, signUp!, {'flow': flowId}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           body: {
             'traits.email': _emailController.text,
             'traits.name.first': _firstNameController.text,
             'traits.name.last': _lastNameController.text,
-            //'csrf_token': csrfToken,
             'method': 'password',
             'password': _passwordController.text,
           },
         );
-
+          log('signup response body: $response.toString()');
         if (response.statusCode == 200 || response.statusCode == 201) {
           _showSnackBar('Signup successful!', true);
-          Future.delayed(Duration(seconds: 2), () {
-            Navigator.pushReplacementNamed(context, '/signin');
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGN_IN']!);
           });
         } else {
           final errorResponse = json.decode(response.body);
@@ -83,10 +89,10 @@ class _SignupPageState extends State<SignupPage> {
               isSuccess ? Icons.check : Icons.error,
               color: Colors.white,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(child: Text(message)),
             IconButton(
-              icon: Icon(Icons.close, color: Colors.white),
+              icon: const Icon(Icons.close, color: Colors.white),
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
@@ -94,7 +100,7 @@ class _SignupPageState extends State<SignupPage> {
           ],
         ),
         backgroundColor: isSuccess ? Colors.green : Colors.red,
-        duration: Duration(seconds: 4),
+        duration: const Duration(seconds: 4),
       ),
     );
   }
@@ -156,7 +162,7 @@ class _SignupPageState extends State<SignupPage> {
                             controller: _passwordController,
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -176,10 +182,10 @@ class _SignupPageState extends State<SignupPage> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: _confirmPasswordController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Confirm Password',
                               border: OutlineInputBorder(),
 
@@ -198,7 +204,7 @@ class _SignupPageState extends State<SignupPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -208,14 +214,14 @@ class _SignupPageState extends State<SignupPage> {
 
             alignment: Alignment.bottomCenter,
             child: Container(
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.white),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     CheckboxListTile(
-                      title: Text("I accept the terms and conditions", style: TextStyle(fontSize: 14),),
+                      title: const Text("I accept the terms and conditions", style: TextStyle(fontSize: 14),),
                       value: _acceptTerms,
                       onChanged: (newValue) {
                         setState(() {
@@ -229,16 +235,16 @@ class _SignupPageState extends State<SignupPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _signup,
-                          child: Text('Signup'),
+                          child: const Text('Signup'),
                         ),
                       ),
-                    if (_isLoading) LinearProgressIndicator(),
-                    SizedBox(height: 10),
+                    if (_isLoading) const LinearProgressIndicator(),
+                    const SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/signin');
+                        Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGN_IN']!);
                       },
-                      child: Text('Already have an account? Login'),
+                      child: const Text('Already have an account? Login'),
                     ),
                   ],
                 ),

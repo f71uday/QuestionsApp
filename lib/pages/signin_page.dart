@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _isLoginSuccessful = true;
               _showCustomToast();
-              Navigator.pushReplacementNamed(context, '/subjects');
+              Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SUBJECTS']! );
             });
           } else {
             setState(() {
@@ -222,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text("Don't have an Account?"),
                     TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(context, '/singup'),
+                      onPressed: () => Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGNUP']!),
                       child: Text('SignUp'),
                     ),
                   ],
