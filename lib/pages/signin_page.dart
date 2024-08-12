@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,8 +20,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
-  String baseURL = '127.0.0.1';
+  String? baseURL = (dotenv.env['BASE_URL_IP'] )?.trim();
   String? initializeSignIn = dotenv.env['INITIALIZE_LOGIN'];
+  String? sessionTokenKey = dotenv.env['SESSION_TOKEN_KEY'];
   bool _isLoginSuccessful = false;
   bool _obscureText = true;
 
@@ -31,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage = '';
       });
       try {
-        final url = Uri.http(baseURL, initializeSignIn!, {'refresh': 'false'});
+        final url = Uri.http(baseURL!, initializeSignIn!, {'refresh': 'false'});
         final response = await http.get(url);
         if (response.statusCode == 200) {
           final httpResponse = json.decode(response.body);
@@ -47,11 +49,14 @@ class _LoginPageState extends State<LoginPage> {
               'method': 'password',
             },
           );
+
+          log(loginResponse.toString());
+
           if (loginResponse.statusCode == 200) {
             final loginData = jsonDecode(loginResponse.body);
 
-            // Save session token in secure storage
-            await secureStorage.write(key: 'session_token', value: loginData['session_token']);
+            // Save session token in secure storage SESSION_TOKEN_KEY
+            await secureStorage.write(key: sessionTokenKey!, value: loginData[sessionTokenKey!]);
 
             setState(() {
               _isLoginSuccessful = true;
@@ -77,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
           _errorMessage = 'Network error. Please check your connection.';
           _isLoginSuccessful = false;
+
           _showErrorMessage(_errorMessage);
         });
       } finally {
