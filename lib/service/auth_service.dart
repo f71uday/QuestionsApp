@@ -7,8 +7,8 @@ class AuthService {
 
   static Future<String> getAccessToken() async {
     log('get access token called.');
-
-    final token = await _storage.read(key: 'session_token');
+    String sessionTokenString = dotenv.env['SESSION_TOKEN_KEY'] ?? '';
+    final token = await _storage.read(key: sessionTokenString);
     if (token == null) {
       // TODO: redirect to login screen if no token found or is expired.
       throw Exception('No access token found');

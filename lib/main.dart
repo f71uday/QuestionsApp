@@ -9,8 +9,9 @@ import 'service/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final accesstoken = await AuthService.getAccessToken();
   await loadEnvFilesWithConflictHandling();
+  final accesstoken = await AuthService.getAccessToken();
+
   runApp(QuizApp(isLoggedIn: accesstoken != null));
   //runApp(QuizApp());
 }
