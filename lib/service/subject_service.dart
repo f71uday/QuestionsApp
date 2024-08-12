@@ -3,14 +3,16 @@ import 'dart:developer';
 
 import 'package:VetScholar/models/subjects.dart';
 import 'package:VetScholar/service/authorized_client.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SubjectService {
   final HttpService _httpService = HttpService();
+  final String? baseUrl = dotenv.env['baseUrl'];
   final Uri resourceBasePath = Uri.parse('http://127.0.0.1/api/subjects');
 
   Future<List<Subject>> fetchSubjects() async {
     log('Request to fetch subject initialized.');
-    final response = await _httpService.authorizedGet(resourceBasePath);
+    final response = await _httpService.authorizedGet(Uri.parse('$baseUrl/api/subjects'));
 
     log('fetch subject response : $response');
 
