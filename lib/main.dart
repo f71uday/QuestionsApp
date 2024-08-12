@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final accesstoken = await AuthService.getAccessToken();
   await dotenv.load(fileName: const String.fromEnvironment("environmentVars"));
+  await dotenv.load(fileName: const String.fromEnvironment("commonVars"));
   runApp(QuizApp(isLoggedIn: accesstoken != null));
   //runApp(QuizApp());
 }

@@ -1,3 +1,4 @@
 {
-  "environmentVars": "env/.qa.env"
+  "environmentVars": "env/.qa.env",
+  "commonVars": "env/.common.env"
 }
