@@ -10,11 +10,26 @@ import 'service/auth_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final accesstoken = await AuthService.getAccessToken();
-  await dotenv.load(fileName: const String.fromEnvironment("environmentVars"));
-  await dotenv.load(fileName: const String.fromEnvironment("commonVars"));
+  await loadEnvFilesWithConflictHandling();
   runApp(QuizApp(isLoggedIn: accesstoken != null));
   //runApp(QuizApp());
 }
+
+Future<void> loadEnvFilesWithConflictHandling() async {
+  await dotenv.load(fileName: const String.fromEnvironment("environmentVars"));
+  final  envSpecific = Map<String, String>.from(dotenv.env);
+  await dotenv.load(fileName: const String.fromEnvironment("commonVars"));
+  final commonEnv = Map<String, String>.from(dotenv.env);
+
+  dotenv.env
+    ..clear()
+    ..addAll(commonEnv)
+    ..addAll(envSpecific);
+
+
+}
+
+
 
 class QuizApp extends StatelessWidget {
   final bool isLoggedIn;

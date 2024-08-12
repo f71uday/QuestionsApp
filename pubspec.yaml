@@ -73,4 +73,4 @@ flutter:
     - env/.qa.env
     - env/.local.env
     - env/.prod.env
-    - env.common.env
+    - env/.common.env
