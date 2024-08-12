@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 
-import '../Questions/Question.dart';
-import '../Questions/QuestionResponse.dart';
+import '../models/Questions/Question.dart';
+import '../models/Questions/QuestionResponse.dart';
 import '../service/question_service.dart';
 
 class QuizPage extends StatefulWidget {

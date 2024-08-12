@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../Questions/Question.dart';
+import '../models/Questions/Question.dart';
 import 'authorized_client.dart';
 
 class QuestionService {

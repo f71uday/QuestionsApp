@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../../Questions/QuestionResponse.dart';
-import '../../Questions/TestResult.dart';
+import '../../models/Questions/QuestionResponse.dart';
+import '../../models/Questions/TestResult.dart';
 import '../../service/authorized_client.dart'; // Import your HttpService
 
 class ColorAnimationPage extends StatefulWidget {
