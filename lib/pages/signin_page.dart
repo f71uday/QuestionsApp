@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   String _errorMessage = '';
   String baseURL = '127.0.0.1';
+  String? initializeSignIn = dotenv.env['INITIALIZE_LOGIN'];
   bool _isLoginSuccessful = false;
   bool _obscureText = true;
 
@@ -29,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage = '';
       });
       try {
-        final url = Uri.http(baseURL, '/idp/self-service/login/api', {'refresh': 'false'});
+        final url = Uri.http(baseURL, initializeSignIn!, {'refresh': 'false'});
         final response = await http.get(url);
         if (response.statusCode == 200) {
           final httpResponse = json.decode(response.body);
