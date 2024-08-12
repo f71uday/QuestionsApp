@@ -41,7 +41,7 @@ class QuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       //initialRoute: isLoggedIn? '/subjects':'/auth',
-      initialRoute: '/signin',
+      initialRoute: dotenv.env['ROUTE_SIGN_IN'],
       routes: {
         '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),
