@@ -67,7 +67,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - properties/config_local.json
     - assets/no-connection.png
     #Env File assest
     - env/.dev.env
+    - env/.qa.env
+    - env/.local.env
+    - env/.prod.env
+    - env.common.env
