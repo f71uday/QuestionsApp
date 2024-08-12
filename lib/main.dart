@@ -15,6 +15,7 @@ void main() async {
   //runApp(QuizApp());
 }
 
+// This Function will overwrite the keys in environmentVars with keys in commonVars, if keys are same
 Future<void> loadEnvFilesWithConflictHandling() async {
   await dotenv.load(fileName: const String.fromEnvironment("environmentVars"));
   final  envSpecific = Map<String, String>.from(dotenv.env);
