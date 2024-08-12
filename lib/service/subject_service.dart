@@ -7,9 +7,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SubjectService {
   final HttpService _httpService = HttpService();
-  final String? baseUrl = dotenv.env['baseUrl'];
-  final String? subjects = dotenv.env['subjects'];
-  final Uri resourceBasePath = Uri.parse('http://127.0.0.1/api/subjects');
+  final String? baseUrl = dotenv.env['BASE_URL'];
+  final String? subjects = dotenv.env['SUBJECTS'];
 
   Future<List<Subject>> fetchSubjects() async {
     log('Request to fetch subject initialized.');

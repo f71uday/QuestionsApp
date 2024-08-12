@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:VetScholar/pages/view/home_view.dart';
 import 'package:VetScholar/pages/view/profile_view.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../models/subjects.dart';
 
@@ -18,8 +16,8 @@ class SubjectListPage extends StatefulWidget  {
 class _SubjectListPageState extends State<SubjectListPage> {
   late Future<List<Subject>> subjects;
   int _selectedIndex = 0;
-  PageController _pageController = PageController();
-  static  List<Widget> _pages = <Widget>[
+  final PageController _pageController = PageController();
+  static  final List<Widget> _pages = <Widget>[
     HomeView(),
     //SearchView(),
     ProfileView(),
@@ -48,7 +46,7 @@ class _SubjectListPageState extends State<SubjectListPage> {
     return Scaffold(
       // appBar: AppBar(title: Text('Home')),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home'),
