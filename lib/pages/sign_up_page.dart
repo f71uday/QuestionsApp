@@ -20,7 +20,7 @@ class _SignupPageState extends State<SignupPage> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  String baseURL = '127.0.0.1:4433';
+  String baseURL = '127.0.0.1';
   bool _acceptTerms = false;
 
   Future<void> _signup() async {
@@ -31,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
       try {
         // Start the registration flow to get the CSRF token and flow ID
         final initResponse = await http.get(
-          Uri.http(baseURL, '/self-service/registration/api'),
+          Uri.http(baseURL, '/idp/self-service/registration/api'),
         );
         if (initResponse.statusCode != 200) {
           _showSnackBar('Failed to initialize registration. Please try again.', false);
@@ -43,7 +43,7 @@ class _SignupPageState extends State<SignupPage> {
         //final csrfToken = initJson['csrf_token'];
 
         final response = await http.post(
-          Uri.http(baseURL, '/self-service/registration', {'flow': flowId}),
+          Uri.http(baseURL, '/idp/self-service/registration', {'flow': flowId}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           body: {
             'traits.email': _emailController.text,

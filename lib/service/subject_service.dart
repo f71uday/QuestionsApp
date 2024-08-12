@@ -6,7 +6,7 @@ import 'package:VetScholar/service/authorized_client.dart';
 
 class SubjectService {
   final HttpService _httpService = HttpService();
-  final Uri resourceBasePath = Uri.parse('http://localhost/api/subjects');
+  final Uri resourceBasePath = Uri.parse('http://127.0.0.1/api/subjects');
 
   Future<List<Subject>> fetchSubjects() async {
     log('Request to fetch subject initialized.');

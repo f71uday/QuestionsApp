@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
-  String baseURL = '127.0.0.1:4433';
+  String baseURL = '127.0.0.1';
   bool _isLoginSuccessful = false;
   bool _obscureText = true;
 
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage = '';
       });
       try {
-        final url = Uri.http(baseURL, '/self-service/login/api', {'refresh': 'false'});
+        final url = Uri.http(baseURL, '/idp/self-service/login/api', {'refresh': 'false'});
         final response = await http.get(url);
         if (response.statusCode == 200) {
           final httpResponse = json.decode(response.body);
