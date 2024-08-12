@@ -1,5 +1,5 @@
 
-## Run application 
+## Running application 
 ```
 --dart-define-from-file=properties/config_dev.json
 ```
