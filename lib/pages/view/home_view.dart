@@ -11,11 +11,12 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   late Future<List<Subject>> subjects;
-  SubjectService _subjectService = SubjectService();
+  late SubjectService _subjectService ;
 
   @override
   void initState() {
     super.initState();
+    _subjectService = SubjectService(context);
     subjects = _subjectService.fetchSubjects();
   }
 

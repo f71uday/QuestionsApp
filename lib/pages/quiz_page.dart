@@ -32,11 +32,12 @@ class _QuizPageState extends State<QuizPage> {
   bool? isPassed;
   final List<String> tags = ["no tags"];
 
-  final QuestionService _questionService = QuestionService();
+  late final QuestionService _questionService;
   List<QuestionResponse> response = [];
   @override
   void initState() {
     super.initState();
+    _questionService = QuestionService(context);
     questions = _questionService.fetchQuestions(widget.questionLink);
     _startTimer();
   }
