@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../auth/auth_service.dart';
-import '../auth_page.dart';
 
 
 class NoInternetPage extends StatefulWidget {

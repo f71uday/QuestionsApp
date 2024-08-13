@@ -1,4 +1,3 @@
-import 'package:VetScholar/pages/auth_page.dart';
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
@@ -46,7 +45,6 @@ class QuizApp extends StatelessWidget {
       routes: {
         '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),
-        '/auth': (context) => AuthPage(),
         '/singup': (context) => SignupPage()
       },
     );
