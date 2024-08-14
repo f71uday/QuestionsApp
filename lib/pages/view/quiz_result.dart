@@ -1,3 +1,5 @@
+import 'package:VetScholar/service/profile_service.dart';
+import 'package:VetScholar/service/question_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -51,11 +53,10 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
 
   Future<void> _fetchTestResponse() async {
     try {
-      final response = await HttpService().authorizedPost(Uri.parse(widget.link),jsonEncode(QuestionSubResponse(questionResponses:  widget.response).toJson() ));
+      QuestionService questionService = QuestionService(context);
+      TestResult? testResult = await questionService.fetchTestResponse(widget.link,jsonEncode(QuestionSubResponse(questionResponses:  widget.response).toJson()));
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData = jsonDecode(response.body);
-         testResult = TestResult.fromJson(jsonData);
+      if (testResult != null ) {
         setState(() {
           _isLoading = false;
           _percentage = testResult.percentage;
@@ -63,9 +64,8 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
           _controller.forward(); // Start animation after loading
         });
       } else {
-      print(jsonEncode(QuestionSubResponse(questionResponses:  widget.response).toJson() ));
-      print(response.statusCode);
-        throw Exception('Failed to load responses');
+
+        throw Exception('null responses');
 
       }
     } catch (error) {
