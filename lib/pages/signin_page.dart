@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
+import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -116,19 +117,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showCustomToast() {
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          Icon(Icons.check, color: Colors.white),
-          SizedBox(width: 10),
-          Text("Logged in Successfully"),
-        ],
-      ),
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 2),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    CustomSnackBar().showCustomToast(context,Colors.green,Icons.check,"LoggedIn Successfully");
   }
 
   @override
