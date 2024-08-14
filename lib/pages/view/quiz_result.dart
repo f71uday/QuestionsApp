@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import '../../models/Questions/QuestionResponse.dart';
 import '../../models/Questions/TestResult.dart';
-import '../../service/authorized_client.dart'; // Import your HttpService
 
 class ColorAnimationPage extends StatefulWidget {
  // Determines whether the color is red or green
