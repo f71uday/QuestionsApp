@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/login_response.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -95,25 +94,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          Icon(Icons.error, color: Colors.white),
-          SizedBox(width: 10),
-          Expanded(child: Text(message)),
-          IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ],
-      ),
-      backgroundColor: Colors.red,
-      duration: Duration(seconds: 4),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    CustomSnackBar().showCustomToastWithCloseButton(context,Colors.red,Icons.close,message);
   }
 
   void _showCustomToast() {
