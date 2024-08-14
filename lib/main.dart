@@ -1,6 +1,7 @@
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
+import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -9,9 +10,9 @@ import 'service/auth_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadEnvFilesWithConflictHandling();
-  final accesstoken = await AuthService.getAccessToken();
+  final isValid = await ProfileService().whoami();
 
-  runApp(QuizApp(isLoggedIn: accesstoken != null));
+  runApp(QuizApp(isLoggedIn: isValid));
   //runApp(QuizApp());
 }
 
@@ -40,8 +41,7 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //initialRoute: isLoggedIn? '/subjects':'/auth',
-      initialRoute: dotenv.env['ROUTE_SIGN_IN'],
+      initialRoute: isLoggedIn? dotenv.env['ROUTE_SUBJECTS'] : dotenv.env['ROUTE_SIGN_IN'],
       routes: {
         '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),

@@ -1,6 +1,7 @@
 // signup_page.dart
 import 'dart:convert';
 import 'dart:developer';
+import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -81,28 +82,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _showSnackBar(String message, bool isSuccess) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isSuccess ? Icons.check : Icons.error,
-              color: Colors.white,
-            ),
-            const SizedBox(width: 10),
-            Expanded(child: Text(message)),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ],
-        ),
-        backgroundColor: isSuccess ? Colors.green : Colors.red,
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    CustomSnackBar().showCustomToastWithCloseButton(context, isSuccess ? Colors.green : Colors.red, isSuccess ? Icons.check : Icons.error, message);
   }
 
   @override

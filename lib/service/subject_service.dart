@@ -3,12 +3,15 @@ import 'dart:developer';
 
 import 'package:VetScholar/models/subjects.dart';
 import 'package:VetScholar/service/authorized_client.dart';
+import 'package:VetScholar/service/fault_navigator.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class SubjectService {
+class SubjectService extends FaultNavigator{
   final HttpService _httpService = HttpService();
   final String? baseUrl = dotenv.env['BASE_URL'];
   final String? subjects = dotenv.env['SUBJECTS'];
+
+  SubjectService(super.context);
 
   Future<List<Subject>> fetchSubjects() async {
     log('Request to fetch subject initialized.');
@@ -22,8 +25,11 @@ class SubjectService {
 
       log('subjects loaded successfully. subjects: $subjectsJson');
       return subjectsJson.map((json) => Subject.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load subjects');
     }
+      int code = response.statusCode;
+      String body = response.body;
+      log("Could not fetch Subject response code : $code and response body: $body");
+      navigateToLoginScreen();
+      return [];
   }
 }
