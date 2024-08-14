@@ -214,7 +214,7 @@ class _QuizPageState extends State<QuizPage> {
               child: Column(
                 children: [
                   const Spacer(),
-                  Text(
+                  const Text(
                     'tags',
                     style: TextStyle(fontSize: 20),
                   ),

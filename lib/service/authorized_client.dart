@@ -4,7 +4,7 @@ import 'auth_service.dart';
 
 class HttpService {
   Future<Response> authorizedGet(Uri url) async {
-    String sessionToken = await AuthService.getAccessToken();
+    String? sessionToken = await AuthService.getAccessToken();
     return await get(
       url,
       headers: {
@@ -13,7 +13,7 @@ class HttpService {
     );
   }
   Future<Response> authorizedPost(Uri url, String body) async {
-    String sessionToken = await AuthService.getAccessToken();
+    String? sessionToken = await AuthService.getAccessToken();
 
     // Combine the provided headers with the Authorization header
     final Map<String, String> combinedHeaders = {
@@ -28,7 +28,7 @@ class HttpService {
     );
   }
   Future<Response> authorizedDelete(Uri url,String body) async {
-    String sessionToken = await AuthService.getAccessToken();
+    String? sessionToken = await AuthService.getAccessToken();
 
     // Combine the provided headers with the Authorization header
     final Map<String, String> combinedHeaders = {
