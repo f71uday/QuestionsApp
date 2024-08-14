@@ -27,4 +27,19 @@ class HttpService {
       body: body,
     );
   }
+  Future<Response> authorizedDelete(Uri url,String body) async {
+    String sessionToken = await AuthService.getAccessToken();
+
+    // Combine the provided headers with the Authorization header
+    final Map<String, String> combinedHeaders = {
+      'Authorization': 'Bearer $sessionToken',
+      'Content-Type': 'application/json'
+    };
+
+    return await delete(
+      url,
+      headers: combinedHeaders,
+      body: body,
+    );
+  }
 }

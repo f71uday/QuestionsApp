@@ -4,10 +4,10 @@ import 'dart:developer';
 
 class AuthService {
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
-
+  static String sessionTokenString = dotenv.env['SESSION_TOKEN_KEY'] ?? '';
   static Future<String> getAccessToken() async {
     log('get access token called.');
-    String sessionTokenString = dotenv.env['SESSION_TOKEN_KEY'] ?? '';
+
     final token = await _storage.read(key: sessionTokenString);
     if (token == null) {
       // TODO: redirect to login screen if no token found or is expired.
@@ -16,5 +16,8 @@ class AuthService {
 
     log('get access token found, value : $token');
     return token;
+  }
+  void deleteAccessToken(){
+    _storage.delete(key: sessionTokenString);
   }
 }

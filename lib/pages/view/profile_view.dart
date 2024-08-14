@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:http/http.dart' as http;
 
 import '../../models/who_am_i.dart';
 
@@ -16,7 +16,6 @@ class _ProfilePageState extends State<ProfileView> {
   String _name = "Loading...";
   String _email = "Loading...";
   bool _isLoading = true;
-  String baseurl = '127.0.0.1:4433';
   String _appVersion = "";
   static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
@@ -35,15 +34,7 @@ class _ProfilePageState extends State<ProfileView> {
   }
 
   Future<void> _fetchProfileData() async {
-    String? sessionToken = await secureStorage.read(key: 'session_token');
-    final url = Uri.http(baseurl, '/sessions/whoami');
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $sessionToken',
-      },
-    );
-
+   final response = await ProfileService().fetchProfileData();
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final userSession = UserSession.fromJson(data);
@@ -63,28 +54,7 @@ class _ProfilePageState extends State<ProfileView> {
   }
 
   Future<void> _logout() async {
-    String? sessionToken = await secureStorage.read(key: 'session_token');
-    final url = Uri.http(baseurl, '/sessions');
-    final response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $sessionToken',
-      },
-      body: json.encode({
-        'session_token': sessionToken,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      await secureStorage.delete(key: 'session_token');
-      Navigator.of(context).pushReplacementNamed('/signin'); // Replace with your login route
-    } else {
-      // Handle errors here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to logout')),
-      );
-    }
+    ProfileService().logout(context);
   }
 
   void _showLogoutDialog() {
@@ -92,21 +62,21 @@ class _ProfilePageState extends State<ProfileView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Logout'),
-          content: Text('Are you sure you want to logout?'),
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _logout();
               },
-              child: Text('Yes'),
+              child: const Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );
@@ -118,10 +88,10 @@ class _ProfilePageState extends State<ProfileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               _showLogoutDialog();
             },
