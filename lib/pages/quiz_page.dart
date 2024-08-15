@@ -110,7 +110,6 @@ class _QuizPageState extends State<QuizPage> {
   void _goToQuestion(int index) {
     setState(() {
       currentQuestionIndex = index;
-      selectedOptionIndex = null;
     });
     Navigator.pop(context); // Close the drawer
   }
