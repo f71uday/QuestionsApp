@@ -10,8 +10,10 @@ import 'service/auth_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadEnvFilesWithConflictHandling();
-  final isValid = await ProfileService().whoami();
-
+  bool isValid = false;
+  if ( await AuthService.getAccessToken()!=null) {
+    isValid = await ProfileService().whoami();
+  }
   runApp(QuizApp(isLoggedIn: isValid));
   //runApp(QuizApp());
 }
