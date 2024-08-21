@@ -23,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  String? baseURL = dotenv.env['BASE_URL_IP'];
+  String? baseURL = dotenv.env['BASE_URL'];
   String? signUpPath = dotenv.env['REGISTRATION_INITIALIZATION_PATH'];
   String? signUp = dotenv.env['REGISTRATION_PATH'];
   bool _acceptTerms = false;

@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
-  String? baseURL = (dotenv.env['BASE_URL_IP'] )?.trim();
+  String? baseURL = (dotenv.env['BASE_URL'] )?.trim();
   String? initializeSignIn = dotenv.env['INITIALIZE_LOGIN'];
   String? sessionTokenKey = dotenv.env['SESSION_TOKEN_KEY'];
   bool _isLoginSuccessful = false;
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage = '';
       });
       try {
-        final url = Uri.http(baseURL!, initializeSignIn!, {'refresh': 'false'});
+        final url = Uri.parse(baseURL!).resolve(initializeSignIn!);
         final response = await http.get(url);
         if (response.statusCode == 200) {
           final httpResponse = json.decode(response.body);
