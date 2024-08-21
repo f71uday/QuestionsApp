@@ -36,9 +36,9 @@ class _SignupPageState extends State<SignupPage> {
       try {
         // Start the registration flow to get the CSRF token and flow ID
         final initResponse = await http.get(
-          Uri.http(baseURL!, signUpPath!),
+          Uri.parse(baseURL!).resolve(signUpPath!),
         );
-
+       
         log(initResponse.toString());
 
         if (initResponse.statusCode != 200) {
