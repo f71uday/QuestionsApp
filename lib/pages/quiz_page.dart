@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/Questions/Question.dart';
 import '../models/Questions/QuestionResponse.dart';
@@ -379,8 +380,11 @@ class _QuizPageState extends State<QuizPage> {
             child: Text('No'),
           ),
           TextButton(
-              onPressed: () =>
-                  Navigator.pushReplacementNamed(context, '/subjects'),
+              onPressed: () {
+                _timer?.cancel();
+                isActive = false;
+                Navigator.pushNamed(context, dotenv.env['ROUTE_SUBJECTS']!);
+              },
               child: Text('Yes'))
         ],
       ),
