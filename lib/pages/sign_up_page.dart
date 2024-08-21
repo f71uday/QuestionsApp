@@ -38,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
         final initResponse = await http.get(
           Uri.parse(baseURL!).resolve(signUpPath!),
         );
-       
+
         log(initResponse.toString());
 
         if (initResponse.statusCode != 200) {
@@ -51,7 +51,7 @@ class _SignupPageState extends State<SignupPage> {
         //final csrfToken = initJson['csrf_token'];
 
         final response = await http.post(
-          Uri.http(baseURL!, signUp!, {'flow': flowId}),
+            Uri.parse(baseURL!).resolve(signUp!).replace(queryParameters: {'flow': flowId}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           body: {
             'traits.email': _emailController.text,
