@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
-
 class TestHistoryPage extends StatefulWidget {
   TestHistoryPage({super.key});
 
@@ -52,76 +51,60 @@ class TestHistoryPageState extends State<TestHistoryPage> {
     }
   }
 
-  MaterialColor getColor(String text)
-  {
+  MaterialColor getColor(String text) {
     if (text == 'PASS') return Colors.green;
     else return Colors.red;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test History'),
+        title: const Text('History'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
           ? const Center(child: Text('Failed to load data.'))
-          : ListView.builder(
+          : ListView.separated(
         itemCount: _testResults.length,
+        separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           final testResult = _testResults[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Test Result',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  const Divider(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
-                            Text('Test Taken on : ${ formatter.format( testResult.createdAt.toLocal())}'),
-                          ],
-                        ),
-                      ),
-                      VerticalDivider(),
-                      Row(
-                        children: [
-
-                          Column(
-                            children: [
-                              Text("Percentage"),
-                              Text(
-                                '${testResult.percentage.toStringAsFixed(2)}%',
-                                style:  TextStyle(fontSize: 16,color: getColor(testResult.shortRemark)),
-
-                              ),
-                            ],
-                          ),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+          return ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            title: Text(
+              'Test Result',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
+                Text('Test Taken on: ${formatter.format(testResult.createdAt.toLocal())}'),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    
+                    Text(
+                      '${testResult.percentage.toStringAsFixed(2)}%',
+                      style: TextStyle(fontSize: 16, color: getColor(testResult.shortRemark)),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward_ios, size: 16),
+              ],
+            ),
+            isThreeLine: true,
           );
         },
       ),
