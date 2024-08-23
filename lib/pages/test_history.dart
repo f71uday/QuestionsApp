@@ -88,7 +88,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
-                Text('Test Taken on: ${formatter.format(testResult.createdAt.toLocal())}'),
+                Text('Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
               ],
             ),
             trailing: Row(
