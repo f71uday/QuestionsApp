@@ -99,7 +99,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
       context: context,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,9 +109,13 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               SizedBox(height: 16),
-              Text(
-                'Sort by:',
-                style: TextStyle(fontSize: 16),
+              Row(
+                children: [
+                  const Text(
+                    'Sort by:',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
               DropdownButton<String>(
                 value: _sortOption,
@@ -164,7 +168,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
         title: const Text('History'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_alt_outlined),
             onPressed: _showFilterSortBottomSheet,
           ),
         ],
