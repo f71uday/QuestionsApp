@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
+
 class TestHistoryPage extends StatefulWidget {
-   TestHistoryPage({super.key});
+  TestHistoryPage({super.key});
 
   @override
   TestHistoryPageState createState() => TestHistoryPageState();
@@ -13,6 +16,7 @@ class TestHistoryPage extends StatefulWidget {
 
 class TestHistoryPageState extends State<TestHistoryPage> {
   late List<TestResponseEvaluation> _testResults = [];
+  DateFormat formatter = DateFormat('dd-MM-yyyy');
   bool _isLoading = true;
   bool _hasError = false;
 
@@ -24,8 +28,8 @@ class TestHistoryPageState extends State<TestHistoryPage> {
 
   Future<void> _fetchTestHistory() async {
     try {
-     TestHistoryServices services = TestHistoryServices(context);
-     http.Response response = await services.fetchHistory();
+      TestHistoryServices services = TestHistoryServices(context);
+      http.Response response = await services.fetchHistory();
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -48,6 +52,11 @@ class TestHistoryPageState extends State<TestHistoryPage> {
     }
   }
 
+  MaterialColor getColor(String text)
+  {
+    if (text == 'PASS') return Colors.green;
+    else return Colors.red;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +75,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,14 +84,41 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  const SizedBox(height: 8),
-                  Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
-                  Text('Percentage: ${testResult.percentage.toStringAsFixed(2)}%'),
-                  Text('Correct Answers: ${testResult.correctAnswers}'),
-                  Text('Incorrect Answers: ${testResult.incorrectAnswers}'),
-                  Text('Remarks: ${testResult.remarks ?? "N/A"}'),
-                  Text('Time Taken: ${testResult.timeTaken}'),
-                  Text('Date Taken: ${testResult.createdAt.toLocal()}'),
+                  const Divider(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
+                            Text('Test Taken on : ${ formatter.format( testResult.createdAt.toLocal())}'),
+                          ],
+                        ),
+                      ),
+                      VerticalDivider(),
+                      Row(
+                        children: [
+
+                          Column(
+                            children: [
+                              Text("Percentage"),
+                              Text(
+                                '${testResult.percentage.toStringAsFixed(2)}%',
+                                style:  TextStyle(fontSize: 16,color: getColor(testResult.shortRemark)),
+
+                              ),
+                            ],
+                          ),
+
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
