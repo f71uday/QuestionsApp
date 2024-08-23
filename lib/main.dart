@@ -1,6 +1,7 @@
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
+import 'package:VetScholar/pages/test_history.dart';
 import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -47,7 +48,8 @@ class QuizApp extends StatelessWidget {
       routes: {
         '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),
-        '/singup': (context) => SignupPage()
+        '/singup': (context) => SignupPage(),
+        '/testHistory': (context) => TestHistoryPage()
       },
     );
   }

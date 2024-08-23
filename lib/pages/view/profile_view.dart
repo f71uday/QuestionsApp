@@ -114,6 +114,15 @@ class _ProfilePageState extends State<ProfileView> {
               'Email: $_email',
               style: TextStyle(fontSize: 16),
             ),
+            SizedBox(height: 16), // Add space between email and list item
+            ListTile(
+              title: Text('Test History'),
+              leading: Icon(Icons.history),
+              onTap: () {
+                // Navigate to the Test History page
+                Navigator.pushNamed(context, '/testHistory');
+              },
+            ),
             Spacer(),
             Center(
               child: ElevatedButton(
