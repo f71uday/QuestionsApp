@@ -1,3 +1,5 @@
+
+
 import 'package:VetScholar/models/test_history.dart';
 import 'package:VetScholar/service/test_history_services.dart';
 import 'package:flutter/material.dart';
@@ -67,11 +69,13 @@ class TestHistoryPageState extends State<TestHistoryPage> {
           : _hasError
           ? const Center(child: Text('Failed to load data.'))
           : ListView.separated(
+       
         itemCount: _testResults.length,
         separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           final testResult = _testResults[index];
           return ListTile(
+            onTap: () => print("tapped"),
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             title: Text(
               'Test Result',
