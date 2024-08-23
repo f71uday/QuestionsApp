@@ -140,6 +140,44 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
+  void _showBottomSheet(Question currentQuestion) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),  // Adjusted padding for better spacing
+          child: Column(
+            mainAxisSize: MainAxisSize.min,  // Ensures the bottom sheet height is minimal
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  'Tags',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const Divider(),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: currentQuestion.topics
+                    .map((tag) => Chip(
+                  label: Text(tag.name),
+                  backgroundColor: const Color.fromARGB(100, 213, 212, 212),
+                  labelStyle: const TextStyle(
+                    color: Colors.black,
+                  ),
+                ))
+                    .toList(),
+              ),
+              const SizedBox(height: 20),  // Add space before any additional buttons
+
+            ],
+          ),
+        );
+      },
+    );
+  }
   void _skipQuestion() {
     setState(() {
       currentQuestionIndex++;
@@ -205,7 +243,8 @@ class _QuizPageState extends State<QuizPage> {
                 IconButton(
                   icon: Icon(Icons.info),
                   onPressed: () {
-                    _scaffoldKey.currentState!.openEndDrawer();
+                    // _scaffoldKey.currentState!.openEndDrawer();
+                    _showBottomSheet(currentQuestion);
                   },
                 ),
               ],

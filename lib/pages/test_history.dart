@@ -60,9 +60,6 @@ class TestHistoryPageState extends State<TestHistoryPage> {
       case 'Date':
         _filteredResults.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
-      case 'Score':
-        _filteredResults.sort((a, b) => b.score.compareTo(a.score));
-        break;
       case 'Percentage':
         _filteredResults.sort((a, b) => b.percentage.compareTo(a.percentage));
         break;
@@ -78,9 +75,6 @@ class TestHistoryPageState extends State<TestHistoryPage> {
         break;
       case 'Fail':
         _filteredResults = _testResults.where((result) => result.shortRemark == 'FAIL').toList();
-        break;
-      case 'High Score':
-        _filteredResults = _testResults.where((result) => result.score > 80).toList();
         break;
       default:
         _filteredResults = _testResults;
@@ -109,50 +103,66 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               SizedBox(height: 16),
-              Row(
-                children: [
-                  const Text(
-                    'Sort by:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+              Text(
+                'Sort by:',
+                style: TextStyle(fontSize: 16),
               ),
-              DropdownButton<String>(
-                value: _sortOption,
-                items: <String>['Date', 'Score', 'Percentage'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+              Wrap(
+                spacing: 8.0,
+                children: ['Appeared on', 'Percentage'].map((String value) {
+                  return ChoiceChip(
+                    label: Text(value),
+                    selected: _sortOption == value,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _sortOption = value;
+                        _sortTestResults();
+                      });
+                      Navigator.of(context).pop();
+                    },
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _sortOption = newValue!;
-                    _sortTestResults();
-                  });
-                  Navigator.of(context).pop(); // Close the bottom sheet
-                },
               ),
               Divider(),
               Text(
                 'Filter by:',
                 style: TextStyle(fontSize: 16),
               ),
-              DropdownButton<String>(
-                value: _filterOption,
-                items: <String>['All', 'Pass', 'Fail', 'High Score'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+              Wrap(
+                spacing: 8.0,
+                children: ['All', 'Pass', 'Fail'].map((String value) {
+                  return ChoiceChip(
+                    label: Text(value),
+                    selected: _filterOption == value,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _filterOption = value;
+                        _applyFilter();
+
+                      });
+                      Navigator.of(context).pop();
+                    },
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _filterOption = newValue!;
-                    _applyFilter();
-                  });
-                  Navigator.of(context).pop(); // Close the bottom sheet
-                },
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        // Reset filter and sort options to default
+                        _sortOption = 'Appeared on';
+                        _filterOption = 'All';
+                        _applyFilter(); // Apply the default filter
+                        _sortTestResults(); // Sort with the default option
+                      });
+                      Navigator.of(context).pop(); // Close the bottom sheet
+                    },
+                    child: Text('Reset'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -178,47 +188,47 @@ class TestHistoryPageState extends State<TestHistoryPage> {
           : _hasError
           ? const Center(child: Text('Failed to load data.'))
           : ListView.separated(
-              itemCount: _filteredResults.length,
-              separatorBuilder: (context, index) => Divider(),
-              itemBuilder: (context, index) {
-                final testResult = _filteredResults[index];
-                return ListTile(
-                  onTap: () => print("tapped"),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  title: Text(
-                    'Test Result',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
-                      Text('Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${testResult.percentage.toStringAsFixed(2)}%',
-                            style: TextStyle(fontSize: 16, color: getColor(testResult.shortRemark)),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward_ios, size: 16),
-                    ],
-                  ),
-                  isThreeLine: true,
-                );
-              },
+        itemCount: _filteredResults.length,
+        separatorBuilder: (context, index) => Divider(),
+        itemBuilder: (context, index) {
+          final testResult = _filteredResults[index];
+          return ListTile(
+            onTap: () => print("tapped"),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            title: Text(
+              'Test Result',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
+                Text('Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${testResult.percentage.toStringAsFixed(2)}%',
+                      style: TextStyle(fontSize: 16, color: getColor(testResult.shortRemark)),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward_ios, size: 16),
+              ],
+            ),
+            isThreeLine: true,
+          );
+        },
+      ),
     );
   }
 }
