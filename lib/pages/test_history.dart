@@ -1,9 +1,9 @@
-import 'package:VetScholar/models/test_history.dart';
 import 'package:VetScholar/service/test_history_services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:intl/intl.dart';
+
+import '../models/Remark.dart';
+import '../models/test_result.dart';
 
 class TestHistoryPage extends StatefulWidget {
   TestHistoryPage({super.key});
@@ -13,8 +13,8 @@ class TestHistoryPage extends StatefulWidget {
 }
 
 class TestHistoryPageState extends State<TestHistoryPage> {
-  late List<TestResponseEvaluation> _testResults = [];
-  late List<TestResponseEvaluation> _filteredResults = [];
+  late List<TestResult> _testResults = [];
+  late List<TestResult> _filteredResults = [];
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   bool _isLoading = true;
   bool _hasError = false;
@@ -27,31 +27,30 @@ class TestHistoryPageState extends State<TestHistoryPage> {
     _fetchTestHistory();
   }
 
+  void _disableLoadWithError() {
+    setState(() {
+      _hasError = true;
+      _isLoading = false;
+    });
+  }
+
+  void _disableLoadWithSuccess(List<TestResult> testResults) {
+    setState(() {
+      _testResults = testResults;
+      _applyFilter(); // Apply filter after fetching data
+      _sortTestResults(); // Sort after filtering
+      _isLoading = false;
+    });
+  }
+
   Future<void> _fetchTestHistory() async {
     try {
       TestHistoryServices services = TestHistoryServices(context);
-      http.Response response = await services.fetchHistory();
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        final TestHistory testHistory = TestHistory.fromJson(data);
-        setState(() {
-          _testResults = testHistory.embedded.testResponseEvaluations;
-          _applyFilter(); // Apply filter after fetching data
-          _sortTestResults(); // Sort after filtering
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _hasError = true;
-          _isLoading = false;
-        });
-      }
+      _disableLoadWithSuccess(await services.fetchHistory());
     } catch (error) {
-      setState(() {
-        _hasError = true;
-        _isLoading = false;
-      });
+      _disableLoadWithError();
+    } finally {
+      // _disableLoadWithError();
     }
   }
 
@@ -71,21 +70,25 @@ class TestHistoryPageState extends State<TestHistoryPage> {
   void _applyFilter() {
     switch (_filterOption) {
       case 'Pass':
-        _filteredResults = _testResults.where((result) => result.shortRemark == 'PASS').toList();
+        _filteredResults = _testResults
+            .where((result) => result.remark == Remark.PASS)
+            .toList();
         break;
       case 'Fail':
-        _filteredResults = _testResults.where((result) => result.shortRemark == 'FAIL').toList();
+        _filteredResults = _testResults
+            .where((result) => result.remark == Remark.FAIL)
+            .toList();
         break;
       default:
         _filteredResults = _testResults;
         break;
     }
-    _sortTestResults(); // Ensure sorting is applied after filtering
+
+    _sortTestResults();
   }
 
-  MaterialColor getColor(String text) {
-    if (text == 'PASS') return Colors.green;
-    else return Colors.red;
+  MaterialColor _getColor(Remark remark) {
+    return remark == Remark.PASS ? Colors.green : Colors.red;
   }
 
   void _showFilterSortBottomSheet() {
@@ -138,7 +141,6 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                       setState(() {
                         _filterOption = value;
                         _applyFilter();
-
                       });
                       Navigator.of(context).pop();
                     },
@@ -186,49 +188,54 @@ class TestHistoryPageState extends State<TestHistoryPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
-          ? const Center(child: Text('Failed to load data.'))
-          : ListView.separated(
-        itemCount: _filteredResults.length,
-        separatorBuilder: (context, index) => Divider(),
-        itemBuilder: (context, index) {
-          final testResult = _filteredResults[index];
-          return ListTile(
-            onTap: () => print("tapped"),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            title: Text(
-              'Test Result',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Score: ${testResult.score} / ${testResult.totalQuestions}'),
-                Text('Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${testResult.percentage.toStringAsFixed(2)}%',
-                      style: TextStyle(fontSize: 16, color: getColor(testResult.shortRemark)),
-                    ),
-                  ],
+              ? const Center(child: Text('Failed to load data.'))
+              : ListView.separated(
+                  itemCount: _filteredResults.length,
+                  separatorBuilder: (context, index) => Divider(),
+                  itemBuilder: (context, index) {
+                    final testResult = _filteredResults[index];
+                    return ListTile(
+                      onTap: () => print("tapped"),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      title: Text(
+                        testResult.testName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
+                          Text(
+                              'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${testResult.percentage.toStringAsFixed(2)}%',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: _getColor(testResult.remark)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward_ios, size: 16),
+                        ],
+                      ),
+                      isThreeLine: true,
+                    );
+                  },
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, size: 16),
-              ],
-            ),
-            isThreeLine: true,
-          );
-        },
-      ),
     );
   }
 }

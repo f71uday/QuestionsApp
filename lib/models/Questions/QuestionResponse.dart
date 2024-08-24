@@ -1,21 +1,33 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'QuestionResponse.g.dart';
+
+@JsonSerializable()
 class QuestionResponse {
   final int questionId;
   final String answer;
+  final DateTime startedAt;
+  final DateTime endedAt;
 
-  QuestionResponse({required this.questionId, required this.answer});
+  QuestionResponse(this.questionId, this.answer, this.startedAt, this.endedAt);
 
-  Map<String, dynamic> toJson() => {
-    'questionId': questionId,
-    'answer': answer,
-  };
+  factory QuestionResponse.fromJson(Map<String, dynamic> json) =>
+      _$QuestionResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$QuestionResponseToJson(this);
 }
 
-class QuestionSubResponse {
+@JsonSerializable()
+class TestResponse {
   final List<QuestionResponse> questionResponses;
+  final DateTime startedAt;
+  final DateTime endedAt;
 
-  QuestionSubResponse({required this.questionResponses});
 
-  Map<String, dynamic> toJson() => {
-    'questionResponses': questionResponses.map((qr) => qr.toJson()).toList(),
-  };
+  TestResponse(this.questionResponses, this.startedAt, this.endedAt);
+
+  factory TestResponse.fromJson(Map<String, dynamic> json) =>
+      _$TestResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TestResponseToJson(this);
 }

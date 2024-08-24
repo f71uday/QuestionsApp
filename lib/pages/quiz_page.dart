@@ -35,6 +35,7 @@ class _QuizPageState extends State<QuizPage> {
 
   late final QuestionService _questionService;
   List<QuestionResponse> response = [];
+
   @override
   void initState() {
     super.initState();
@@ -125,15 +126,17 @@ class _QuizPageState extends State<QuizPage> {
                     .options[selectedOptionIndex!]
                     .text) {
           score++;
-
-
-
         }
-        insertOrReplace(response,currentQuestionIndex,QuestionResponse(
-            questionId: questionList[currentQuestionIndex].id,
-            answer: questionList[currentQuestionIndex]
-                .options[selectedOptionIndex!]
-                .text));
+
+        QuestionResponse questionResponse = QuestionResponse(
+          questionList[currentQuestionIndex].id,
+          questionList[currentQuestionIndex].options[selectedOptionIndex!].text,
+          DateTime.now().toUtc(),
+          DateTime.now().toUtc(),
+        );
+
+        insertOrReplace(response, currentQuestionIndex, questionResponse);
+
         currentQuestionIndex++;
         selectedOptionIndex = null;
       });
@@ -145,9 +148,11 @@ class _QuizPageState extends State<QuizPage> {
       context: context,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),  // Adjusted padding for better spacing
+          padding: const EdgeInsets.all(16.0),
+          // Adjusted padding for better spacing
           child: Column(
-            mainAxisSize: MainAxisSize.min,  // Ensures the bottom sheet height is minimal
+            mainAxisSize: MainAxisSize.min,
+            // Ensures the bottom sheet height is minimal
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Center(
@@ -162,35 +167,40 @@ class _QuizPageState extends State<QuizPage> {
                 runSpacing: 8.0,
                 children: currentQuestion.topics
                     .map((tag) => Chip(
-                  label: Text(tag.name),
-                  backgroundColor: const Color.fromARGB(100, 213, 212, 212),
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                ))
+                          label: Text(tag.name),
+                          backgroundColor:
+                              const Color.fromARGB(100, 213, 212, 212),
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ))
                     .toList(),
               ),
-              const SizedBox(height: 20),  // Add space before any additional buttons
-
+              const SizedBox(height: 20),
+              // Add space before any additional buttons
             ],
           ),
         );
       },
     );
   }
+
   void _skipQuestion() {
     setState(() {
       currentQuestionIndex++;
       selectedOptionIndex = null;
     });
   }
-  void insertOrReplace(List<QuestionResponse> list, int index, QuestionResponse value) {
+
+  void insertOrReplace(
+      List<QuestionResponse> list, int index, QuestionResponse value) {
     if (index < list.length) {
       list[index] = value; // Replace
     } else {
       list.add(value); // Insert at the end
     }
   }
+
   bool isPageDisposed() {
     return !mounted;
   }
@@ -225,7 +235,6 @@ class _QuizPageState extends State<QuizPage> {
             return ColorAnimationPage(
               response: response,
               link: _questionService.fetchResponseLink(),
-
             );
           }
 
