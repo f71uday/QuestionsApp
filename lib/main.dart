@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:VetScholar/global_theme_data.dart';
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
@@ -45,17 +46,21 @@ Future<void> loadEnvFilesWithConflictHandling() async {
 class QuizApp extends StatelessWidget {
   final bool isLoggedIn;
 
-  QuizApp({required this.isLoggedIn});
+  const QuizApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      theme: GlobalThemData.lightThemeData,
+      darkTheme: GlobalThemData.darkThemeData,
       initialRoute: isLoggedIn? dotenv.env['ROUTE_SUBJECTS'] : dotenv.env['ROUTE_SIGN_IN'],
       routes: {
         '/signin': (context) => LoginPage(),
         '/subjects': (context) => SubjectListPage(),
         '/singup': (context) => SignupPage(),
-        '/testHistory': (context) => TestHistoryPage()
+        '/testHistory': (context) => const TestHistoryPage()
       },
     );
   }
