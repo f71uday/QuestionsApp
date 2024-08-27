@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
@@ -12,8 +14,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadEnvFilesWithConflictHandling();
   bool isValid = false;
-  if ( await AuthService.getAccessToken()!=null) {
-    isValid = await ProfileService().whoami();
+  try {
+    if (await AuthService.getAccessToken() != null) {
+      isValid = await ProfileService().whoami();
+    }
+  } on Exception {
+    isValid = false;
   }
   runApp(QuizApp(isLoggedIn: isValid));
   //runApp(QuizApp());
