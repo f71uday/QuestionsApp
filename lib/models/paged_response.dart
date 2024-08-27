@@ -13,7 +13,7 @@ class PagedResponse {
   @JsonKey(name: '_links')
   final Map<String, Link> links;
 
-  final Page page;
+  final Page? page;
 
   PagedResponse(this.embedded, this.links, this.page);
 

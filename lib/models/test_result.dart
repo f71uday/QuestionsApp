@@ -16,7 +16,6 @@ class TestResult {
   final String testName;
   final int totalQuestions;
   final int correctAnswers;
-
   @JsonKey(name: '_links')
   final Map<String, Link> links;
 

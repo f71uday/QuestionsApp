@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import '../models/Questions/Question.dart';
+import '../models/Questions/question.dart';
 import '../models/test_result.dart';
 import 'authorized_client.dart';
 import 'fault_navigator.dart';
@@ -20,7 +20,11 @@ class QuestionService extends FaultNavigator {
       http_response = response;
       final parsed = json.decode(response.body);
       final questionsJson = parsed['questions'] as List;
-      return questionsJson.map((json) => Question.fromJson(json)).toList();
+      try {
+        return questionsJson.map((json) => Question.fromJson(json)).toList();
+      } catch (error) {
+        log("error while parsing Response");
+      }
     } else if (response.statusCode == 401) {
       log(" question service returned $response.statusCode with body$response.body.toString() ");
       navigateToLoginScreen();

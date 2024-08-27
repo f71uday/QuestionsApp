@@ -1,12 +1,13 @@
+import 'package:VetScholar/pages/test_history/detailed_questions.dart';
 import 'package:VetScholar/service/test_history_services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/Remark.dart';
-import '../models/test_result.dart';
+import '../../models/Remark.dart';
+import '../../models/test_result.dart';
 
 class TestHistoryPage extends StatefulWidget {
-  TestHistoryPage({super.key});
+  const TestHistoryPage({super.key});
 
   @override
   TestHistoryPageState createState() => TestHistoryPageState();
@@ -34,9 +35,9 @@ class TestHistoryPageState extends State<TestHistoryPage> {
     });
   }
 
-  void _disableLoadWithSuccess(List<TestResult> testResults) {
+  void _disableLoadWithSuccess(List<TestResult>? testResults) {
     setState(() {
-      _testResults = testResults;
+      _testResults = testResults!;
       _applyFilter(); // Apply filter after fetching data
       _sortTestResults(); // Sort after filtering
       _isLoading = false;
@@ -105,8 +106,8 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                 'Filters & Sort',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Sort by:',
                 style: TextStyle(fontSize: 16),
               ),
@@ -126,8 +127,8 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                   );
                 }).toList(),
               ),
-              Divider(),
-              Text(
+              const Divider(),
+              const Text(
                 'Filter by:',
                 style: TextStyle(fontSize: 16),
               ),
@@ -147,7 +148,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -162,7 +163,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                       });
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: Text('Reset'),
+                    child: const Text('Reset'),
                   ),
                 ],
               ),
@@ -191,16 +192,16 @@ class TestHistoryPageState extends State<TestHistoryPage> {
               ? const Center(child: Text('Failed to load data.'))
               : ListView.separated(
                   itemCount: _filteredResults.length,
-                  separatorBuilder: (context, index) => Divider(),
+                  separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (context, index) {
                     final testResult = _filteredResults[index];
                     return ListTile(
-                      onTap: () => print("tapped"),
+                      onTap: () =>Navigator.push(context,MaterialPageRoute(builder: (context) => DetailedQuestionsPage(testResult.links["questionResponses"]!.href,testResult.testName),)),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       title: Text(
                         testResult.testName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),

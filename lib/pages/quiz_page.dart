@@ -4,7 +4,7 @@ import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../models/Questions/Question.dart';
+import '../models/Questions/question.dart';
 import '../models/Questions/QuestionResponse.dart';
 import '../service/question_service.dart';
 
