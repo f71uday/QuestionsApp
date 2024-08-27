@@ -119,7 +119,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                         !_isPass
                             ? 'Better luck next time!'
                             : 'Congratulations! You passed!',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           color: Colors.white,
                         ),
@@ -128,7 +128,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                       SizedBox(height: 20),
                       Text(
                         'Your score: ${_percentage.toStringAsFixed(2)}%',
-                        style: TextStyle(
+                        style:const TextStyle(
                           fontSize: 18,
                           color: Colors.white,
                         ),

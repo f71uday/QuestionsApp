@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalThemData {
   static final Color _lightFocusColor = Colors.black.withOpacity(0.12);
@@ -46,4 +48,32 @@ class GlobalThemData {
   );
 }
 
+class ThemeProvider extends ChangeNotifier {
+  static String? themePreferenceKey = dotenv.env['IS_MODE_DARK'];
 
+  ThemeData _currentTheme = GlobalThemData.lightThemeData;
+
+  ThemeData get currentTheme => _currentTheme;
+
+  ThemeProvider() {
+    _loadThemePreference();
+  }
+
+  void toggleTheme(bool isDarkMode) async {
+    _currentTheme = isDarkMode
+        ? GlobalThemData.lightThemeData
+        : GlobalThemData.darkThemeData;
+    notifyListeners();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(themePreferenceKey!, !isDarkMode);
+  }
+
+  void _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isDarkMode = prefs.getBool(themePreferenceKey!) ?? false;
+    _currentTheme = isDarkMode
+        ? GlobalThemData.lightThemeData
+        : GlobalThemData.darkThemeData;
+    notifyListeners();
+  }
+}

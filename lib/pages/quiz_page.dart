@@ -367,13 +367,11 @@ class _QuizPageState extends State<QuizPage> {
                     final isSelected = option.key == selectedOptionIndex;
                     final isCorrect =
                         option.value.text == currentQuestion.answer.text;
-                    final color = isSelected
-                        ? (isCorrect ? Colors.green : Colors.red)
-                        : Colors.black;
+
                     return ListTile(
                       title: Text(
                         option.value.text,
-                        style: TextStyle(color: color),
+
                       ),
                       leading: Radio<int>(
                         value: option.key,

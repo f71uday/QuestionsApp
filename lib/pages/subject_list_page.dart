@@ -56,7 +56,6 @@ class _SubjectListPageState extends State<SubjectListPage> {
           )
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
         onTap: _onItemTapped,
       ),
       body: PageView(
