@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +32,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(widget.testName),
+        title: const Text('History'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -54,7 +56,6 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                         });
                       },
                       child: Column(
-
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ListTile(
@@ -73,25 +74,39 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                   : Icons.expand_more,
                             ),
                           ),
-                          if (isExpanded)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Answer: ${questionResponse.userAnswer}',
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Result: ${questionResponse.result.toString()}',
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 300),
+                            reverseDuration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOutBack,
+                            child: isExpanded
+                                ? Container(
+                                    color:
+                                        const Color.fromRGBO(138, 43, 226, 0.1),
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Answer: ${questionResponse.userAnswer}',
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'Result: ${questionResponse.result}',
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ),
                         ],
                       ),
                     );
