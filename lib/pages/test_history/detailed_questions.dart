@@ -32,7 +32,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: Text(widget.testName),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
