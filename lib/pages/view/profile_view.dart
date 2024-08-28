@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfileView> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
-      _isDarkMode = prefs.getBool(dotenv.env["IS_MODE_DARK"]!) ?? false;
+      _isDarkMode = prefs.getBool(dotenv.env["IS_MODE_DARK"]!)!;
       _appVersion = packageInfo.version;
     });
   }

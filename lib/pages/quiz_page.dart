@@ -73,16 +73,16 @@ class _QuizPageState extends State<QuizPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Time is up!'),
+        title: const Text('Time is up!'),
         content: FutureBuilder<List<Question>>(
           future: questions,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Text('No questions available.');
+              return const Text('No questions available.');
             } else {
               return Text('Your score: $score/${snapshot.data!.length}');
             }
@@ -222,15 +222,12 @@ class _QuizPageState extends State<QuizPage> {
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Scaffold(
-            appBar: AppBar(title: Text('Quiz App')),
-            body: Center(child: Text('No questions available.')),
+            appBar: AppBar(title: const Text('Quiz App')),
+            body: const Center(child: Text('No questions available.')),
           );
         } else {
           List<Question> questions = snapshot.data!;
           if (currentQuestionIndex >= questions.length) {
-            double _percentage = (score / questions.length) * 100;
-            bool _isPassed = _percentage > 60;
-
             // Navigate to the ColorAnimationPage when the quiz ends
             return ColorAnimationPage(
               response: response,
@@ -275,7 +272,7 @@ class _QuizPageState extends State<QuizPage> {
                               label: Text(tag.name),
                               backgroundColor:
                                   const Color.fromARGB(100, 213, 212, 212),
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Colors.black,
                               ),
                             ))
@@ -305,8 +302,8 @@ class _QuizPageState extends State<QuizPage> {
                     child: GridView.builder(
                       padding: EdgeInsets.all(10),
                       shrinkWrap: true,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,

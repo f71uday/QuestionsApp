@@ -55,19 +55,19 @@ class ThemeProvider extends ChangeNotifier {
 
   void toggleTheme(bool isDarkMode) async {
     _currentTheme = isDarkMode
-        ? GlobalThemData.lightThemeData
-        : GlobalThemData.darkThemeData;
+        ? GlobalThemData.darkThemeData
+        : GlobalThemData.lightThemeData;
     notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(themePreferenceKey!, !isDarkMode);
+    prefs.setBool(themePreferenceKey!, isDarkMode);
   }
 
   void _loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isDarkMode = prefs.getBool(themePreferenceKey!) ?? false;
     _currentTheme = isDarkMode
-        ? GlobalThemData.lightThemeData
-        : GlobalThemData.darkThemeData;
+        ? GlobalThemData.darkThemeData
+        : GlobalThemData.lightThemeData;
     notifyListeners();
   }
 }
