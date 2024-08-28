@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:json_theme/json_theme.dart';
 
 import '../models/Questions/question.dart';
 import '../models/Questions/QuestionResponse.dart';
@@ -168,11 +169,7 @@ class _QuizPageState extends State<QuizPage> {
                 children: currentQuestion.topics
                     .map((tag) => Chip(
                           label: Text(tag.name),
-                          backgroundColor:
-                              const Color.fromARGB(100, 213, 212, 212),
-                          labelStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
+
                         ))
                     .toList(),
               ),
@@ -311,8 +308,8 @@ class _QuizPageState extends State<QuizPage> {
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
                         final color = questions[index].isAnswered
-                            ? Colors.blue
-                            : Colors.white;
+                            ? Colors.green
+                            : Colors.red;
                         return GestureDetector(
                           onTap: () => _goToQuestion(index),
                           child: Card(
@@ -336,14 +333,8 @@ class _QuizPageState extends State<QuizPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: _confirmEnd,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, // Background color
-                          ),
-                          child: Text(
+                          child: const Text(
                             'End',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
                           )),
                     ),
                   )

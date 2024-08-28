@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../global_theme_data.dart';
+import '../../theme_provider.dart';
 import '../../models/who_am_i.dart';
 
 class ProfileView extends StatefulWidget {
@@ -141,8 +140,6 @@ class _ProfilePageState extends State<ProfileView> {
                 const Text('Dark Mode'),
                 Switch(
                   value: _isDarkMode,
-                  inactiveTrackColor: GlobalThemData.lightColorScheme.onError,
-                  inactiveThumbColor: GlobalThemData.lightColorScheme.error,
                   onChanged: (value) {
                     themeProvider.toggleTheme(value);
                     setState(() {

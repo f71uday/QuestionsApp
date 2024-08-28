@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:VetScholar/global_theme_data.dart';
+import 'package:VetScholar/theme_provider.dart';
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
