@@ -140,14 +140,14 @@ class _ProfilePageState extends State<ProfileView> {
               children: [
                 const Text('Dark Mode'),
                 Switch(
-                  value: !_isDarkMode,
-                  activeColor: GlobalThemData.darkThemeData.primaryColor,
+                  value: _isDarkMode,
+                  inactiveTrackColor: GlobalThemData.lightColorScheme.onError,
+                  inactiveThumbColor: GlobalThemData.lightColorScheme.error,
                   onChanged: (value) {
                     themeProvider.toggleTheme(value);
                     setState(() {
-                      _isDarkMode = !_isDarkMode;
+                      _isDarkMode = value;
                     });
-
                   },
                 ),
               ],

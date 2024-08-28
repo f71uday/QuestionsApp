@@ -371,7 +371,6 @@ class _QuizPageState extends State<QuizPage> {
                     return ListTile(
                       title: Text(
                         option.value.text,
-
                       ),
                       leading: Radio<int>(
                         value: option.key,
