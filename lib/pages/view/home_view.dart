@@ -26,13 +26,14 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
         .build(context); // Ensure AutomaticKeepAliveClientMixin works correctly
     return Scaffold(
       appBar: AppBar(
-        title: Text('Subjects'),
+        title: const Text('Subjects'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Subject>>(
         future: subjects,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -41,19 +42,16 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
               itemBuilder: (context, index) {
                 final subject = snapshot.data![index];
                 return Card(
-                  margin: EdgeInsets.all(5.0),
+                  margin: const EdgeInsets.all(5.0),
                   elevation: 1.0,
                   child: Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
                           child: Text(
                             subject.name,
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -69,7 +67,7 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                               ),
                             );
                           },
-                          child: Text('Start Quiz'),
+                          child: const Text('Start Quiz'),
                         ),
                       ],
                     ),

@@ -182,7 +182,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 96,
       "fontWeight": "w300",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": -1.5,
       "textBaseline": "alphabetic"
     },
@@ -193,7 +193,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 60,
       "fontWeight": "w300",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": -0.5,
       "textBaseline": "alphabetic"
     },
@@ -204,7 +204,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 48,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0,
       "textBaseline": "alphabetic"
     },
@@ -215,7 +215,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 40,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.25,
       "textBaseline": "alphabetic"
     },
@@ -226,7 +226,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 34,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.25,
       "textBaseline": "alphabetic"
     },
@@ -237,7 +237,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 24,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0,
       "textBaseline": "alphabetic"
     },
@@ -248,7 +248,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 14,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.25,
       "textBaseline": "alphabetic"
     },
@@ -259,7 +259,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 11,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.5,
       "textBaseline": "alphabetic"
     },
@@ -270,7 +270,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 10,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.5,
       "textBaseline": "alphabetic"
     },
@@ -281,7 +281,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 20,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.15,
       "textBaseline": "alphabetic"
     },
@@ -292,7 +292,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 16,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.15,
       "textBaseline": "alphabetic"
     },
@@ -303,7 +303,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 14,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.1,
       "textBaseline": "alphabetic"
     }
@@ -354,7 +354,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 96,
       "fontWeight": "w300",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": -1.5,
       "textBaseline": "alphabetic"
     },
@@ -365,7 +365,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 60,
       "fontWeight": "w300",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": -0.5,
       "textBaseline": "alphabetic"
     },
@@ -376,7 +376,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 48,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0,
       "textBaseline": "alphabetic"
     },
@@ -387,7 +387,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 40,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.25,
       "textBaseline": "alphabetic"
     },
@@ -398,7 +398,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 34,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.25,
       "textBaseline": "alphabetic"
     },
@@ -409,7 +409,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 24,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0,
       "textBaseline": "alphabetic"
     },
@@ -420,7 +420,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 14,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.25,
       "textBaseline": "alphabetic"
     },
@@ -431,7 +431,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 11,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.5,
       "textBaseline": "alphabetic"
     },
@@ -442,7 +442,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 10,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 1.5,
       "textBaseline": "alphabetic"
     },
@@ -453,7 +453,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 20,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.15,
       "textBaseline": "alphabetic"
     },
@@ -464,7 +464,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 16,
       "fontWeight": "w400",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.15,
       "textBaseline": "alphabetic"
     },
@@ -475,7 +475,7 @@
       "fontFamily": ".AppleSystemUIFont",
       "fontSize": 14,
       "fontWeight": "w500",
-      "inherit": false,
+      "inherit": true,
       "letterSpacing": 0.1,
       "textBaseline": "alphabetic"
     }
@@ -593,7 +593,7 @@
         "fontSize": 16,
         "fontWeight": "w400",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "ideographic"
@@ -602,7 +602,7 @@
         "fontSize": 14,
         "fontWeight": "w400",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.25,
         "textBaseline": "ideographic"
@@ -611,7 +611,7 @@
         "fontSize": 12,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.4,
         "textBaseline": "ideographic"
@@ -620,7 +620,7 @@
         "fontSize": 57,
         "fontWeight": "w400",
         "height": 1.12,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": -0.25,
         "textBaseline": "ideographic"
@@ -629,7 +629,7 @@
         "fontSize": 45,
         "fontWeight": "w400",
         "height": 1.16,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -638,7 +638,7 @@
         "fontSize": 36,
         "fontWeight": "w400",
         "height": 1.22,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -647,7 +647,7 @@
         "fontSize": 32,
         "fontWeight": "w400",
         "height": 1.25,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -656,7 +656,7 @@
         "fontSize": 28,
         "fontWeight": "w400",
         "height": 1.29,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -665,7 +665,7 @@
         "fontSize": 24,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -674,7 +674,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "ideographic"
@@ -683,7 +683,7 @@
         "fontSize": 12,
         "fontWeight": "w500",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "ideographic"
@@ -692,7 +692,7 @@
         "fontSize": 11,
         "fontWeight": "w500",
         "height": 1.45,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "ideographic"
@@ -701,7 +701,7 @@
         "fontSize": 22,
         "fontWeight": "w400",
         "height": 1.27,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "ideographic"
@@ -710,7 +710,7 @@
         "fontSize": 16,
         "fontWeight": "w500",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.15,
         "textBaseline": "ideographic"
@@ -719,7 +719,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "ideographic"
@@ -730,7 +730,7 @@
         "fontSize": 16,
         "fontWeight": "w400",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -739,7 +739,7 @@
         "fontSize": 14,
         "fontWeight": "w400",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.25,
         "textBaseline": "alphabetic"
@@ -748,7 +748,7 @@
         "fontSize": 12,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.4,
         "textBaseline": "alphabetic"
@@ -757,7 +757,7 @@
         "fontSize": 57,
         "fontWeight": "w400",
         "height": 1.12,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": -0.25,
         "textBaseline": "alphabetic"
@@ -766,7 +766,7 @@
         "fontSize": 45,
         "fontWeight": "w400",
         "height": 1.16,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -775,7 +775,7 @@
         "fontSize": 36,
         "fontWeight": "w400",
         "height": 1.22,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -784,7 +784,7 @@
         "fontSize": 32,
         "fontWeight": "w400",
         "height": 1.25,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -793,7 +793,7 @@
         "fontSize": 28,
         "fontWeight": "w400",
         "height": 1.29,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -802,7 +802,7 @@
         "fontSize": 24,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -811,7 +811,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "alphabetic"
@@ -820,7 +820,7 @@
         "fontSize": 12,
         "fontWeight": "w500",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -829,7 +829,7 @@
         "fontSize": 11,
         "fontWeight": "w500",
         "height": 1.45,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -838,7 +838,7 @@
         "fontSize": 22,
         "fontWeight": "w400",
         "height": 1.27,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -847,7 +847,7 @@
         "fontSize": 16,
         "fontWeight": "w500",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.15,
         "textBaseline": "alphabetic"
@@ -856,7 +856,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "alphabetic"
@@ -867,7 +867,7 @@
         "fontSize": 16,
         "fontWeight": "w400",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -876,7 +876,7 @@
         "fontSize": 14,
         "fontWeight": "w400",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.25,
         "textBaseline": "alphabetic"
@@ -885,7 +885,7 @@
         "fontSize": 12,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.4,
         "textBaseline": "alphabetic"
@@ -894,7 +894,7 @@
         "fontSize": 57,
         "fontWeight": "w400",
         "height": 1.12,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": -0.25,
         "textBaseline": "alphabetic"
@@ -903,7 +903,7 @@
         "fontSize": 45,
         "fontWeight": "w400",
         "height": 1.16,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -912,7 +912,7 @@
         "fontSize": 36,
         "fontWeight": "w400",
         "height": 1.22,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -921,7 +921,7 @@
         "fontSize": 32,
         "fontWeight": "w400",
         "height": 1.25,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -930,7 +930,7 @@
         "fontSize": 28,
         "fontWeight": "w400",
         "height": 1.29,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -939,7 +939,7 @@
         "fontSize": 24,
         "fontWeight": "w400",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -948,7 +948,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "alphabetic"
@@ -957,7 +957,7 @@
         "fontSize": 12,
         "fontWeight": "w500",
         "height": 1.33,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -966,7 +966,7 @@
         "fontSize": 11,
         "fontWeight": "w500",
         "height": 1.45,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.5,
         "textBaseline": "alphabetic"
@@ -975,7 +975,7 @@
         "fontSize": 22,
         "fontWeight": "w400",
         "height": 1.27,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0,
         "textBaseline": "alphabetic"
@@ -984,7 +984,7 @@
         "fontSize": 16,
         "fontWeight": "w500",
         "height": 1.5,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.15,
         "textBaseline": "alphabetic"
@@ -993,7 +993,7 @@
         "fontSize": 14,
         "fontWeight": "w500",
         "height": 1.43,
-        "inherit": false,
+        "inherit": true,
         "leadingDistribution": "even",
         "letterSpacing": 0.1,
         "textBaseline": "alphabetic"
