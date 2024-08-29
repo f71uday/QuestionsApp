@@ -99,32 +99,43 @@ class _ProfilePageState extends State<ProfileView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _showLogoutDialog();
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const CircleAvatar(
+              radius: 60,
+              backgroundImage:
+                NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+              child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: CircleAvatar(
+                        radius: 18,
+                        child: Icon(Icons.edit),
+                      ),
+                    ),
+                  ]
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
-              'Name: $_name',
+              _name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Email: $_email',
+              _email,
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16), // Add space between email and list item
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
             ListTile(
               title: const Text('Test History'),
               leading: const Icon(Icons.history),
@@ -151,7 +162,7 @@ class _ProfilePageState extends State<ProfileView> {
             ),
             const Spacer(),
             Center(
-              child: ElevatedButton(
+              child: FilledButton.tonal(
                 onPressed: () {
                   _showLogoutDialog();
                 },

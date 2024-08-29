@@ -55,7 +55,7 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        ElevatedButton(
+                        FilledButton(
                           onPressed: () {
                             Navigator.push(
                               context,

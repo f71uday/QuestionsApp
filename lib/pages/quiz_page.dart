@@ -13,7 +13,7 @@ class QuizPage extends StatefulWidget {
   final String questionLink;
   final String subjectName;
 
-  QuizPage({
+  const QuizPage({super.key,
     required this.questionLink,
     required this.subjectName,
   });
@@ -331,7 +331,7 @@ class _QuizPageState extends State<QuizPage> {
                     padding: const EdgeInsets.all(20.0),
                     child: SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
+                      child: FilledButton(
                           onPressed: _confirmEnd,
                           child: const Text(
                             'End',
@@ -376,7 +376,7 @@ class _QuizPageState extends State<QuizPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: ElevatedButton(
+                        child: FilledButton(
                           onPressed: selectedOptionIndex == null
                               ? null
                               : _nextQuestion,
@@ -385,7 +385,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       Padding(padding: EdgeInsets.all(10.0)),
                       Expanded(
-                        child: ElevatedButton(
+                        child: FilledButton.tonal(
                           onPressed: _skipQuestion,
                           child: Text('Skip'),
                         ),
@@ -408,11 +408,11 @@ class _QuizPageState extends State<QuizPage> {
         title: Text('Confirm'),
         content: Text('Are you sure want to end this quiz?'),
         actions: [
-          TextButton(
+          FilledButton.tonal(
             onPressed: () => Navigator.of(context).pop(),
             child: Text('No'),
           ),
-          TextButton(
+          FilledButton(
               onPressed: () {
                 _timer?.cancel();
                 isActive = false;

@@ -80,8 +80,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                             curve: Curves.easeInOutBack,
                             child: isExpanded
                                 ? Container(
-                                    color:
-                                        const Color.fromRGBO(138, 43, 226, 0.1),
+
                                     width: double.infinity,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(

@@ -135,7 +135,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20),
-                      ElevatedButton(
+                      FilledButton(
                         onPressed: () {
                           Navigator.pop(
                               context); // Go back to the previous screen
