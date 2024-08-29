@@ -21,9 +21,9 @@ class _ProfilePageState extends State<ProfileView> {
   String _name = "Loading...";
   String _email = "Loading...";
   bool _isLoading = true;
-  late String _appVersion ;
-  late bool _isDarkMode = true;
+  late String _appVersion;
 
+  late bool _isDarkMode = true;
 
   @override
   void initState() {
@@ -31,7 +31,6 @@ class _ProfilePageState extends State<ProfileView> {
     _fetchProfileData();
     _getAppVersionAndMode();
   }
-
 
   Future<void> _getAppVersionAndMode() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,13 +42,14 @@ class _ProfilePageState extends State<ProfileView> {
   }
 
   Future<void> _fetchProfileData() async {
-   final response = await ProfileService().fetchProfileData();
+    final response = await ProfileService().fetchProfileData();
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final userSession = UserSession.fromJson(data);
 
       setState(() {
-        _name = '${userSession.identity?.traits?.name?.first ?? ''} ${userSession.identity?.traits?.name?.last ?? ''}';
+        _name =
+            '${userSession.identity?.traits?.name?.first ?? ''} ${userSession.identity?.traits?.name?.last ?? ''}';
         _email = userSession.identity?.traits?.email ?? '';
         _isLoading = false;
       });
@@ -105,73 +105,81 @@ class _ProfilePageState extends State<ProfileView> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const CircleAvatar(
-              radius: 60,
-              backgroundImage:
-                NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: CircleAvatar(
-                        radius: 18,
-                        child: Icon(Icons.edit),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 60,
+                    backgroundImage: NetworkImage(
+                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                    child: Stack(children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          radius: 18,
+                          child: Icon(Icons.edit),
+                        ),
                       ),
+                    ]),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _email,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  const Row(
+                    children: [
+                      Text("Settings"),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                          child: Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                      )),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(_isDarkMode
+                            ? Icons.mode_night_outlined
+                            : Icons.nightlight),
+                        const Text('Dark Mode'),
+                        Switch(
+                          value: _isDarkMode,
+                          onChanged: (value) {
+                            themeProvider.toggleTheme(value);
+                            setState(() {
+                              _isDarkMode = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                  ]
+                  ),
+                  const Spacer(),
+                  Center(
+                    child: FilledButton.tonal(
+                      onPressed: () {
+                        _showLogoutDialog();
+                      },
+                      child: const Text('Logout'),
+                    ),
+                  ),
+                  Center(child: Text('Version: $_appVersion')),
+                ],
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _email,
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 16),
-            ListTile(
-              title: const Text('Test History'),
-              leading: const Icon(Icons.history),
-              onTap: () {
-                // Navigate to the Test History page
-                Navigator.pushNamed(context, '/testHistory');
-              },
-
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Dark Mode'),
-                Switch(
-                  value: _isDarkMode,
-                  onChanged: (value) {
-                    themeProvider.toggleTheme(value);
-                    setState(() {
-                      _isDarkMode = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            const Spacer(),
-            Center(
-              child: FilledButton.tonal(
-                onPressed: () {
-                  _showLogoutDialog();
-                },
-                child: const Text('Logout'),
-              ),
-            ),
-            Center(child: Text('Version: $_appVersion')),
-          ],
-        ),
       ),
     );
   }
