@@ -11,7 +11,9 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   late Future<List<Subject>> subjects;
-  late SubjectService _subjectService ;
+  late SubjectService _subjectService;
+  late Subject selectSubject;
+  int _radioGroupValue = -1;
 
   @override
   void initState() {
@@ -25,6 +27,11 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
     super
         .build(context); // Ensure AutomaticKeepAliveClientMixin works correctly
     return Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => QuizPage(questionLink: selectSubject.questionsLink, subjectName: selectSubject.name),)),
+          label: Text('Start Quiz'),
+          icon: Icon(Icons.play_arrow),
+        ),
       appBar: AppBar(
         title: const Text('Subjects'),
         automaticallyImplyLeading: false,
@@ -47,27 +54,23 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Radio(
+                            value: index,
+                            groupValue: _radioGroupValue,
+                            onChanged: (value) {
+                             setState(() {
+                               _radioGroupValue = value!;
+                               selectSubject = snapshot.data![index];
+                             });
+                            },),
+                        const SizedBox(width: 8.0),
                         Flexible(
                           child: Text(
                             subject.name,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        FilledButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QuizPage(
-                                  questionLink: subject.questionsLink,
-                                  subjectName: subject.name,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('Start Quiz'),
                         ),
                       ],
                     ),
@@ -83,4 +86,6 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
+
+
 }
