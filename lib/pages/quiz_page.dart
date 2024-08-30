@@ -244,7 +244,7 @@ class _QuizPageState extends State<QuizPage> {
               elevation: 5.0,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.info),
+                  icon: Icon(Icons.info_outline),
                   onPressed: () {
                     // _scaffoldKey.currentState!.openEndDrawer();
                     _showBottomSheet(currentQuestion);
@@ -285,7 +285,7 @@ class _QuizPageState extends State<QuizPage> {
                   DrawerHeader(
                     child: Text(
                       '${widget.subjectName} Quiz',
-                      style: TextStyle(fontSize: 30.0),
+                      style: const TextStyle(fontSize: 30.0),
                     ),
                   ),
                   ListTile(
