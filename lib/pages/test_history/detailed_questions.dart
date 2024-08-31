@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/test_result/result.dart';
 import '../../service/test_history_services.dart';
 
 class DetailedQuestionsPage extends StatefulWidget {
@@ -21,6 +22,14 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   late bool _isLoading = true;
   late bool _hasError = false;
   final Set<int> _expandedTiles = {}; // Set to track expanded tiles
+
+  Color _getColor(questionResponse){
+    return questionResponse.result == Result.CORRECT ? Colors.green: Colors.red;
+  }
+
+  String _getTopics(questionResponse) {
+    return questionResponse.question.topics.map((topic) => topic.name).join(',');
+  }
 
   @override
   void initState() {
@@ -90,13 +99,18 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Answer: ${questionResponse.userAnswer}',
+                                            'Your Response: ${questionResponse.userAnswer}',
+                                            style:
+                                            TextStyle(fontSize: 16, color: _getColor(questionResponse)),
+                                          ),
+                                          Text(
+                                            'Correct Answer: ${questionResponse.question.answer.text}',
                                             style:
                                                 const TextStyle(fontSize: 16),
                                           ),
-                                          const SizedBox(height: 8),
+                                          const SizedBox(height: 16),
                                           Text(
-                                            'Result: ${questionResponse.result}',
+                                            '[ ${_getTopics(questionResponse)} ]',
                                             style:
                                                 const TextStyle(fontSize: 16),
                                           ),

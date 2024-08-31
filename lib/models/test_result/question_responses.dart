@@ -9,7 +9,6 @@ class QuestionResponses{
     String userAnswer;
     Result result;
 
-
     QuestionResponses(this.question, this.userAnswer, this.result);
 
 
