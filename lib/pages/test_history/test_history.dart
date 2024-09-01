@@ -190,54 +190,76 @@ class TestHistoryPageState extends State<TestHistoryPage> {
           ? const Center(child: CircularProgressIndicator())
           : _hasError
               ? const Center(child: Text('Failed to load data.'))
-              : ListView.separated(
+              : ListView.builder(
                   itemCount: _filteredResults.length,
-                  separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (context, index) {
                     final testResult = _filteredResults[index];
-                    return ListTile(
-                      onTap: () =>Navigator.push(context,MaterialPageRoute(builder: (context) => DetailedQuestionsPage(testResult.links["questionResponses"]!.href,testResult.testName),)),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      title: Text(
-                        testResult.testName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      elevation: 4,
+                      child: InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailedQuestionsPage(
+                              testResult.links["questionResponses"]!.href,
+                              testResult.testName,
+                            ),
+                          ),
                         ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
-                          Text(
-                              'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '${testResult.percentage.toStringAsFixed(2)}%',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: _getColor(testResult.remark)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    testResult.testName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                      'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                      'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
+                                  const SizedBox(height: 12),
+
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${testResult.percentage.toStringAsFixed(2)}%',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: _getColor(testResult.remark),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.arrow_forward_ios, size: 16),
-                        ],
+                        ),
                       ),
-                      isThreeLine: true,
                     );
                   },
                 ),
     );
   }
-
 }
