@@ -246,39 +246,12 @@ class _QuizPageState extends State<QuizPage> {
                 IconButton(
                   icon: Icon(Icons.info_outline),
                   onPressed: () {
-                    // _scaffoldKey.currentState!.openEndDrawer();
                     _showBottomSheet(currentQuestion);
                   },
                 ),
               ],
             ),
-            endDrawer: Drawer(
-              child: Column(
-                children: [
-                  const Spacer(),
-                  const Text(
-                    'tags',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const Divider(),
-                  Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: currentQuestion.topics
-                        .map((tag) => Chip(
-                              label: Text(tag.name),
-                              backgroundColor:
-                                  const Color.fromARGB(100, 213, 212, 212),
-                              labelStyle: const TextStyle(
-                                color: Colors.black,
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                  const Padding(padding: EdgeInsets.all(20))
-                ],
-              ),
-            ),
+
             drawer: Drawer(
               child: Column(
                 children: [
