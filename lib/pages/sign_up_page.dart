@@ -218,29 +218,27 @@ class _SignupPageState extends State<SignupPage> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          // Continue with other children here
-                          if (!_isLoading)
-                            SizedBox(
-                              width: double.infinity,
-                              child: FilledButton(
-                                onPressed: _signup,
-                                child: const Text('Signup'),
-                              ),
+                    Column(
+                      children: [
+                        // Continue with other children here
+                        if (!_isLoading)
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: _signup,
+                              child: const Text('Signup'),
                             ),
-                          if (_isLoading) const LinearProgressIndicator(),
-                          const SizedBox(height: 10),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, dotenv.env['ROUTE_SIGN_IN']!);
-                            },
-                            child: const Text('Already have an account? Login'),
                           ),
-                        ],
-                      ),
+                        if (_isLoading) const LinearProgressIndicator(),
+                        const SizedBox(height: 10),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, dotenv.env['ROUTE_SIGN_IN']!);
+                          },
+                          child: const Text('Already have an account? Login'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
