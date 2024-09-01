@@ -17,7 +17,7 @@ class ProfileView extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfileView> {
+class _ProfilePageState extends State<ProfileView> with AutomaticKeepAliveClientMixin{
   String _name = "Loading...";
   String _email = "Loading...";
   bool _isLoading = true;
@@ -94,6 +94,7 @@ class _ProfilePageState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -129,7 +130,7 @@ class _ProfilePageState extends State<ProfileView> {
                   const SizedBox(height: 8),
                   Text(
                     _email,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 16),
                   const Row(
@@ -182,5 +183,8 @@ class _ProfilePageState extends State<ProfileView> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }

@@ -47,6 +47,7 @@ dependencies:
   shared_preferences: ^2.3.2
   json_theme: ^6.5.0+1
   flutter_native_splash: ^2.4.1
+  dio: ^5.6.0
 
 flutter_native_splash:
   color: "#ff0000" # Background color of the splash screen

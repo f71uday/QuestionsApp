@@ -10,6 +10,7 @@ class SubjectService extends FaultNavigator{
   final HttpService _httpService = HttpService();
   final String? baseUrl = dotenv.env['BASE_URL'];
   final String? subjects = dotenv.env['SUBJECTS'];
+  final String? subjectTest = dotenv.env['SUBJECT_TEST'];
 
   SubjectService(super.context);
 
@@ -17,7 +18,7 @@ class SubjectService extends FaultNavigator{
     log('Request to fetch subject initialized.');
     final response = await _httpService.authorizedGet(Uri.parse('$baseUrl$subjects'));
 
-    log('fetch subject response : $response');
+    log('fetch subject response : $response.body');
 
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
@@ -32,4 +33,5 @@ class SubjectService extends FaultNavigator{
       navigateToLoginScreen();
       return [];
   }
+
 }

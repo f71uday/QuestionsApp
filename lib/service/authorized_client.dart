@@ -1,8 +1,11 @@
 import 'package:http/http.dart';
+import 'package:dio/dio.dart' as dio;
 
 import 'auth_service.dart';
 
 class HttpService {
+  final dioService = dio.Dio();
+
   Future<Response> authorizedGet(Uri url) async {
     String? sessionToken = await AuthService.getAccessToken();
     return await get(
@@ -12,6 +15,7 @@ class HttpService {
       },
     );
   }
+
   Future<Response> authorizedPost(Uri url, String body) async {
     String? sessionToken = await AuthService.getAccessToken();
 
@@ -27,7 +31,8 @@ class HttpService {
       body: body,
     );
   }
-  Future<Response> authorizedDelete(Uri url,String body) async {
+
+  Future<Response> authorizedDelete(Uri url, String body) async {
     String? sessionToken = await AuthService.getAccessToken();
 
     // Combine the provided headers with the Authorization header
@@ -41,5 +46,17 @@ class HttpService {
       headers: combinedHeaders,
       body: body,
     );
+  }
+
+  Future<dio.Response> authorizedGET(
+      String path, Map<String, dynamic> queryParams) async {
+    String? sessionToken = await AuthService.getAccessToken();
+    return await dioService.get(path,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "Authorization": 'Bearer $sessionToken',
+          },
+        ));
   }
 }

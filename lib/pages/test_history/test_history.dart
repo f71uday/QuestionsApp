@@ -13,7 +13,8 @@ class TestHistoryPage extends StatefulWidget {
   TestHistoryPageState createState() => TestHistoryPageState();
 }
 
-class TestHistoryPageState extends State<TestHistoryPage> {
+class TestHistoryPageState extends State<TestHistoryPage>
+    with AutomaticKeepAliveClientMixin {
   late List<TestResult> _testResults = [];
   late List<TestResult> _filteredResults = [];
   DateFormat formatter = DateFormat('dd-MM-yyyy');
@@ -176,6 +177,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
@@ -232,12 +234,11 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                                   Text(
                                       'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
                                   const SizedBox(height: 12),
-
                                 ],
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
@@ -262,4 +263,7 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                 ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

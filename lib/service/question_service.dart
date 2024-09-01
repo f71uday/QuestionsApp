@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../models/Questions/question.dart';
 import '../models/test_result.dart';
 import 'authorized_client.dart';
@@ -10,16 +12,16 @@ class QuestionService extends FaultNavigator {
   QuestionService(super.context);
 
   final HttpService _httpService = HttpService();
-
+  final String? baseUrl = dotenv.env['BASE_URL'];
+  final String? subjectTest = dotenv.env['SUBJECT_TEST'];
   var http_response;
 
-  Future<List<Question>> fetchQuestions(String questionLink) async {
-    final response = await _httpService.authorizedGet(Uri.parse(questionLink));
+  Future<List<Question>> fetchQuestions(String subjectIds) async {
+    final response = await _httpService.authorizedGET('$baseUrl$subjectTest',{'subjectIds':subjectIds});
 
     if (response.statusCode == 200) {
       http_response = response;
-      final parsed = json.decode(response.body);
-      final questionsJson = parsed['questions'] as List;
+      final questionsJson = response.data['questions'] as List;
       try {
         return questionsJson.map((json) => Question.fromJson(json)).toList();
       } catch (error) {
@@ -34,8 +36,7 @@ class QuestionService extends FaultNavigator {
   }
 
   String fetchResponseLink() {
-    final parsed = json.decode(http_response.body);
-    return parsed['_links']['response']['href'] as String;
+    return http_response.data['_links']['response']['href'] as String;
   }
 
   Future<TestResult?> fetchTestResponse(
