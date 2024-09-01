@@ -2,6 +2,7 @@ import 'package:VetScholar/pages/test_history/test_history.dart';
 import 'package:VetScholar/pages/view/home_view.dart';
 import 'package:VetScholar/pages/view/profile_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '../models/subjects.dart';
 

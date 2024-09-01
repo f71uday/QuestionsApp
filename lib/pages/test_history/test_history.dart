@@ -195,11 +195,11 @@ class TestHistoryPageState extends State<TestHistoryPage> {
                   separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (context, index) {
                     final testResult = _filteredResults[index];
-                    return ListTile(
+                    return Card(
                       onTap: () =>Navigator.push(context,MaterialPageRoute(builder: (context) => DetailedQuestionsPage(testResult.links["questionResponses"]!.href,testResult.testName),)),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
-                      title: Text(
+                      chil: Text(
                         testResult.testName,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,

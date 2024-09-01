@@ -4,6 +4,7 @@ import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,6 +27,11 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoginSuccessful = false;
   bool _obscureText = true;
 
+  @override
+  @override
+  void initState() {
+    super.initState();
+  }
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {

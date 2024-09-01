@@ -46,6 +46,16 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   json_theme: ^6.5.0+1
+  flutter_native_splash: ^2.4.1
+
+flutter_native_splash:
+  color: "#111418" # Background color of the splash screen
+  image: assets/no-connection.png # Path to your splash screen image
+  android: true # Enable for Android
+  ios: true # Enable for iOS
+  android_gravity: center # Center the image on Android
+  ios_content_mode: scaleAspectFill # Scale the image for iOS
+  fullscreen: true # Enable full-screen mode
 
 dev_dependencies:
   flutter_test:

@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfileView> {
   String _email = "Loading...";
   bool _isLoading = true;
   String _appVersion = "1.0.0";
-
   bool _isDarkMode = false;
 
   @override

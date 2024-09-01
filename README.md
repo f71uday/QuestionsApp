@@ -11,6 +11,7 @@ https://docs.flutter.dev/data-and-backend/serialization/json#generating-code-con
 
 ```bash
 dart run build_runner watch --delete-conflicting-outputs
+flutter pub run flutter_native_splash:create
 ```
 
 ## Swagger CodeGen
