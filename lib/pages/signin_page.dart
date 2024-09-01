@@ -138,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                       Flexible(
                         child: TextFormField(
                           controller: _usernameController,
-                          decoration: InputDecoration(
-                              labelText: 'Username',
+                          decoration: const InputDecoration(
+                              labelText: 'E-mail',
                               border: OutlineInputBorder()),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
