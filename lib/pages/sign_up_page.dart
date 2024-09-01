@@ -18,7 +18,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final EmailValidatorFlutter emailValidatorFlutter = EmailValidatorFlutter();
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -42,7 +43,8 @@ class _SignupPageState extends State<SignupPage> {
         log(initResponse.toString());
 
         if (initResponse.statusCode != 200) {
-          _showSnackBar('Failed to initialize registration. Please try again.', false);
+          _showSnackBar(
+              'Failed to initialize registration. Please try again.', false);
           return;
         }
 
@@ -51,7 +53,9 @@ class _SignupPageState extends State<SignupPage> {
         //final csrfToken = initJson['csrf_token'];
 
         final response = await http.post(
-            Uri.parse(baseURL!).resolve(signUp!).replace(queryParameters: {'flow': flowId}),
+          Uri.parse(baseURL!)
+              .resolve(signUp!)
+              .replace(queryParameters: {'flow': flowId}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           body: {
             'traits.email': _emailController.text,
@@ -61,15 +65,19 @@ class _SignupPageState extends State<SignupPage> {
             'password': _passwordController.text,
           },
         );
-          log('signup response body: $response.toString()');
+        log('signup response body: $response.toString()');
         if (response.statusCode == 200 || response.statusCode == 201) {
           _showSnackBar('Signup successful!', true);
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGN_IN']!);
+            Navigator.pushReplacementNamed(
+                context, dotenv.env['ROUTE_SIGN_IN']!);
           });
         } else {
           final errorResponse = json.decode(response.body);
-          _showSnackBar(errorResponse['ui']['messages'][0]['text'] ?? 'Signup failed. Please try again.', false);
+          _showSnackBar(
+              errorResponse['ui']['messages'][0]['text'] ??
+                  'Signup failed. Please try again.',
+              false);
         }
       } catch (error) {
         _showSnackBar('Network error. Please check your connection.', false);
@@ -82,7 +90,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _showSnackBar(String message, bool isSuccess) {
-    CustomSnackBar().showCustomToastWithCloseButton(context, isSuccess ? Colors.green : Colors.red, isSuccess ? Icons.check : Icons.error, message);
+    CustomSnackBar().showCustomToastWithCloseButton(
+        context,
+        isSuccess ? Colors.green : Colors.red,
+        isSuccess ? Icons.check : Icons.error,
+        message);
   }
 
   @override
@@ -106,9 +118,13 @@ class _SignupPageState extends State<SignupPage> {
                         children: <Widget>[
                           TextFormField(
                             controller: _emailController,
-                            decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
+                            decoration: InputDecoration(
+                                labelText: 'Email',
+                                border: OutlineInputBorder()),
                             validator: (value) {
-                              if (value == null || value.isEmpty || !emailValidatorFlutter.validateEmail(value)) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !emailValidatorFlutter.validateEmail(value)) {
                                 return 'Please enter your email';
                               }
 
@@ -118,7 +134,9 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 20),
                           TextFormField(
                             controller: _firstNameController,
-                            decoration: InputDecoration(labelText: 'First Name', border: OutlineInputBorder()),
+                            decoration: InputDecoration(
+                                labelText: 'First Name',
+                                border: OutlineInputBorder()),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your first name';
@@ -129,7 +147,9 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 20),
                           TextFormField(
                             controller: _lastNameController,
-                            decoration: InputDecoration(labelText: 'Last Name', border: OutlineInputBorder()),
+                            decoration: InputDecoration(
+                                labelText: 'Last Name',
+                                border: OutlineInputBorder()),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your last name';
@@ -145,7 +165,9 @@ class _SignupPageState extends State<SignupPage> {
                               border: const OutlineInputBorder(),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                  _obscurePassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -168,7 +190,6 @@ class _SignupPageState extends State<SignupPage> {
                             decoration: const InputDecoration(
                               labelText: 'Confirm Password',
                               border: OutlineInputBorder(),
-
                             ),
                             obscureText: _obscureConfirmPassword,
                             validator: (value) {
@@ -181,50 +202,45 @@ class _SignupPageState extends State<SignupPage> {
                               return null;
                             },
                           ),
+                          CheckboxListTile(
+                            title: const Text(
+                              "I accept the terms and conditions",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            value: _acceptTerms,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _acceptTerms = newValue!;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Align(
-
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    CheckboxListTile(
-                      title: const Text("I accept the terms and conditions", style: TextStyle(fontSize: 14),),
-                      value: _acceptTerms,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _acceptTerms = newValue!;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                      if(!_isLoading)
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _signup,
-                          child: const Text('Signup'),
-                        ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          // Continue with other children here
+                          if (!_isLoading)
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: _signup,
+                                child: const Text('Signup'),
+                              ),
+                            ),
+                          if (_isLoading) const LinearProgressIndicator(),
+                          const SizedBox(height: 10),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, dotenv.env['ROUTE_SIGN_IN']!);
+                            },
+                            child: const Text('Already have an account? Login'),
+                          ),
+                        ],
                       ),
-                    if (_isLoading) const LinearProgressIndicator(),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGN_IN']!);
-                      },
-                      child: const Text('Already have an account? Login'),
                     ),
                   ],
                 ),

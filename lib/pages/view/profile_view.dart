@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfileView> {
                       children: [
                         Icon(_isDarkMode
                             ? Icons.mode_night_outlined
-                            : Icons.nightlight),
+                            : Icons.sunny),
                         const Text('Dark Mode'),
                         Switch(
                           value: _isDarkMode,

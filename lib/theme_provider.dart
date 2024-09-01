@@ -17,7 +17,7 @@ class ThemeProvider extends ChangeNotifier {
   void toggleTheme(bool isDarkMode) async {
     ThemeData? lightTheme = await _loadThemeFromAssets(isDark: true);
     ThemeData? darkTheme = await _loadThemeFromAssets(isDark: false);
-    currentTheme = isDarkMode ? darkTheme : lightTheme;
+    currentTheme = isDarkMode ? lightTheme : darkTheme;
     notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(themePreferenceKey!, isDarkMode);
@@ -28,7 +28,7 @@ class ThemeProvider extends ChangeNotifier {
     ThemeData? darkTheme = await _loadThemeFromAssets(isDark: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isDarkMode = prefs.getBool(themePreferenceKey!) ?? false;
-    currentTheme = isDarkMode ? darkTheme : lightTheme;
+    currentTheme = isDarkMode ? lightTheme : darkTheme;
     notifyListeners();
   }
 

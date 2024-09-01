@@ -17,6 +17,6 @@ build:
       - echo Build started on `date`
       - flutter build apk --no-shrink
       - ls -al
-  post_build:
-    commands:
-      - echo Build completed on `date`
+    post_build:
+      commands:
+        - echo Build completed on `date`

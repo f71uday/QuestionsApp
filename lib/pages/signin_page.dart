@@ -8,8 +8,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
-  String? baseURL = (dotenv.env['BASE_URL'] )?.trim();
+  String? baseURL = (dotenv.env['BASE_URL'])?.trim();
   String? initializeSignIn = dotenv.env['INITIALIZE_LOGIN'];
   String? sessionTokenKey = dotenv.env['SESSION_TOKEN_KEY'];
   bool _isLoginSuccessful = false;
@@ -32,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -62,12 +64,14 @@ class _LoginPageState extends State<LoginPage> {
             final loginData = jsonDecode(loginResponse.body);
 
             // Save session token in secure storage SESSION_TOKEN_KEY
-            await secureStorage.write(key: sessionTokenKey!, value: loginData[sessionTokenKey!]);
+            await secureStorage.write(
+                key: sessionTokenKey!, value: loginData[sessionTokenKey!]);
 
             setState(() {
               _isLoginSuccessful = true;
               _showCustomToast();
-              Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SUBJECTS']! );
+              Navigator.pushReplacementNamed(
+                  context, dotenv.env['ROUTE_SUBJECTS']!);
             });
           } else {
             setState(() {
@@ -100,22 +104,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showErrorMessage(String message) {
-    CustomSnackBar().showCustomToastWithCloseButton(context,Colors.red,Icons.close,message);
+    CustomSnackBar().showCustomToastWithCloseButton(
+        context, Colors.red, Icons.close, message);
   }
 
   void _showCustomToast() {
-    CustomSnackBar().showCustomToast(context,Colors.green,Icons.check,"LoggedIn Successfully");
+    CustomSnackBar().showCustomToast(
+        context, Colors.green, Icons.check, "LoggedIn Successfully");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login'),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: const Text('Login'),
         automaticallyImplyLeading: false,
       ),
-
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
             Spacer(),
@@ -128,52 +135,57 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                            labelText: 'Username',
-                            border: OutlineInputBorder()),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                              labelText: 'Username',
+                              border: OutlineInputBorder()),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your username';
+                            }
+                            return null;
+                          },
                         ),
-                        obscureText: _obscureText,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 20),
+                      Flexible(
+                        child: TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                            ),
+                          ),
+                          obscureText: _obscureText,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () => Navigator.pushReplacementNamed(context, '/forgot-password'),
-                            child: Text('Forgot Password?'),
+                            onPressed: () => Navigator.pushReplacementNamed(
+                                context, '/forgot-password'),
+                            child: const Text('Forgot Password?'),
                           ),
                         ],
                       ),
@@ -182,27 +194,28 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Spacer(),
+            const SizedBox(height: 20),
+            const Spacer(),
             Column(
               children: [
                 if (!_isLoading)
                   SizedBox(
-                    width: double.infinity, // Make the button take the full width
-                    child: ElevatedButton(
+                    width: double.infinity,
+                    // Make the button take the full width
+                    child: FilledButton(
                       onPressed: _login,
-                      child: Text('Login'),
+                      child: const Text('Login'),
                     ),
                   ),
-                if (_isLoading)
-                  LinearProgressIndicator(),
+                if (_isLoading) const LinearProgressIndicator(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an Account?"),
+                    const Text("Don't have an Account?"),
                     TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(context, dotenv.env['ROUTE_SIGNUP']!),
-                      child: Text('SignUp'),
+                      onPressed: () => Navigator.pushReplacementNamed(
+                          context, dotenv.env['ROUTE_SIGNUP']!),
+                      child: const Text('SignUp'),
                     ),
                   ],
                 ),

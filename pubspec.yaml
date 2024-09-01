@@ -49,7 +49,7 @@ dependencies:
   flutter_native_splash: ^2.4.1
 
 flutter_native_splash:
-  color: "#111418" # Background color of the splash screen
+  color: "#ff0000" # Background color of the splash screen
   image: assets/no-connection.png # Path to your splash screen image
   android: true # Enable for Android
   ios: true # Enable for iOS
