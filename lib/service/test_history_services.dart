@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:VetScholar/service/fault_navigator.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/paged_response.dart';
 import '../models/test_result.dart';
 import 'authorized_client.dart';
-import 'package:http/src/response.dart';
 
 class TestHistoryServices extends FaultNavigator {
   final HttpService _httpService = HttpService();
@@ -17,15 +17,15 @@ class TestHistoryServices extends FaultNavigator {
 
   TestHistoryServices(super.context);
 
-  Future<List<TestResult>?> fetchHistory() async {
+  Future<List<TestResult>?> fetchHistory({required int page}) async {
     log('Request to fetch test history initialized.');
     final response =
-        await _httpService.authorizedGet(Uri.parse('$baseUrl$subjects'));
-    log('fetch subject response : $response');
+        await _httpService.authorizedGET('$baseUrl$subjects',{'size':6,'page': page});
+    log('fetch subject response : $response.body');
     _handleError(response);
-    final parsed = json.decode(response.body);
-    PagedResponse pagedResponse = PagedResponse.fromJson(parsed);
-    log('subjects loaded successfully. subjects: $parsed');
+
+    PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
+    log('subjects loaded successfully. subjects: $response.data');
     return pagedResponse.embedded.testResponses;
   }
 
@@ -44,11 +44,20 @@ class TestHistoryServices extends FaultNavigator {
   async {
     log('Request to fetch test Questions initialized.');
     final response = await _httpService.authorizedGet(uri);
-    _handleError(response);
-    final parsed = json.decode(response.body);
-    PagedResponse pagedResponse = PagedResponse.fromJson(parsed);
-    log('subjects loaded successfully. subjects: $parsed');
-    return pagedResponse.embedded.questionResponses;
+    if (response.statusCode != 200 && response.statusCode != 401) {
+      log("Could not fetch test history response code : $response.statusCode and response body: $response.body");
 
+      //TODO:Handle to show No Internet Screen
+      throw Exception('An error occurred while connecting to server');
+    } else if (response.statusCode == 401) {
+      navigateToLoginScreen();
+    }
+    else {
+      final parsed = json.decode(response.body);
+      PagedResponse pagedResponse = PagedResponse.fromJson(parsed);
+      log('subjects loaded successfully. subjects: $parsed');
+      return pagedResponse.embedded.questionResponses;
+    }
+    return null;
   }
 }
