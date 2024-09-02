@@ -17,8 +17,8 @@ class _SubjectListPageState extends State<SubjectListPage> {
   final PageController _pageController = PageController();
   static final List<Widget> _pages = <Widget>[
     HomeView(),
-    ProfileView(),
-    TestHistoryPage()
+    TestHistoryPage(),
+    ProfileView()
   ];
 
   @override
@@ -42,12 +42,11 @@ class _SubjectListPageState extends State<SubjectListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History')
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

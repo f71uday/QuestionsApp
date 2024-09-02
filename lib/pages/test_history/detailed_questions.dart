@@ -72,9 +72,10 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                 horizontal: 12, vertical: 8),
                             title: Text(
                               questionResponse.question.text,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
+                                color: _getColor(questionResponse)
                               ),
                             ),
                             trailing: Icon(

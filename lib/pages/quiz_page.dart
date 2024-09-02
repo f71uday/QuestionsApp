@@ -13,7 +13,8 @@ class QuizPage extends StatefulWidget {
   final String questionLink;
   final String subjectName;
 
-  const QuizPage({super.key,
+  const QuizPage({
+    super.key,
     required this.questionLink,
     required this.subjectName,
   });
@@ -169,7 +170,6 @@ class _QuizPageState extends State<QuizPage> {
                 children: currentQuestion.topics
                     .map((tag) => Chip(
                           label: Text(tag.name),
-
                         ))
                     .toList(),
               ),
@@ -244,14 +244,19 @@ class _QuizPageState extends State<QuizPage> {
               elevation: 5.0,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.info_outline),
+                  icon: Icon(Icons.bookmark),
                   onPressed: () {
                     _showBottomSheet(currentQuestion);
                   },
                 ),
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () {
+                    _showBottomSheet(currentQuestion);
+                  },
+                )
               ],
             ),
-
             drawer: Drawer(
               child: Column(
                 children: [
@@ -273,7 +278,8 @@ class _QuizPageState extends State<QuizPage> {
                       padding: EdgeInsets.all(10),
                       shrinkWrap: true,
                       physics: const AlwaysScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
@@ -349,18 +355,18 @@ class _QuizPageState extends State<QuizPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
+                        child: FilledButton.tonal(
+                          onPressed: _skipQuestion,
+                          child: Text('Skip'),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.all(10.0)),
+                      Expanded(
                         child: FilledButton(
                           onPressed: selectedOptionIndex == null
                               ? null
                               : _nextQuestion,
                           child: Text('Next'),
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.all(10.0)),
-                      Expanded(
-                        child: FilledButton.tonal(
-                          onPressed: _skipQuestion,
-                          child: Text('Skip'),
                         ),
                       ),
                     ],
