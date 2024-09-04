@@ -1,5 +1,3 @@
-
-
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:flutter/material.dart';
 
@@ -23,12 +21,14 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   late bool _hasError = false;
   final Set<int> _expandedTiles = {}; // Set to track expanded tiles
 
-  Color _getColor(questionResponse){
-    return questionResponse.result == Result.CORRECT ? Colors.green: Colors.red;
+  Color _getColor(questionResponse) {
+    return questionResponse.result == Result.CORRECT
+        ? Colors.green
+        : Colors.red;
   }
 
-  String _getTopics(questionResponse) {
-    return questionResponse.question.topics.map((topic) => topic.name).join(',');
+  bool _isPass(questionResponse) {
+    return questionResponse.result == Result.CORRECT;
   }
 
   @override
@@ -72,16 +72,31 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                 horizontal: 12, vertical: 8),
                             title: Text(
                               questionResponse.question.text,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: _getColor(questionResponse)
                               ),
                             ),
-                            trailing: Icon(
-                              isExpanded
-                                  ? Icons.expand_less
-                                  : Icons.expand_more,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Icon(
+                                    _isPass(questionResponse)
+                                        ? Icons.check
+                                        : Icons.close,
+                                    color: _getColor(questionResponse),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Icon(
+                                    isExpanded
+                                        ? Icons.expand_less
+                                        : Icons.expand_more,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                           AnimatedSize(
@@ -90,7 +105,6 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                             curve: Curves.easeInOutBack,
                             child: isExpanded
                                 ? Container(
-
                                     width: double.infinity,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -99,21 +113,47 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Your Response: ${questionResponse.userAnswer}',
-                                            style:
-                                            TextStyle(fontSize: 16, color: _getColor(questionResponse)),
+                                          Row(
+                                            children: [
+                                               Text(
+                                                'Your Response: ',
+                                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.primary),
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  questionResponse.userAnswer,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: _getColor(
+                                                          questionResponse)),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            'Correct Answer: ${questionResponse.question.answer.text}',
-                                            style:
-                                                const TextStyle(fontSize: 16),
+                                          Row(
+                                            children: [
+                                               Text(
+                                                'Correct Answer: ',
+                                                style:
+                                                TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.primary),
+                                              ),
+                                              Text(
+                                                questionResponse.question.answer.text,
+                                                style:
+                                                    const TextStyle(fontSize: 16),
+                                              ),
+                                            ],
                                           ),
                                           const SizedBox(height: 16),
-                                          Text(
-                                            '[ ${_getTopics(questionResponse)} ]',
-                                            style:
-                                                const TextStyle(fontSize: 16),
+                                          Wrap(
+                                            spacing: 8.0,
+                                            runSpacing: 8.0,
+                                            children:
+                                                questionResponse.question.topics
+                                                    .map((tag) => Chip(
+                                                          label: Text(tag.name),
+                                                        ))
+                                                    .toList(),
                                           ),
                                         ],
                                       ),

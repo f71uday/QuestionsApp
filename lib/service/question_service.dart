@@ -35,8 +35,15 @@ class QuestionService extends FaultNavigator {
     return [];
   }
 
-  String fetchResponseLink() {
+  String getResponseLink() {
     return http_response.data['_links']['response']['href'] as String;
+  }
+
+  String getQuizName(){
+    return http_response.data['name'];
+  }
+  String getQuizDesc(){
+    return http_response.data['description'];
   }
 
   Future<TestResult?> fetchTestResponse(

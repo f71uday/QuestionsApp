@@ -228,7 +228,7 @@ class _QuizPageState extends State<QuizPage> {
             // Navigate to the ColorAnimationPage when the quiz ends
             return ColorAnimationPage(
               response: response,
-              link: _questionService.fetchResponseLink(),
+              link: _questionService.getResponseLink(),
             );
           }
 
@@ -244,12 +244,6 @@ class _QuizPageState extends State<QuizPage> {
               elevation: 5.0,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.bookmark),
-                  onPressed: () {
-                    _showBottomSheet(currentQuestion);
-                  },
-                ),
-                IconButton(
                   icon: Icon(Icons.info_outline),
                   onPressed: () {
                     _showBottomSheet(currentQuestion);
@@ -261,9 +255,13 @@ class _QuizPageState extends State<QuizPage> {
               child: Column(
                 children: [
                   DrawerHeader(
-                    child: Text(
-                      '${widget.subjectName} Quiz',
-                      style: const TextStyle(fontSize: 30.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          '${_questionService.getQuizName()} Quiz',
+                          style: const TextStyle(fontSize: 30.0),
+                        ),
+                      ],
                     ),
                   ),
                   ListTile(

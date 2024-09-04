@@ -82,12 +82,15 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
             return Column(
               children: [
                 // Select All Checkbox
-                CheckboxListTile(
-                  title: const Text('Select All'),
-                  value: selectedSubjects.length == allSubjects.length,
-                  onChanged: (isSelected) =>
-                      _selectAll(isSelected ?? false, allSubjects),
-                  controlAffinity: ListTileControlAffinity.leading,
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: CheckboxListTile(
+                    title: const Text('Select All'),
+                    value: selectedSubjects.length == allSubjects.length,
+                    onChanged: (isSelected) =>
+                        _selectAll(isSelected ?? false, allSubjects),
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -96,7 +99,7 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                       final subject = allSubjects[index];
                       return Card(
                         margin: const EdgeInsets.all(5.0),
-                        elevation: 1.0,
+                        elevation: 4.0,
                         child: InkWell(
                           onTap: () => {
                             setState(() {
