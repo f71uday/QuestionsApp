@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -88,7 +89,7 @@ class _QuizPageState extends State<QuizPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              return noInternet();
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Text('No questions available.');
             } else {
@@ -225,7 +226,7 @@ class _QuizPageState extends State<QuizPage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return noInternet();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No questions available.');
                   } else {
@@ -260,11 +261,11 @@ class _QuizPageState extends State<QuizPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.question_mark_outlined),
-                            SizedBox(
+                            const Icon(Icons.question_mark_outlined),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               'Total Questions ',
                               style: TextStyle(fontSize: 16),
                             ),
@@ -275,21 +276,21 @@ class _QuizPageState extends State<QuizPage> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.timer_outlined),
-                            SizedBox(
+                            const Icon(Icons.timer_outlined),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               'Total Time ',
                               style: TextStyle(fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               '${_formattedTime(_remainingTime)} Min',
                               style: TextStyle(fontSize: 16),
@@ -313,13 +314,10 @@ class _QuizPageState extends State<QuizPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
               appBar: AppBar(title: Text('Quiz App')),
-              body: Center(child: CircularProgressIndicator()),
+              body: const Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
-            return Scaffold(
-              appBar: AppBar(title: Text('Quiz App')),
-              body: Center(child: Text('Error: ${snapshot.error}')),
-            );
+            return noInternet();
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Scaffold(
               appBar: AppBar(title: const Text('Quiz App')),
@@ -473,16 +471,16 @@ class _QuizPageState extends State<QuizPage> {
                           Expanded(
                             child: FilledButton.tonal(
                               onPressed: _scaffoldKey.currentState!.openDrawer,
-                              child: Text('Navigate'),
+                              child: const Text('Navigate'),
                             ),
                           ),
-                          Padding(padding: EdgeInsets.all(10.0)),
+                          const Padding(padding: EdgeInsets.all(10.0)),
                           Expanded(
                             child: FilledButton(
                               onPressed: selectedOptionIndex == null
                                   ? null
                                   : _confirmEnd,
-                              child: Text(
+                              child: const Text(
                                 'End',
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -534,5 +532,12 @@ class _QuizPageState extends State<QuizPage> {
         ],
       ),
     );
+  }
+  NoInternetPage noInternet(){
+    return NoInternetPage(onRetry: () {
+      setState(() {
+        Navigator.pop(context);
+      });
+    },);
   }
 }

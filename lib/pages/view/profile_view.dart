@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme_provider.dart';
 import '../../models/who_am_i.dart';
+import '../error/no-intrnet.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -17,12 +18,14 @@ class ProfileView extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfileView> with AutomaticKeepAliveClientMixin{
+class _ProfilePageState extends State<ProfileView>
+    with AutomaticKeepAliveClientMixin {
   String _name = "Loading...";
   String _email = "Loading...";
   bool _isLoading = true;
   String _appVersion = "1.0.0";
   bool _isDarkMode = false;
+  bool _hasError = true;
 
   @override
   void initState() {
@@ -41,21 +44,32 @@ class _ProfilePageState extends State<ProfileView> with AutomaticKeepAliveClient
   }
 
   Future<void> _fetchProfileData() async {
-    final response = await ProfileService().fetchProfileData();
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final userSession = UserSession.fromJson(data);
+    try {
+      final response = await ProfileService().fetchProfileData();
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final userSession = UserSession.fromJson(data);
 
+        setState(() {
+          _name =
+          '${userSession.identity?.traits?.name?.first ?? ''} ${userSession
+              .identity?.traits?.name?.last ?? ''}';
+          _email = userSession.identity?.traits?.email ?? '';
+          _isLoading = false;
+          _hasError = false;
+        });
+      } else {
+        setState(() {
+          _name = 'Error loading name';
+          _email = 'Error loading email';
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    } catch(_)
+    {
       setState(() {
-        _name =
-            '${userSession.identity?.traits?.name?.first ?? ''} ${userSession.identity?.traits?.name?.last ?? ''}';
-        _email = userSession.identity?.traits?.email ?? '';
-        _isLoading = false;
-      });
-    } else {
-      setState(() {
-        _name = 'Error loading name';
-        _email = 'Error loading email';
+        _hasError = true;
         _isLoading = false;
       });
     }
@@ -104,87 +118,96 @@ class _ProfilePageState extends State<ProfileView> with AutomaticKeepAliveClient
         padding: const EdgeInsets.all(16.0),
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                    child: Stack(children: [
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                          radius: 18,
-                          child: Icon(Icons.edit),
+            : _hasError
+                ? NoInternetPage(
+                    onRetry: () {
+                      setState(() {
+                        _isLoading = true;
+                        _hasError = false;
+                      });
+                      _fetchProfileData();
+                    },
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const CircleAvatar(
+                        radius: 60,
+                        backgroundImage: NetworkImage(
+                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                        child: Stack(children: [
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: CircleAvatar(
+                              radius: 18,
+                              child: Icon(Icons.edit),
+                            ),
+                          ),
+                        ]),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _name,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _email,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 16),
+                      const Row(
+                        children: [
+                          Text("Settings"),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                              child: Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(_isDarkMode
+                                ? Icons.mode_night_outlined
+                                : Icons.sunny),
+                            const Text('Dark Mode'),
+                            Switch(
+                              value: _isDarkMode,
+                              onChanged: (value) {
+                                themeProvider.toggleTheme(value);
+                                setState(() {
+                                  _isDarkMode = value;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ]),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _name,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _email,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  const Row(
-                    children: [
-                      Text("Settings"),
-                      SizedBox(
-                        width: 8,
+                      const Spacer(),
+                      Center(
+                        child: FilledButton.tonal(
+                          onPressed: () {
+                            _showLogoutDialog();
+                          },
+                          child: const Text('Logout'),
+                        ),
                       ),
-                      Expanded(
-                          child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      )),
+                      Center(child: Text('Version: $_appVersion')),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(_isDarkMode
-                            ? Icons.mode_night_outlined
-                            : Icons.sunny),
-                        const Text('Dark Mode'),
-                        Switch(
-                          value: _isDarkMode,
-                          onChanged: (value) {
-                            themeProvider.toggleTheme(value);
-                            setState(() {
-                              _isDarkMode = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  Center(
-                    child: FilledButton.tonal(
-                      onPressed: () {
-                        _showLogoutDialog();
-                      },
-                      child: const Text('Logout'),
-                    ),
-                  ),
-                  Center(child: Text('Version: $_appVersion')),
-                ],
-              ),
       ),
     );
   }
 
   @override
-  bool get wantKeepAlive => true;
-
+  bool get wantKeepAlive => false;
 }

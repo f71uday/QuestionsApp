@@ -6,6 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../models/Remark.dart';
 import '../../models/test_result.dart';
+import '../error/no-intrnet.dart';
 
 class TestHistoryPage extends StatefulWidget {
   const TestHistoryPage({super.key});
@@ -23,9 +24,11 @@ class TestHistoryPageState extends State<TestHistoryPage>
   bool _hasError = false;
   String _sortOption = 'Date'; // Default sort option
   String _filterOption = 'All'; // Default filter option
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   int _currentPage = 1;
   bool _isLastPage = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +51,8 @@ class TestHistoryPageState extends State<TestHistoryPage>
     });
   }
 
-  Future<void> _fetchTestHistory({bool isRefresh = false, bool isLoadMore = false}) async {
+  Future<void> _fetchTestHistory(
+      {bool isRefresh = false, bool isLoadMore = false}) async {
     if (isLoadMore && _isLastPage) {
       _refreshController.loadNoData();
       return;
@@ -56,7 +60,8 @@ class TestHistoryPageState extends State<TestHistoryPage>
 
     try {
       TestHistoryServices services = TestHistoryServices(context);
-      List<TestResult>? newResults = await services.fetchHistory(page: _currentPage);
+      List<TestResult>? newResults =
+          await services.fetchHistory(page: _currentPage);
 
       if (newResults != null && newResults.isNotEmpty) {
         if (isRefresh) {
@@ -229,82 +234,90 @@ class TestHistoryPageState extends State<TestHistoryPage>
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
-          ? const Center(child: Text('Failed to load data.'))
-          : SmartRefresher(
-        controller: _refreshController,
-        onRefresh: () => _fetchTestHistory(isRefresh: true),
-        enablePullUp: true,
-        onLoading: () => _fetchTestHistory(isLoadMore: true),
-        child: ListView.builder(
-          itemCount: _filteredResults.length,
-          itemBuilder: (context, index) {
-            final testResult = _filteredResults[index];
-            return Card(
-              margin: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              elevation: 4,
-              child: InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailedQuestionsPage(
-                      testResult.links["questionResponses"]!.href,
-                      testResult.testName,
-                    ),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            testResult.testName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+              ? NoInternetPage(
+                  onRetry: () {
+                    setState(() {
+                      _isLoading = true;
+                      _hasError = false;
+                    });
+                    _fetchTestHistory();
+                  },
+                )
+              : SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: () => _fetchTestHistory(isRefresh: true),
+                  enablePullUp: true,
+                  onLoading: () => _fetchTestHistory(isLoadMore: true),
+                  child: ListView.builder(
+                    itemCount: _filteredResults.length,
+                    itemBuilder: (context, index) {
+                      final testResult = _filteredResults[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        elevation: 4,
+                        child: InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailedQuestionsPage(
+                                testResult.links["questionResponses"]!.href,
+                                testResult.testName,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                              'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
-                          const SizedBox(height: 4),
-                          Text(
-                              'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${testResult.percentage.toStringAsFixed(2)}%',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: _getColor(testResult.remark),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      testResult.testName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                        'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                        'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
+                                    const SizedBox(height: 12),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '${testResult.percentage.toStringAsFixed(2)}%',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: _getColor(testResult.remark),
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-      ),
     );
   }
 
@@ -315,5 +328,5 @@ class TestHistoryPageState extends State<TestHistoryPage>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }

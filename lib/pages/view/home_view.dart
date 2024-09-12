@@ -1,3 +1,4 @@
+import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/service/subject_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -75,7 +76,9 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return NoInternetPage(onRetry: () {
+              
+            },);
           } else {
             final allSubjects = snapshot.data ?? [];
 
@@ -143,7 +146,7 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 
 
 }
