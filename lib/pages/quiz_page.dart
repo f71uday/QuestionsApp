@@ -207,84 +207,102 @@ class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     if (_showPreview) {
-      return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: _startQuiz,
-            child: const Icon(Icons.arrow_forward),
-          ),
-          appBar: AppBar(
-            title: Text('Preview'),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FutureBuilder<List<Question>>(
-              future: questions,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('No questions available.');
-                } else {
-                  final questionCount = snapshot.data!.length;
-                  return Column(
-                    children: [
-                      Text(
-                        _questionService.getQuizName(),
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      ),
-                      SizedBox(height: 15),
-                      const Row(
-                        children: [
-                          Text("Specifications"),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                              child: Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                              )),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(Icons.question_mark_outlined),
-                          SizedBox(width: 10,),
-                          Text('Total Questions ',style: TextStyle(fontSize: 16),),
-                          Spacer(),
-                          Text('$questionCount', style: TextStyle(fontSize: 16),),
-
-                        ],
-                      ),
-                      SizedBox(height: 20,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(Icons.timer_outlined),
-                          SizedBox(width: 10,),
-                          Text('Total Time ',style: TextStyle(fontSize: 16),),
-                          Spacer(),
-                          Text('${_formattedTime(_remainingTime)} Min', style: TextStyle(fontSize: 16),),
-
-                        ],
-                      ),
-
-                    ],
-                  );
-                }
-              },
+      return PopScope(
+        canPop:false ,
+        child: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: _startQuiz,
+              child: const Icon(Icons.arrow_forward),
             ),
-          ));
+            appBar: AppBar(
+              title: Text('Preview'),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FutureBuilder<List<Question>>(
+                future: questions,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No questions available.');
+                  } else {
+                    final questionCount = snapshot.data!.length;
+                    return Column(
+                      children: [
+                        Text(
+                          _questionService.getQuizName(),
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        SizedBox(height: 15),
+                        const Row(
+                          children: [
+                            Text("Specifications"),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                                child: Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            )),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.question_mark_outlined),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Total Questions ',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Spacer(),
+                            Text(
+                              '$questionCount',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.timer_outlined),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Total Time ',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Spacer(),
+                            Text(
+                              '${_formattedTime(_remainingTime)} Min',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            )),
+      );
     }
 
     return PopScope(
@@ -309,13 +327,6 @@ class _QuizPageState extends State<QuizPage> {
             );
           } else {
             List<Question> questions = snapshot.data!;
-            if (currentQuestionIndex >= questions.length) {
-              // Navigate to the ColorAnimationPage when the quiz ends
-              return ColorAnimationPage(
-                response: response,
-                link: _questionService.getResponseLink(),
-              );
-            }
 
             Question currentQuestion = questions[currentQuestionIndex];
 
@@ -434,26 +445,51 @@ class _QuizPageState extends State<QuizPage> {
                       );
                     }).toList(),
                     Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: FilledButton.tonal(
-                            onPressed: _skipQuestion,
-                            child: Text('Skip'),
+                    if (!_isLastQuestion(questions))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: _skipQuestion,
+                              child: Text('Skip'),
+                            ),
                           ),
-                        ),
-                        Padding(padding: EdgeInsets.all(10.0)),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: selectedOptionIndex == null
-                                ? null
-                                : _nextQuestion,
-                            child: Text('Next'),
+                          Padding(padding: EdgeInsets.all(10.0)),
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: selectedOptionIndex == null
+                                  ? null
+                                  : _nextQuestion,
+                              child: Text('Next'),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    if (_isLastQuestion(questions))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: _scaffoldKey.currentState!.openDrawer,
+                              child: Text('Navigate'),
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.all(10.0)),
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: selectedOptionIndex == null
+                                  ? null
+                                  : _confirmEnd,
+                              child: Text(
+                                'End',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -463,6 +499,12 @@ class _QuizPageState extends State<QuizPage> {
       ),
     );
   }
+
+  bool _isBeyondLastQuestion(List<Question> questions) =>
+      currentQuestionIndex >= questions.length;
+
+  bool _isLastQuestion(List<Question> questions) =>
+      currentQuestionIndex == questions.length - 1;
 
   void _confirmEnd() {
     showDialog(
@@ -479,7 +521,14 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 _timer?.cancel();
                 isActive = false;
-                Navigator.pushNamed(context, dotenv.env['ROUTE_SUBJECTS']!);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ColorAnimationPage(
+                            response: response,
+                            link: _questionService.getResponseLink(),
+                          )),
+                );
               },
               child: Text('Yes'))
         ],

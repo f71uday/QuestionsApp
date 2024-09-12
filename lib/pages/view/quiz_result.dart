@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VetScholar/models/Remark.dart';
 import 'package:VetScholar/models/test_result.dart';
+import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/service/question_service.dart';
 import 'package:flutter/material.dart';
 
@@ -137,8 +138,13 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                       SizedBox(height: 20),
                       FilledButton(
                         onPressed: () {
-                          Navigator.pop(
-                              context); // Go back to the previous screen
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => SubjectListPage(),
+                            ),
+                                (route) => false,
+                          );
                         },
                         child: Text('Back to Home'),
                       ),
