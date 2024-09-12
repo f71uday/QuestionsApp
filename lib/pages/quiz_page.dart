@@ -237,10 +237,10 @@ class _QuizPageState extends State<QuizPage> {
                           style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
-                          height: 60,
+                        const SizedBox(
+                          height: 75,
                         ),
-                        SizedBox(height: 15),
+
                         const Row(
                           children: [
                             Text("Specifications"),
