@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:convert';
 
 import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';  // Add this import
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +28,9 @@ class _ProfilePageState extends State<ProfileView>
   String _appVersion = "1.0.0";
   bool _isDarkMode = false;
   bool _hasError = true;
+  File? _imageFile;  // For storing the picked image
+
+  final ImagePicker _picker = ImagePicker(); // ImagePicker instance
 
   @override
   void initState() {
@@ -52,8 +57,7 @@ class _ProfilePageState extends State<ProfileView>
 
         setState(() {
           _name =
-          '${userSession.identity?.traits?.name?.first ?? ''} ${userSession
-              .identity?.traits?.name?.last ?? ''}';
+          '${userSession.identity?.traits?.name?.first ?? ''} ${userSession.identity?.traits?.name?.last ?? ''}';
           _email = userSession.identity?.traits?.email ?? '';
           _isLoading = false;
           _hasError = false;
@@ -66,8 +70,7 @@ class _ProfilePageState extends State<ProfileView>
           _hasError = true;
         });
       }
-    } catch(_)
-    {
+    } catch (_) {
       setState(() {
         _hasError = true;
         _isLoading = false;
@@ -106,10 +109,21 @@ class _ProfilePageState extends State<ProfileView>
     );
   }
 
+  // Method to pick an image from the gallery
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path); // Store the picked image
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -119,91 +133,98 @@ class _ProfilePageState extends State<ProfileView>
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _hasError
-                ? NoInternetPage(
-                    onRetry: () {
-                      setState(() {
-                        _isLoading = true;
-                        _hasError = false;
-                      });
-                      _fetchProfileData();
-                    },
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 60,
-                        backgroundImage: NetworkImage(
-                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                        child: Stack(children: [
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: CircleAvatar(
-                              radius: 18,
-                              child: Icon(Icons.edit),
-                            ),
-                          ),
-                        ]),
+            ? NoInternetPage(
+          onRetry: () {
+            setState(() {
+              _isLoading = true;
+              _hasError = false;
+            });
+            _fetchProfileData();
+          },
+        )
+            : Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: _pickImage, // Trigger image picking on tap
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: _imageFile != null
+                    ? FileImage(_imageFile!)
+                    : const NetworkImage(
+                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                ) as ImageProvider, // Show picked image or default image
+                child: Stack(
+                  children: const [
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: CircleAvatar(
+                        radius: 18,
+                        child: Icon(Icons.edit),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _name,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _email,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 16),
-                      const Row(
-                        children: [
-                          Text("Settings"),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                              child: Divider(
-                            color: Colors.grey,
-                            thickness: 1,
-                          )),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(_isDarkMode
-                                ? Icons.mode_night_outlined
-                                : Icons.sunny),
-                            const Text('Dark Mode'),
-                            Switch(
-                              value: _isDarkMode,
-                              onChanged: (value) {
-                                themeProvider.toggleTheme(value);
-                                setState(() {
-                                  _isDarkMode = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      Center(
-                        child: FilledButton.tonal(
-                          onPressed: () {
-                            _showLogoutDialog();
-                          },
-                          child: const Text('Logout'),
-                        ),
-                      ),
-                      Center(child: Text('Version: $_appVersion')),
-                    ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _name,
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _email,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            const Row(
+              children: [
+                Text("Settings"),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1,
                   ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(_isDarkMode
+                      ? Icons.mode_night_outlined
+                      : Icons.sunny),
+                  const Text('Dark Mode'),
+                  Switch(
+                    value: _isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.toggleTheme(value);
+                      setState(() {
+                        _isDarkMode = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Center(
+              child: FilledButton.tonal(
+                onPressed: _showLogoutDialog,
+                child: const Text('Logout'),
+              ),
+            ),
+            Center(child: Text('Version: $_appVersion')),
+          ],
+        ),
       ),
     );
   }
