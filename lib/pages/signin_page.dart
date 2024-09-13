@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
+import 'package:VetScholar/service/logging_service.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -59,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           );
 
           log(loginResponse.toString());
+          EventLogger.logSignInEvent();
 
           if (loginResponse.statusCode == 200) {
             final loginData = jsonDecode(loginResponse.body);

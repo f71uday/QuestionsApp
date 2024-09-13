@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import '../service/logging_service.dart';
+
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -65,6 +67,7 @@ class _SignupPageState extends State<SignupPage> {
             'password': _passwordController.text,
           },
         );
+        EventLogger.logSignUpEvent();
         log('signup response body: $response.toString()');
         if (response.statusCode == 200 || response.statusCode == 201) {
           _showSnackBar('Signup successful!', true);

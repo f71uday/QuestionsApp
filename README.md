@@ -18,3 +18,14 @@ flutter pub run flutter_native_splash:create
 ```bash
 brew install swagger-codegen
 ```
+
+## Debugging Analytics with Debug Mode on Firebase
+https://firebase.google.com/docs/analytics/debugview
+https://console.firebase.google.com/project/testregister-ae4f8/analytics/app/android:com.example.flutter_application_2/debugview/realtime~2Fdebugview%3Ffpn%3D583974691550
+
+```bash
+-FIRAnalyticsDebugEnabled
+-FIRDebugEnabled
+```
+
+Launch from Xcode, android studio/idea wont' work (https://github.com/flutter/flutter/issues/17043)
