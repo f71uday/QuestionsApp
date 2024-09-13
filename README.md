@@ -19,6 +19,12 @@ flutter pub run flutter_native_splash:create
 brew install swagger-codegen
 ```
 
+## installing firebase cli
+do not use curl from official doc, instead:
+```bash
+npm i -g firebase-tools
+```
+
 ## Debugging Analytics with Debug Mode on Firebase
 https://firebase.google.com/docs/analytics/debugview
 https://console.firebase.google.com/project/testregister-ae4f8/analytics/app/android:com.example.flutter_application_2/debugview/realtime~2Fdebugview%3Ffpn%3D583974691550

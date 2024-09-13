@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:VetScholar/theme_provider.dart';
 import 'package:VetScholar/pages/sign_up_page.dart';
@@ -6,6 +6,7 @@ import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/pages/test_history/test_history.dart';
 import 'package:VetScholar/service/profile_service.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -20,6 +21,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await loadEnvFilesWithConflictHandling();
   bool isValid = false;
+
   try {
     if (await AuthService.getAccessToken() != null) {
       isValid = await ProfileService().whoami();
@@ -27,10 +29,22 @@ void main() async {
   } on Exception {
     isValid = false;
   }
+
   FlutterNativeSplash.remove();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   runApp(ChangeNotifierProvider(
       create: (_) => ThemeProvider(), child: QuizApp(isLoggedIn: isValid)));
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:VetScholar/service/fault_navigator.dart';
+import 'package:VetScholar/service/logging_service.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,6 +35,7 @@ class ProfileService {
         json.encode({
           'session_token': await AuthService.getAccessToken(),
         }));
+    EventLogger.logSignOutEvent();
     log(response.body);
     if (response.statusCode != 200 && response.statusCode != 500) {
       CustomSnackBar().showCustomToastWithCloseButton(
