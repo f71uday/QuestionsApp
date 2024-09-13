@@ -26,7 +26,7 @@ class TestHistoryPageState extends State<TestHistoryPage>
   String _filterOption = 'All'; // Default filter option
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  int _currentPage = 1;
+  int _currentPage = 0;
   bool _isLastPage = false;
 
   @override
