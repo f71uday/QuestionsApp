@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'service/auth_service.dart';
 
@@ -26,6 +28,9 @@ void main() async {
     isValid = false;
   }
   FlutterNativeSplash.remove();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(ChangeNotifierProvider(
       create: (_) => ThemeProvider(), child: QuizApp(isLoggedIn: isValid)));
 }
