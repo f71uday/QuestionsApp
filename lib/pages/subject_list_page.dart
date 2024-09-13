@@ -1,6 +1,7 @@
 import 'package:VetScholar/pages/test_history/test_history.dart';
 import 'package:VetScholar/pages/view/home_view.dart';
 import 'package:VetScholar/pages/view/profile_view.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -14,6 +15,7 @@ class SubjectListPage extends StatefulWidget {
 class _SubjectListPageState extends State<SubjectListPage> {
   late Future<List<Subject>> subjects;
   int _selectedIndex = 0;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   final PageController _pageController = PageController();
   static final List<Widget> _pages = <Widget>[
     HomeView(),
@@ -23,10 +25,14 @@ class _SubjectListPageState extends State<SubjectListPage> {
 
   @override
   void initState() {
+    analytics.setAnalyticsCollectionEnabled(true);
     super.initState();
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) async {
+    analytics.logEvent(name: 'pages_tracked', parameters: {
+      'page_name': _pages[index]
+    });
     setState(() {
       _selectedIndex = index;
     });

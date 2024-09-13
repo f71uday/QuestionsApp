@@ -6,6 +6,8 @@ import 'package:VetScholar/pages/signin_page.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/pages/test_history/test_history.dart';
 import 'package:VetScholar/service/profile_service.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -57,13 +59,14 @@ Future<void> loadEnvFilesWithConflictHandling() async {
 class QuizApp extends StatelessWidget {
   final bool isLoggedIn;
 
-  const QuizApp({super.key, required this.isLoggedIn});
-
+  QuizApp({super.key, required this.isLoggedIn});
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
+          navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
           debugShowCheckedModeBanner: false,
           theme: themeProvider.currentTheme,
           initialRoute: isLoggedIn
