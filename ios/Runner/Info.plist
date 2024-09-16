@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Flutter Application 2</string>
+		<string>VetScholar</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -50,10 +50,10 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 		<key>NSCameraUsageDescription</key>
-        <string>We need camera access to upload photos.</string>
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>We need access to your photo library to select images.</string>
-        <key>NSMicrophoneUsageDescription</key>
-        <string>We need microphone access for recording audio.</string>
+		<string>We need camera access to upload photos.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photo library to select images.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>We need microphone access for recording audio.</string>
 	</dict>
 </plist>

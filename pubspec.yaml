@@ -54,13 +54,13 @@ dependencies:
   firebase_analytics: ^11.3.1
   firebase_crashlytics: ^4.1.1
 
+
 flutter_native_splash:
-  color: "#ff0000" # Background color of the splash screen
-  image: assets/no-connection.png # Path to your splash screen image
+  color: "#002D62" # Background color of the splash screen
+  image: assets/app_logo.png # Path to your splash screen image
   android: true # Enable for Android
   ios: true # Enable for iOS
   android_gravity: center # Center the image on Android
-  ios_content_mode: scaleAspectFill # Scale the image for iOS
   fullscreen: true # Enable full-screen mode
 
 dev_dependencies:
@@ -68,7 +68,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.4.11
   json_serializable: ^6.8.0
-
+  flutter_launcher_icons: ^0.13.1
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -79,7 +79,23 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/app_logo.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/app_logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/app_logo.png"
 # The following section is specific to Flutter packages.
 flutter:
 
