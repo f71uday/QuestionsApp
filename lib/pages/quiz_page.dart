@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/view/quiz_result.dart';
-import 'package:VetScholar/ui/snack_bar.dart';
+import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/Questions/question.dart';
@@ -20,16 +20,16 @@ class QuizPage extends StatefulWidget {
   });
 
   @override
-  _QuizPageState createState() => _QuizPageState();
+  QuizPageState createState() => QuizPageState();
 }
 
-class _QuizPageState extends State<QuizPage> {
+class QuizPageState extends State<QuizPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int currentQuestionIndex = 0;
   int score = 0;
   int? selectedOptionIndex;
   Timer? _timer;
-  Duration _remainingTime = Duration(minutes: 10);
+  Duration _remainingTime = const Duration(minutes: 10);
   late Future<List<Question>> questions;
   bool isActive = true; // flag to check if the page is active
   bool? isPassed;
@@ -61,13 +61,13 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isActive) {
         timer.cancel();
       } else {
         setState(() {
           if (_remainingTime.inSeconds > 0) {
-            _remainingTime = _remainingTime - Duration(seconds: 1);
+            _remainingTime = _remainingTime - const Duration(seconds: 1);
           } else {
             timer.cancel();
             _showTimeUpDialog();
@@ -106,12 +106,12 @@ class _QuizPageState extends State<QuizPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ColorAnimationPage(
-                      response: response,
-                      link: _questionService.getResponseLink(),
-                    )),
+                          response: response,
+                          link: _questionService.getResponseLink(),
+                        )),
               );
             },
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -228,7 +228,7 @@ class _QuizPageState extends State<QuizPage> {
               child: const Icon(Icons.arrow_forward),
             ),
             appBar: AppBar(
-              title: Text('Preview'),
+              title: const Text('Preview'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -280,10 +280,10 @@ class _QuizPageState extends State<QuizPage> {
                               'Total Questions ',
                               style: TextStyle(fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               '$questionCount',
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
@@ -304,7 +304,7 @@ class _QuizPageState extends State<QuizPage> {
                             const Spacer(),
                             Text(
                               '${_formattedTime(_remainingTime)} Min',
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
@@ -407,7 +407,7 @@ class _QuizPageState extends State<QuizPage> {
                               child: Center(
                                 child: Text(
                                   '${index + 1}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ),
                             ),
@@ -473,7 +473,7 @@ class _QuizPageState extends State<QuizPage> {
                               onPressed: selectedOptionIndex == null
                                   ? null
                                   : _nextQuestion,
-                              child: Text('Next'),
+                              child: const Text('Next'),
                             ),
                           ),
                         ],
@@ -519,12 +519,12 @@ class _QuizPageState extends State<QuizPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirm'),
-        content: Text('Are you sure want to end this quiz?'),
+        title: const Text('Confirm'),
+        content: const Text('Are you sure want to end this quiz?'),
         actions: [
           FilledButton.tonal(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('No'),
+            child: const Text('No'),
           ),
           FilledButton(
               onPressed: () {
@@ -539,7 +539,7 @@ class _QuizPageState extends State<QuizPage> {
                           )),
                 );
               },
-              child: Text('Yes'))
+              child: const Text('Yes'))
         ],
       ),
     );
@@ -559,19 +559,9 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       currentQuestion.isBookmarked =
           currentQuestion.isBookmarked ? false : true;
-
     });
     currentQuestion.isBookmarked
-        ? _createBookMark(currentQuestion.id)
-        : _deleteBookmark(currentQuestion.id);
-
-  }
-  _createBookMark(int id){
-    _questionService.createBookmark(id);
-    CustomSnackBar().showCustomToastWithCloseButton(context, Colors.green, Icons.add, 'Added to Bookmark');
-  }
-  _deleteBookmark(int id){
-    _questionService.deleteBookMark(id);
-    CustomSnackBar().showCustomToastWithCloseButton(context, Colors.green, Icons.remove, 'Removed from Bookmark');
+        ? BookmarkService(context).addBookmark(currentQuestion.id)
+        : BookmarkService(context).removeBookmark(currentQuestion.id);
   }
 }

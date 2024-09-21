@@ -6,7 +6,7 @@ part 'question_responses.g.dart';
 class QuestionResponses{
     @JsonKey(name: "question")
     Questions question;
-    String userAnswer;
+    String? userAnswer;
     Result result;
 
     QuestionResponses(this.question, this.userAnswer, this.result);
@@ -16,7 +16,4 @@ class QuestionResponses{
         _$QuestionResponsesFromJson(json);
 
     Map<String, dynamic> toJson() => _$QuestionResponsesToJson(this);
-}
-
-class Question {
 }

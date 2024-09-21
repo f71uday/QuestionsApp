@@ -263,7 +263,7 @@ class TestHistoryPageState extends State<TestHistoryPage>
                             context,
                             MaterialPageRoute(
                               builder: (context) => DetailedQuestionsPage(
-                                testResult.links["questionResponses"]!.href,
+                                testResult.links["self"]!.href,
                                 testResult.testName,
                               ),
                             ),

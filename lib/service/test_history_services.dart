@@ -19,31 +19,17 @@ class TestHistoryServices extends FaultNavigator {
 
   Future<List<TestResult>?> fetchHistory({required int page}) async {
     log('Request to fetch test history initialized.');
-    final response =
-        await _httpService.authorizedGET('$baseUrl$subjects',{'size':6,'page': page});
+    final response = await _httpService
+        .authorizedGET('$baseUrl$subjects', {'size': 6, 'page': page});
     log('fetch subject response : $response.body');
     _handleError(response);
 
     PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
     log('subjects loaded successfully. subjects: $response.data');
-    return pagedResponse.embedded.testResponses;
+    return pagedResponse.embedded!.testResponses;
   }
 
   void _handleError(Response response) {
-     if (response.statusCode != 200 && response.statusCode != 401) {
-      log("Could not fetch test history response code : $response.statusCode and response body: $response.body");
-
-      //TODO:Handle to show No Internet Screen
-      throw Exception('An error occurred while connecting to server');
-    } else if (response.statusCode == 401) {
-      navigateToLoginScreen();
-    }
-  }
-
-  Future<List<QuestionResponses>?> fetchTestQuestions(Uri uri)
-  async {
-    log('Request to fetch test Questions initialized.');
-    final response = await _httpService.authorizedGet(uri);
     if (response.statusCode != 200 && response.statusCode != 401) {
       log("Could not fetch test history response code : $response.statusCode and response body: $response.body");
 
@@ -52,11 +38,25 @@ class TestHistoryServices extends FaultNavigator {
     } else if (response.statusCode == 401) {
       navigateToLoginScreen();
     }
-    else {
-      final parsed = json.decode(response.body);
-      PagedResponse pagedResponse = PagedResponse.fromJson(parsed);
-      log('subjects loaded successfully. subjects: $parsed');
-      return pagedResponse.embedded.questionResponses;
+  }
+
+  Future<List<QuestionResponses>?> fetchTestQuestions(String uri) async {
+    log('Request to fetch test Questions initialized.');
+    final response = await _httpService
+        .authorizedGET(uri, {'projection': 'app:history:detail'});
+    if (response.statusCode != 200 && response.statusCode != 401) {
+      //TODO:Handle to show No Internet Screen
+      throw Exception('An error occurred while connecting to server');
+    } else if (response.statusCode == 401) {
+      navigateToLoginScreen();
+    } else {
+      try {
+        PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
+        log('Questions loaded successfully. subjects: $response.data');
+        return pagedResponse.questionResponses;
+      }catch(e){
+        log(e.toString());
+      }
     }
     return null;
   }
