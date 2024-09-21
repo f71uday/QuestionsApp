@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/view/quiz_result.dart';
+import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/Questions/question.dart';
 import '../models/Questions/QuestionResponse.dart';
@@ -99,7 +99,18 @@ class _QuizPageState extends State<QuizPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              _timer?.cancel();
+              isActive = false;
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ColorAnimationPage(
+                      response: response,
+                      link: _questionService.getResponseLink(),
+                    )),
+              );
+            },
             child: Text('OK'),
           ),
         ],
@@ -166,11 +177,12 @@ class _QuizPageState extends State<QuizPage> {
             children: [
               const Center(
                 child: Text(
-                  'Tags',
+                  'Info',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               const Divider(),
+
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
@@ -180,7 +192,7 @@ class _QuizPageState extends State<QuizPage> {
                         ))
                     .toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Add space before any additional buttons
             ],
           ),
@@ -209,7 +221,7 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (_showPreview) {
       return PopScope(
-        canPop:false ,
+        canPop: false,
         child: Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: _startQuiz,
@@ -224,11 +236,11 @@ class _QuizPageState extends State<QuizPage> {
                 future: questions,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return noInternet();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No questions available.');
+                    return const Text('No questions available.');
                   } else {
                     final questionCount = snapshot.data!.length;
                     return Column(
@@ -241,7 +253,6 @@ class _QuizPageState extends State<QuizPage> {
                         const SizedBox(
                           height: 75,
                         ),
-
                         const Row(
                           children: [
                             Text("Specifications"),
@@ -313,7 +324,7 @@ class _QuizPageState extends State<QuizPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-              appBar: AppBar(title: Text('Quiz App')),
+              appBar: AppBar(title: const Text('Quiz App')),
               body: const Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
@@ -338,7 +349,15 @@ class _QuizPageState extends State<QuizPage> {
                 elevation: 5.0,
                 actions: [
                   IconButton(
-                    icon: Icon(Icons.info_outline),
+                    icon: currentQuestion.isBookmarked
+                        ? const Icon(Icons.bookmark)
+                        : const Icon(Icons.bookmark_add_outlined),
+                    onPressed: () {
+                      _addOrRemoveBookmark(currentQuestion);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
                     onPressed: () {
                       _showBottomSheet(currentQuestion);
                     },
@@ -364,10 +383,10 @@ class _QuizPageState extends State<QuizPage> {
                     ListTile(
                       title: Text('Questions Attended: $currentQuestionIndex'),
                     ),
-                    Divider(),
+                    const Divider(),
                     Expanded(
                       child: GridView.builder(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
                         gridDelegate:
@@ -396,7 +415,7 @@ class _QuizPageState extends State<QuizPage> {
                         },
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: SizedBox(
@@ -417,16 +436,11 @@ class _QuizPageState extends State<QuizPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${currentQuestionIndex + 1}. ' +
-                          currentQuestion.question,
-                      style: TextStyle(fontSize: 24.0),
+                      '${currentQuestionIndex + 1}. ${currentQuestion.question}',
+                      style: const TextStyle(fontSize: 24.0),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     ...currentQuestion.options.asMap().entries.map((option) {
-                      final isSelected = option.key == selectedOptionIndex;
-                      final isCorrect =
-                          option.value.text == currentQuestion.answer.text;
-
                       return ListTile(
                         title: Text(
                           option.value.text,
@@ -441,8 +455,8 @@ class _QuizPageState extends State<QuizPage> {
                           },
                         ),
                       );
-                    }).toList(),
-                    Spacer(),
+                    }),
+                    const Spacer(),
                     if (!_isLastQuestion(questions))
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -450,10 +464,10 @@ class _QuizPageState extends State<QuizPage> {
                           Expanded(
                             child: FilledButton.tonal(
                               onPressed: _skipQuestion,
-                              child: Text('Skip'),
+                              child: const Text('Skip'),
                             ),
                           ),
-                          Padding(padding: EdgeInsets.all(10.0)),
+                          const Padding(padding: EdgeInsets.all(10.0)),
                           Expanded(
                             child: FilledButton(
                               onPressed: selectedOptionIndex == null
@@ -498,9 +512,6 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  bool _isBeyondLastQuestion(List<Question> questions) =>
-      currentQuestionIndex >= questions.length;
-
   bool _isLastQuestion(List<Question> questions) =>
       currentQuestionIndex == questions.length - 1;
 
@@ -533,11 +544,34 @@ class _QuizPageState extends State<QuizPage> {
       ),
     );
   }
-  NoInternetPage noInternet(){
-    return NoInternetPage(onRetry: () {
-      setState(() {
-        Navigator.pop(context);
-      });
-    },);
+
+  NoInternetPage noInternet() {
+    return NoInternetPage(
+      onRetry: () {
+        setState(() {
+          Navigator.pop(context);
+        });
+      },
+    );
+  }
+
+  _addOrRemoveBookmark(Question currentQuestion) async {
+    setState(() {
+      currentQuestion.isBookmarked =
+          currentQuestion.isBookmarked ? false : true;
+
+    });
+    currentQuestion.isBookmarked
+        ? _createBookMark(currentQuestion.id)
+        : _deleteBookmark(currentQuestion.id);
+
+  }
+  _createBookMark(int id){
+    _questionService.createBookmark(id);
+    CustomSnackBar().showCustomToastWithCloseButton(context, Colors.green, Icons.add, 'Added to Bookmark');
+  }
+  _deleteBookmark(int id){
+    _questionService.deleteBookMark(id);
+    CustomSnackBar().showCustomToastWithCloseButton(context, Colors.green, Icons.remove, 'Removed from Bookmark');
   }
 }

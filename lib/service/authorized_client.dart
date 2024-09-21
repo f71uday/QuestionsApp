@@ -59,4 +59,30 @@ class HttpService {
           },
         ));
   }
+
+  Future<dio.Response> authorizedDELETE(
+      String path, Map<String, dynamic> queryParams) async {
+    String? sessionToken = await AuthService.getAccessToken();
+    return await dioService.delete(path,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "Authorization": 'Bearer $sessionToken',
+          },
+        ));
+  }
+
+
+  Future<dio.Response> authorizedPOST(
+      String path, Map<String, dynamic> queryParams, String? body) async {
+    String? sessionToken = await AuthService.getAccessToken();
+    return await dioService.post(path,
+        data: body,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "Authorization": 'Bearer $sessionToken',
+          },
+        ));
+  }
 }

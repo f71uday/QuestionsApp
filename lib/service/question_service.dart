@@ -14,10 +14,12 @@ class QuestionService extends FaultNavigator {
   final HttpService _httpService = HttpService();
   final String? baseUrl = dotenv.env['BASE_URL'];
   final String? subjectTest = dotenv.env['SUBJECT_TEST'];
+  final String? bookmarkPath = dotenv.env['BOOKMARK'];
   var http_response;
 
   Future<List<Question>> fetchQuestions(String subjectIds) async {
-    final response = await _httpService.authorizedGET('$baseUrl$subjectTest',{'subjectIds':subjectIds});
+    final response = await _httpService.authorizedGET('$baseUrl$subjectTest',
+        {'subjectIds': subjectIds, 'projection': 'app'});
 
     if (response.statusCode == 200) {
       http_response = response;
@@ -39,10 +41,11 @@ class QuestionService extends FaultNavigator {
     return http_response.data['_links']['response']['href'] as String;
   }
 
-  String getQuizName(){
+  String getQuizName() {
     return http_response.data['name'];
   }
-  String getQuizDesc(){
+
+  String getQuizDesc() {
     return http_response.data['description'];
   }
 
@@ -61,5 +64,20 @@ class QuestionService extends FaultNavigator {
     //Global error page
 
     return null;
+  }
+
+  createBookmark(int id) async {
+    String path =
+        baseUrl! + bookmarkPath!.replaceFirst('{questionId}', id.toString());
+    final response = await HttpService().authorizedPOST(path, {}, null);
+    log(response.statusCode.toString());
+  }
+
+  deleteBookMark(int id) async {
+    String path =
+        baseUrl! + bookmarkPath!.replaceFirst('{questionId}', id.toString());
+    final response = await HttpService().authorizedDELETE(path, {});
+    log(response.statusCode.toString());
+
   }
 }
