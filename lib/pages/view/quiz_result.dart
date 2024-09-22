@@ -10,25 +10,23 @@ import 'package:flutter/material.dart';
 import '../../models/Questions/QuestionResponse.dart';
 
 class ColorAnimationPage extends StatefulWidget {
-  // Determines whether the color is red or green
-
   final List<QuestionResponse> response;
   final String link;
 
-  ColorAnimationPage({
+  const ColorAnimationPage({
+    super.key,
     required this.response,
     required this.link,
   });
 
   @override
-  _ColorAnimationPageState createState() => _ColorAnimationPageState();
+  ColorAnimationPageState createState() => ColorAnimationPageState();
 }
 
-class _ColorAnimationPageState extends State<ColorAnimationPage>
+class ColorAnimationPageState extends State<ColorAnimationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  late List<QuestionResponse> _responses;
   bool _isLoading = true; // To track loading state
   late TestResult testResult;
   late double _percentage;
@@ -39,7 +37,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     _animation = Tween<double>(begin: 0.0, end: 2.0).animate(CurvedAnimation(
@@ -57,9 +55,9 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
       QuestionService questionService = QuestionService(context);
       TestResult? testResult = await questionService.fetchTestResponse(
           widget.link,
-          jsonEncode(
-              TestResponse(widget.response, DateTime.now().toUtc(), DateTime.now().toUtc())
-                  .toJson()));
+          jsonEncode(TestResponse(widget.response, DateTime.now().toUtc(),
+                  DateTime.now().toUtc())
+              .toJson()));
 
       if (testResult != null) {
         setState(() {
@@ -72,13 +70,14 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
         throw Exception('null responses');
       }
     } catch (error) {
-      NoInternetPage(onRetry: () {
-        setState(() {
-          _isLoading = false;
-        });
-        _fetchTestResponse();
-      },);
-
+      NoInternetPage(
+        onRetry: () {
+          setState(() {
+            _isLoading = false;
+          });
+          _fetchTestResponse();
+        },
+      );
     }
   }
 
@@ -92,7 +91,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -119,7 +118,7 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                         size: 100,
                         color: Colors.white,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         !_isPass
                             ? 'Better luck next time!'
@@ -130,27 +129,28 @@ class _ColorAnimationPageState extends State<ColorAnimationPage>
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'Your score: ${_percentage.toStringAsFixed(2)}%',
-                        style:const TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       FilledButton(
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => SubjectListPage(),
+                              builder: (BuildContext context) =>
+                                  const SubjectListPage(),
                             ),
-                                (route) => false,
+                            (route) => false,
                           );
                         },
-                        child: Text('Back to Home'),
+                        child: const Text('Back to Home'),
                       ),
                     ],
                   ),
