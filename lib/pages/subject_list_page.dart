@@ -7,18 +7,20 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import '../models/subjects.dart';
 
 class SubjectListPage extends StatefulWidget {
+  const SubjectListPage({super.key});
+
   @override
-  _SubjectListPageState createState() => _SubjectListPageState();
+  SubjectListPageState createState() => SubjectListPageState();
 }
 
-class _SubjectListPageState extends State<SubjectListPage> {
+class SubjectListPageState extends State<SubjectListPage> {
   late Future<List<Subject>> subjects;
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
   static final List<Widget> _pages = <Widget>[
-    HomeView(),
-    TestHistoryPage(),
-    ProfileView()
+    const HomeView(),
+    const TestHistoryPage(),
+    const ProfileView()
   ];
 
   @override

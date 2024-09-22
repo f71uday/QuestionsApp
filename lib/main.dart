@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:VetScholar/service/app_link_services.dart';
+import 'package:VetScholar/service/context_utility.dart';
 import 'package:VetScholar/theme_provider.dart';
 import 'package:VetScholar/pages/sign_up_page.dart';
 import 'package:VetScholar/pages/signin_page.dart';
@@ -18,6 +20,7 @@ import 'service/auth_service.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await AppLinkServices.init();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await loadEnvFilesWithConflictHandling();
   bool isValid = false;
@@ -72,14 +75,15 @@ class QuizApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
+          navigatorKey: ContextUtility.navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: themeProvider.currentTheme,
           initialRoute: isLoggedIn
               ? dotenv.env['ROUTE_SUBJECTS']
               : dotenv.env['ROUTE_SIGN_IN'],
           routes: {
-            '/signin': (context) => LoginPage(),
-            '/subjects': (context) => SubjectListPage(),
+            '/signin': (context) => const LoginPage(),
+            '/subjects': (context) => const SubjectListPage(),
             '/singup': (context) => SignupPage(),
             '/testHistory': (context) => const TestHistoryPage()
           },

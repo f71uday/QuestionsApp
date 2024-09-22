@@ -4,20 +4,18 @@ import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/Questions/question.dart';
 import '../models/Questions/QuestionResponse.dart';
 import '../service/question_service.dart';
 
 class QuizPage extends StatefulWidget {
-  final String questionLink;
-  final String subjectName;
+  final String? selectedSubjects;
+  final String testLink;
 
-  const QuizPage({
-    super.key,
-    required this.questionLink,
-    required this.subjectName,
-  });
+  const QuizPage(
+      {super.key, required this.selectedSubjects, required this.testLink});
 
   @override
   QuizPageState createState() => QuizPageState();
@@ -43,7 +41,8 @@ class QuizPageState extends State<QuizPage> {
   void initState() {
     super.initState();
     _questionService = QuestionService(context);
-    questions = _questionService.fetchQuestions(widget.questionLink);
+    questions = _questionService.fetchQuestions(
+        widget.selectedSubjects, widget.testLink);
   }
 
   @override

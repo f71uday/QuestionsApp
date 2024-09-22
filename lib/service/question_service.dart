@@ -13,12 +13,11 @@ class QuestionService extends FaultNavigator {
 
   final HttpService _httpService = HttpService();
   final String? baseUrl = dotenv.env['BASE_URL'];
-  final String? subjectTest = dotenv.env['SUBJECT_TEST'];
   final String? bookmarkPath = dotenv.env['BOOKMARK'];
   var http_response;
 
-  Future<List<Question>> fetchQuestions(String subjectIds) async {
-    final response = await _httpService.authorizedGET('$baseUrl$subjectTest',
+  Future<List<Question>> fetchQuestions(String? subjectIds, String path) async {
+    final response = await _httpService.authorizedGET('$baseUrl$path',
         {'subjectIds': subjectIds, 'projection': 'app'});
 
     if (response.statusCode == 200) {

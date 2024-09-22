@@ -6,11 +6,13 @@ import '../../models/subjects.dart';
 import '../quiz_page.dart';
 
 class HomeView extends StatefulWidget {
+  const HomeView({super.key});
+
   @override
-  _HomeViewPage createState() => _HomeViewPage();
+  HomeViewPage createState() => HomeViewPage();
 }
 
-class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
+class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
   late Future<List<Subject>> subjects;
   late SubjectService _subjectService;
   List<Subject> selectedSubjects = [];
@@ -56,15 +58,14 @@ class _HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                   context,
                   MaterialPageRoute(
                     builder: (context) => QuizPage(
-                      questionLink: _getSubjectIds(selectedSubjects),
-                      // Assuming you want the first subject's questions
-                      subjectName: selectedSubjects.first.name,
+                      selectedSubjects: _getSubjectIds(selectedSubjects),
+                      testLink: dotenv.env['SUBJECT_TEST']!,
                     ),
                   ),
                 )
             : null, // Disable the button if no subject is selected
-        label: Text('Start Quiz'),
-        icon: Icon(Icons.play_arrow),
+        label: const Text('Start Quiz'),
+        icon: const  Icon(Icons.play_arrow),
       ),
       appBar: AppBar(
         title: const Text('Subjects'),
