@@ -146,7 +146,7 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(onPressed: () {
-                              Share.share('Hey checkout this test from VetScholar https://vetscholar.app/?code=$_code');
+                              Share.share('Hey checkout this test from VetScholar https://vetscholar.app/?code=$_code I scored $_percentage% lets check yours.');
                           }, child: const Row(children: [
                             Icon(Icons.share),
                             Text('Share Test')
