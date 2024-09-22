@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:VetScholar/service/context_utility.dart';
 import 'package:VetScholar/service/fault_navigator.dart';
 import 'package:VetScholar/service/logging_service.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
@@ -16,10 +17,11 @@ class ProfileService {
   String? baseUrl = dotenv.env['BASE_URL'];
   String? subjectRoute = dotenv.env['ROUTE_SUBJECTS'];
   String? whoamiPath = dotenv.env['WHO_AM_I_PATH'];
-
+  static String name = '';
   Future<bool> whoami() async {
     final response =
         await _httpService.authorizedGet(Uri.parse('$baseUrl$whoamiPath'));
+
     if (response.statusCode != 200) {
       log("user have invalid session_id");
       return false;
@@ -39,12 +41,12 @@ class ProfileService {
     log(response.body);
     if (response.statusCode != 200 && response.statusCode != 500) {
       CustomSnackBar().showCustomToastWithCloseButton(
-          context, Colors.red, Icons.close, "Logout Failed!");
+          ContextUtility.context!, Colors.red, Icons.close, "Logout Failed!");
     }
     AuthService().deleteAccessToken();
     CustomSnackBar().showCustomToast(
-        context, Colors.green, Icons.check, "Logged Out Successfully!");
-    FaultNavigator(context).navigateToLoginScreen();
+        ContextUtility.context!, Colors.green, Icons.check, "Logged Out Successfully!");
+    FaultNavigator(ContextUtility.context!).navigateToLoginScreen();
   }
 
   Future<Response> fetchProfileData() async {

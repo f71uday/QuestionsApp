@@ -6,6 +6,7 @@ import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/service/question_service.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/Questions/QuestionResponse.dart';
 
@@ -28,9 +29,9 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isLoading = true; // To track loading state
-  late TestResult testResult;
   late double _percentage;
   late bool _isPass;
+  late String? _code;
 
   @override
   void initState() {
@@ -64,7 +65,8 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
           _isLoading = false;
           _percentage = testResult.percentage;
           _isPass = (Remark.PASS == testResult.remark) ? true : false;
-          _controller.forward(); // Start animation after loading
+          _controller.forward();
+          _code = testResult.links['self']?.href.split('/').last;// Start animation after loading
         });
       } else {
         throw Exception('null responses');
@@ -112,6 +114,7 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
                         !_isPass ? Icons.thumb_down : Icons.thumb_up,
@@ -139,19 +142,37 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
-                      FilledButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const SubjectListPage(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FilledButton(onPressed: () {
+                              Share.share('Hey checkout this test from VetScholar https://vetscholar.app/?code=$_code');
+                          }, child: const Row(children: [
+                            Icon(Icons.share),
+                            Text('Share Test')
+                          ],)),
+                          const SizedBox(width: 12,),
+                          FilledButton.tonal(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const SubjectListPage(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            child: const Row(
+                              children: [
+                                Icon(Icons.home),
+                                 Text(' Home'),
+                              ],
                             ),
-                            (route) => false,
-                          );
-                        },
-                        child: const Text('Back to Home'),
+                          ),
+                        ],
                       ),
+
                     ],
                   ),
                 );
