@@ -30,8 +30,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   final Set<int> _expandedTiles =
       {}; // Set to track expanded tiles for question responses
   bool _isExpandedSkipped = false; // Tracks if skipped questions are expanded
-  bool _isExpandedResponses =
-      true; // Tracks if question responses are expanded
+  bool _isExpandedResponses = true; // Tracks if question responses are expanded
   String _selfLink = '';
 
   Color _getColor(QuestionResponses questionResponse) {
@@ -85,17 +84,16 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
               : SingleChildScrollView(
                   child: Column(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (_isExpandedResponses) {
-                              _isExpandedResponses = false;
-                            }
-                            _isExpandedSkipped = !_isExpandedSkipped;
-                          });
-                        },
-                        child: ExpansionPanelList(
-                          expansionCallback: (panelIndex, isExpanded) {
+                      // Card for Skipped Questions
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        elevation: 4,
+
+                        child: InkWell(
+                          onTap: () {
                             setState(() {
                               if (_isExpandedResponses) {
                                 _isExpandedResponses = false;
@@ -103,47 +101,54 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                               _isExpandedSkipped = !_isExpandedSkipped;
                             });
                           },
-                          children: [
-                            ExpansionPanel(
-                              headerBuilder: (context, isExpanded) {
-                                return const ListTile(
-                                  title: Text("Skipped Questions"),
-                                );
-                              },
-                              body: ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _skippedResponses.length,
-                                separatorBuilder: (context, index) =>
-                                const Divider(),
-                                itemBuilder: (context, index) {
-                                  final skippedQuestion =
-                                  _skippedResponses[index];
-                                  final isExpanded =
-                                  _expandedTiles.contains(index);
-
-                                  return _buildSkippedQuestionTile(
-                                      skippedQuestion, index, isExpanded);
+                          child: ExpansionPanelList(
+                            expansionCallback: (panelIndex, isExpanded) {
+                              setState(() {
+                                if (_isExpandedResponses) {
+                                  _isExpandedResponses = false;
+                                }
+                                _isExpandedSkipped = !_isExpandedSkipped;
+                              });
+                            },
+                            children: [
+                              ExpansionPanel(
+                                headerBuilder: (context, isExpanded) {
+                                  return const ListTile(
+                                    title: Text("Skipped Questions"),
+                                  );
                                 },
+                                body: ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _skippedResponses.length,
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(),
+                                  itemBuilder: (context, index) {
+                                    final skippedQuestion =
+                                        _skippedResponses[index];
+                                    final isExpanded =
+                                        _expandedTiles.contains(index);
+
+                                    return _buildSkippedQuestionTile(
+                                        skippedQuestion, index, isExpanded);
+                                  },
+                                ),
+                                isExpanded: _isExpandedSkipped,
                               ),
-                              isExpanded: _isExpandedSkipped,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      const Divider(),
-                      // Expansion Panel for Question Responses
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (_isExpandedSkipped) {
-                              _isExpandedSkipped = false;
-                            }
-                            _isExpandedResponses = !_isExpandedResponses;
-                          });
-                        },
-                        child: ExpansionPanelList(
-                          expansionCallback: (panelIndex, isExpanded) {
+
+                      // Card for Question Responses
+                      Card(
+                        margin: const EdgeInsets.all(8.0),
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: InkWell(
+                          onTap: () {
                             setState(() {
                               if (_isExpandedSkipped) {
                                 _isExpandedSkipped = false;
@@ -151,37 +156,44 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                               _isExpandedResponses = !_isExpandedResponses;
                             });
                           },
-                          children: [
-                            ExpansionPanel(
-                              headerBuilder: (context, isExpanded) {
-                                return const ListTile(
-                                  title: Text("Question Responses"),
-                                );
-                              },
-                              body: ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _questionResponses.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(),
-                                itemBuilder: (context, index) {
-                                  final questionResponse =
-                                      _questionResponses[index];
-                                  final isExpanded =
-                                      _expandedTiles.contains(index);
-
-                                  return _buildQuestionTile(
-                                      questionResponse, index, isExpanded);
+                          child: ExpansionPanelList(
+                            expansionCallback: (panelIndex, isExpanded) {
+                              setState(() {
+                                if (_isExpandedSkipped) {
+                                  _isExpandedSkipped = false;
+                                }
+                                _isExpandedResponses = !_isExpandedResponses;
+                              });
+                            },
+                            children: [
+                              ExpansionPanel(
+                                headerBuilder: (context, isExpanded) {
+                                  return const ListTile(
+                                    title: Text("Question Responses"),
+                                  );
                                 },
+                                body: ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _questionResponses.length,
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(),
+                                  itemBuilder: (context, index) {
+                                    final questionResponse =
+                                        _questionResponses[index];
+                                    final isExpanded =
+                                        _expandedTiles.contains(index);
+
+                                    return _buildQuestionTile(
+                                        questionResponse, index, isExpanded);
+                                  },
+                                ),
+                                isExpanded: _isExpandedResponses,
                               ),
-                              isExpanded: _isExpandedResponses,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-
-                      // Expansion Panel for Skipped Questions
-
                     ],
                   ),
                 ),
