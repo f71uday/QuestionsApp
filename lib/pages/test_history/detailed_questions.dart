@@ -86,12 +86,11 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                     children: [
                       // Card for Skipped Questions
                       Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                        margin: const EdgeInsets.all(8.0),
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        elevation: 4,
-
                         child: InkWell(
                           onTap: () {
                             setState(() {
@@ -101,41 +100,46 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                               _isExpandedSkipped = !_isExpandedSkipped;
                             });
                           },
-                          child: ExpansionPanelList(
-                            expansionCallback: (panelIndex, isExpanded) {
-                              setState(() {
-                                if (_isExpandedResponses) {
-                                  _isExpandedResponses = false;
-                                }
-                                _isExpandedSkipped = !_isExpandedSkipped;
-                              });
-                            },
-                            children: [
-                              ExpansionPanel(
-                                headerBuilder: (context, isExpanded) {
-                                  return const ListTile(
-                                    title: Text("Skipped Questions"),
-                                  );
-                                },
-                                body: ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: _skippedResponses.length,
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(),
-                                  itemBuilder: (context, index) {
-                                    final skippedQuestion =
-                                        _skippedResponses[index];
-                                    final isExpanded =
-                                        _expandedTiles.contains(index);
-
-                                    return _buildSkippedQuestionTile(
-                                        skippedQuestion, index, isExpanded);
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            // Ensure the shape is applied
+                            child: ExpansionPanelList(
+                              expansionCallback: (panelIndex, isExpanded) {
+                                setState(() {
+                                  if (_isExpandedResponses) {
+                                    _isExpandedResponses = false;
+                                  }
+                                  _isExpandedSkipped = !_isExpandedSkipped;
+                                });
+                              },
+                              children: [
+                                ExpansionPanel(
+                                  headerBuilder: (context, isExpanded) {
+                                    return const ListTile(
+                                      title: Text("Skipped Questions"),
+                                    );
                                   },
+                                  body: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: _skippedResponses.length,
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(),
+                                    itemBuilder: (context, index) {
+                                      final skippedQuestion =
+                                          _skippedResponses[index];
+                                      final isExpanded =
+                                          _expandedTiles.contains(index);
+
+                                      return _buildSkippedQuestionTile(
+                                          skippedQuestion, index, isExpanded);
+                                    },
+                                  ),
+                                  isExpanded: _isExpandedSkipped,
                                 ),
-                                isExpanded: _isExpandedSkipped,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -156,41 +160,46 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                               _isExpandedResponses = !_isExpandedResponses;
                             });
                           },
-                          child: ExpansionPanelList(
-                            expansionCallback: (panelIndex, isExpanded) {
-                              setState(() {
-                                if (_isExpandedSkipped) {
-                                  _isExpandedSkipped = false;
-                                }
-                                _isExpandedResponses = !_isExpandedResponses;
-                              });
-                            },
-                            children: [
-                              ExpansionPanel(
-                                headerBuilder: (context, isExpanded) {
-                                  return const ListTile(
-                                    title: Text("Question Responses"),
-                                  );
-                                },
-                                body: ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: _questionResponses.length,
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(),
-                                  itemBuilder: (context, index) {
-                                    final questionResponse =
-                                        _questionResponses[index];
-                                    final isExpanded =
-                                        _expandedTiles.contains(index);
-
-                                    return _buildQuestionTile(
-                                        questionResponse, index, isExpanded);
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            // Ensure the shape is applied
+                            child: ExpansionPanelList(
+                              expansionCallback: (panelIndex, isExpanded) {
+                                setState(() {
+                                  if (_isExpandedSkipped) {
+                                    _isExpandedSkipped = false;
+                                  }
+                                  _isExpandedResponses = !_isExpandedResponses;
+                                });
+                              },
+                              children: [
+                                ExpansionPanel(
+                                  headerBuilder: (context, isExpanded) {
+                                    return const ListTile(
+                                      title: Text("Attempted Questions"),
+                                    );
                                   },
+                                  body: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: _questionResponses.length,
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(),
+                                    itemBuilder: (context, index) {
+                                      final questionResponse =
+                                          _questionResponses[index];
+                                      final isExpanded =
+                                          _expandedTiles.contains(index);
+
+                                      return _buildQuestionTile(
+                                          questionResponse, index, isExpanded);
+                                    },
+                                  ),
+                                  isExpanded: _isExpandedResponses,
                                 ),
-                                isExpanded: _isExpandedResponses,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
