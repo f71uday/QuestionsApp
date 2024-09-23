@@ -1,7 +1,5 @@
-
-import 'dart:developer';
-
 import 'package:VetScholar/models/paged_response.dart';
+import 'package:VetScholar/models/test_result/question.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:VetScholar/pages/quiz_page.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
@@ -26,17 +24,23 @@ class DetailedQuestionsPage extends StatefulWidget {
 
 class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   late List<QuestionResponses> _questionResponses = [];
+  late List<Questions> _skippedResponses = [];
   late bool _isLoading = true;
   late bool _hasError = false;
-  final Set<int> _expandedTiles = {}; // Set to track expanded tiles
+  final Set<int> _expandedTiles =
+      {}; // Set to track expanded tiles for question responses
+  bool _isExpandedSkipped = false; // Tracks if skipped questions are expanded
+  bool _isExpandedResponses =
+      true; // Tracks if question responses are expanded
   String _selfLink = '';
-  Color _getColor(questionResponse) {
+
+  Color _getColor(QuestionResponses questionResponse) {
     return questionResponse.result == Result.CORRECT
         ? Colors.green
         : Colors.red;
   }
 
-  bool _isPass(questionResponse) {
+  bool _isPass(QuestionResponses questionResponse) {
     return questionResponse.result == Result.CORRECT;
   }
 
@@ -61,200 +65,292 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.testName),
-        actions:[
-          IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => QuizPage(selectedSubjects: null, testLink: _selfLink),));
-          }, icon: const Icon(Icons.replay))
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          QuizPage(selectedSubjects: null, testLink: _selfLink),
+                    ));
+              },
+              icon: const Icon(Icons.replay))
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
               ? const Center(child: Text('Failed to load data.'))
-              : ListView.separated(
-                  itemCount: _questionResponses.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final questionResponse = _questionResponses[index];
-                    final isExpanded = _expandedTiles.contains(index);
-
-                    return Slidable(
-                      key: ValueKey(index),
-                      // Define the start action pane
-                      startActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              _toggleBookmark(questionResponse);
-                            },
-                            backgroundColor:
-                                questionResponse.question.isBookMarked
-                                    ? Colors.orange
-                                    : Colors.blue,
-                            foregroundColor: Colors.white,
-                            icon: questionResponse.question.isBookMarked
-                                ? Icons.bookmark
-                                : Icons.bookmark_add_outlined,
-                            label: questionResponse.question.isBookMarked
-                                ? 'Remove Bookmark'
-                                : 'Add To Bookmark',
-                          ),
-                        ],
-                      ),
-                      // Define the end action pane
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              // Action for delete
-                            },
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.flag_outlined,
-                            label: 'Flag',
-                          ),
-                        ],
-                      ),
-                      child: GestureDetector(
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      InkWell(
                         onTap: () {
                           setState(() {
-                            if (isExpanded) {
-                              _expandedTiles.remove(index);
-                            } else {
-                              _expandedTiles.add(index);
+                            if (_isExpandedResponses) {
+                              _isExpandedResponses = false;
                             }
+                            _isExpandedSkipped = !_isExpandedSkipped;
                           });
                         },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: ExpansionPanelList(
+                          expansionCallback: (panelIndex, isExpanded) {
+                            setState(() {
+                              if (_isExpandedResponses) {
+                                _isExpandedResponses = false;
+                              }
+                              _isExpandedSkipped = !_isExpandedSkipped;
+                            });
+                          },
                           children: [
-                            ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              title: Text(
-                                questionResponse.question.text,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                            ExpansionPanel(
+                              headerBuilder: (context, isExpanded) {
+                                return const ListTile(
+                                  title: Text("Skipped Questions"),
+                                );
+                              },
+                              body: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _skippedResponses.length,
+                                separatorBuilder: (context, index) =>
+                                const Divider(),
+                                itemBuilder: (context, index) {
+                                  final skippedQuestion =
+                                  _skippedResponses[index];
+                                  final isExpanded =
+                                  _expandedTiles.contains(index);
+
+                                  return _buildSkippedQuestionTile(
+                                      skippedQuestion, index, isExpanded);
+                                },
                               ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Flexible(
-                                      child: VetScholarCustomIcons
-                                          .bookmarkedAnswer(
-                                              _isPass(questionResponse))),
-                                  const SizedBox(width: 8),
-                                  Flexible(
-                                    child: Icon(
-                                      isExpanded
-                                          ? Icons.expand_less
-                                          : Icons.expand_more,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            AnimatedSize(
-                              duration: const Duration(milliseconds: 300),
-                              reverseDuration:
-                                  const Duration(milliseconds: 300),
-                              curve: Curves.easeInOutBack,
-                              child: isExpanded
-                                  ? SizedBox(
-                                      width: double.infinity,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0, vertical: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Your Response: ',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary),
-                                                ),
-                                                Flexible(
-                                                  child: Text(
-                                                    questionResponse
-                                                        .userAnswer!,
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: _getColor(
-                                                            questionResponse)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Correct Answer: ',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary),
-                                                ),
-                                                Text(
-                                                  questionResponse
-                                                      .question.answer.text,
-                                                  style: const TextStyle(
-                                                      fontSize: 16),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 16),
-                                            Wrap(
-                                              spacing: 8.0,
-                                              runSpacing: 8.0,
-                                              children: questionResponse
-                                                  .question.topics
-                                                  .map((tag) => Chip(
-                                                        label: Text(tag.name),
-                                                      ))
-                                                  .toList(),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : Container(),
+                              isExpanded: _isExpandedSkipped,
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
+                      const Divider(),
+                      // Expansion Panel for Question Responses
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (_isExpandedSkipped) {
+                              _isExpandedSkipped = false;
+                            }
+                            _isExpandedResponses = !_isExpandedResponses;
+                          });
+                        },
+                        child: ExpansionPanelList(
+                          expansionCallback: (panelIndex, isExpanded) {
+                            setState(() {
+                              if (_isExpandedSkipped) {
+                                _isExpandedSkipped = false;
+                              }
+                              _isExpandedResponses = !_isExpandedResponses;
+                            });
+                          },
+                          children: [
+                            ExpansionPanel(
+                              headerBuilder: (context, isExpanded) {
+                                return const ListTile(
+                                  title: Text("Question Responses"),
+                                );
+                              },
+                              body: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _questionResponses.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(),
+                                itemBuilder: (context, index) {
+                                  final questionResponse =
+                                      _questionResponses[index];
+                                  final isExpanded =
+                                      _expandedTiles.contains(index);
+
+                                  return _buildQuestionTile(
+                                      questionResponse, index, isExpanded);
+                                },
+                              ),
+                              isExpanded: _isExpandedResponses,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Expansion Panel for Skipped Questions
+
+                    ],
+                  ),
                 ),
+    );
+  }
+
+  Widget _buildQuestionTile(
+      QuestionResponses questionResponse, int index, bool isExpanded) {
+    return Slidable(
+      key: ValueKey(index),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              _toggleBookmark(questionResponse);
+            },
+            backgroundColor: questionResponse.question.isBookMarked
+                ? Colors.orange
+                : Colors.blue,
+            foregroundColor: Colors.white,
+            icon: questionResponse.question.isBookMarked
+                ? Icons.bookmark
+                : Icons.bookmark_add_outlined,
+            label: questionResponse.question.isBookMarked
+                ? 'Remove Bookmark'
+                : 'Add To Bookmark',
+          ),
+        ],
+      ),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              // Action for delete
+            },
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            icon: Icons.flag_outlined,
+            label: 'Flag',
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (isExpanded) {
+              _expandedTiles.remove(index);
+            } else {
+              _expandedTiles.add(index);
+            }
+          });
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              title: Text(
+                questionResponse.question.text,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                      child: VetScholarCustomIcons.bookmarkedAnswer(
+                          _isPass(questionResponse))),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              reverseDuration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutBack,
+              child: isExpanded
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Your Response: ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    questionResponse.userAnswer!,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: _getColor(questionResponse)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Correct Answer: ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                ),
+                                Text(
+                                  questionResponse.question.answer.text,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: questionResponse.question.topics
+                                  .map((tag) => Chip(
+                                        label: Text(tag.name),
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Future<void> _fetchQuestionDetails(String questionResponseUrl) async {
     try {
       TestHistoryServices service = TestHistoryServices(context);
-      PagedResponse? response  = await service.fetchTestQuestions(questionResponseUrl);
-      List<QuestionResponses>? questionResponses = response!.questionResponses;
+      PagedResponse? response =
+          await service.fetchTestQuestions(questionResponseUrl);
       String? testUrl = dotenv.env['TESTWITHID'];
+
       setState(() {
-        questionResponses!.sort((a, b) => a.question.id.compareTo(b.question.id));
-        _questionResponses = questionResponses;
+        _questionResponses = response!.questionResponses!;
+        _skippedResponses = response.skippedQuestions!;
         _isLoading = false;
         _hasError = false;
-        _selfLink = testUrl!.replaceFirst('{testId}', response.links!['self']!.href.split('/').last);
+        _selfLink = testUrl!.replaceFirst(
+            '{testId}', response.links!['self']!.href.split('/').last);
       });
     } catch (error) {
       setState(() {
@@ -262,5 +358,130 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         _hasError = true;
       });
     }
+  }
+
+  Widget _buildSkippedQuestionTile(
+      Questions skippedQuestion, int index, bool isExpanded) {
+    return Slidable(
+      key: ValueKey(index),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              //_toggleBookmark(questionResponse);
+            },
+            backgroundColor:
+                skippedQuestion.isBookMarked ? Colors.orange : Colors.blue,
+            foregroundColor: Colors.white,
+            icon: skippedQuestion.isBookMarked
+                ? Icons.bookmark
+                : Icons.bookmark_add_outlined,
+            label: skippedQuestion.isBookMarked
+                ? 'Remove Bookmark'
+                : 'Add Bookmark',
+          ),
+        ],
+      ),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              // Action for delete
+            },
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            icon: Icons.flag_outlined,
+            label: 'Flag',
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (isExpanded) {
+              _expandedTiles.remove(index);
+            } else {
+              _expandedTiles.add(index);
+            }
+          });
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              title: Text(
+                skippedQuestion.text,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Flexible(child: Icon(Icons.block)),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              reverseDuration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutBack,
+              child: isExpanded
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Correct Answer: ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                ),
+                                Text(
+                                  skippedQuestion.answer.text,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: skippedQuestion.topics
+                                  .map((tag) => Chip(
+                                        label: Text(tag.name),
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
