@@ -309,7 +309,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                           .colorScheme
                                           .primary),
                                 ),
-                                Flexible(
+                                Expanded(
                                   child: Text(
                                     questionResponse.userAnswer!,
                                     style: TextStyle(
@@ -330,9 +330,11 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                           .colorScheme
                                           .primary),
                                 ),
-                                Text(
-                                  questionResponse.question.answer.text,
-                                  style: const TextStyle(fontSize: 16),
+                                Expanded(
+                                  child: Text(
+                                    questionResponse.question.answer.text,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
@@ -478,9 +480,11 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                           .colorScheme
                                           .primary),
                                 ),
-                                Text(
-                                  skippedQuestion.answer.text,
-                                  style: const TextStyle(fontSize: 16),
+                                Expanded(
+                                  child: Text(
+                                    skippedQuestion.answer.text,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
