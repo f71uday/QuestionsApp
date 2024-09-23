@@ -4,7 +4,6 @@ import 'package:VetScholar/pages/error/no-intrnet.dart';
 import 'package:VetScholar/pages/view/quiz_result.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/Questions/question.dart';
 import '../models/Questions/QuestionResponse.dart';

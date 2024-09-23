@@ -40,7 +40,7 @@ class TestHistoryServices extends FaultNavigator {
     }
   }
 
-  Future<List<QuestionResponses>?> fetchTestQuestions(String uri) async {
+  Future<PagedResponse?> fetchTestQuestions(String uri) async {
     log('Request to fetch test Questions initialized.');
     final response = await _httpService
         .authorizedGET(uri, {'projection': 'app:history:detail'});
@@ -53,7 +53,7 @@ class TestHistoryServices extends FaultNavigator {
       try {
         PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
         log('Questions loaded successfully. subjects: $response.data');
-        return pagedResponse.questionResponses;
+        return pagedResponse;
       }catch(e){
         log(e.toString());
       }

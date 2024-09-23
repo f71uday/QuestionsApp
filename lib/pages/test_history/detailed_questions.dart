@@ -1,8 +1,13 @@
 
+import 'dart:developer';
+
+import 'package:VetScholar/models/paged_response.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
+import 'package:VetScholar/pages/quiz_page.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:VetScholar/ui/vet_scholar_custom_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../models/test_result/result.dart';
@@ -24,7 +29,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   late bool _isLoading = true;
   late bool _hasError = false;
   final Set<int> _expandedTiles = {}; // Set to track expanded tiles
-
+  String _selfLink = '';
   Color _getColor(questionResponse) {
     return questionResponse.result == Result.CORRECT
         ? Colors.green
@@ -56,6 +61,11 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.testName),
+        actions:[
+          IconButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => QuizPage(selectedSubjects: null, testLink: _selfLink),));
+          }, icon: const Icon(Icons.replay))
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -236,13 +246,15 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   Future<void> _fetchQuestionDetails(String questionResponseUrl) async {
     try {
       TestHistoryServices service = TestHistoryServices(context);
-      List<QuestionResponses>? questionResponses =
-          await service.fetchTestQuestions(questionResponseUrl);
+      PagedResponse? response  = await service.fetchTestQuestions(questionResponseUrl);
+      List<QuestionResponses>? questionResponses = response!.questionResponses;
+      String? testUrl = dotenv.env['TESTWITHID'];
       setState(() {
         questionResponses!.sort((a, b) => a.question.id.compareTo(b.question.id));
         _questionResponses = questionResponses;
         _isLoading = false;
         _hasError = false;
+        _selfLink = testUrl!.replaceFirst('{testId}', response.links!['self']!.href.split('/').last);
       });
     } catch (error) {
       setState(() {
