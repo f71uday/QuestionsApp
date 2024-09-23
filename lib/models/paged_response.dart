@@ -1,6 +1,7 @@
 import 'package:VetScholar/models/embedded.dart';
 import 'package:VetScholar/models/link.dart';
 import 'package:VetScholar/models/page.dart';
+import 'package:VetScholar/models/test_result/question.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -12,13 +13,14 @@ class PagedResponse {
   final Embedded? embedded;
   @JsonKey(name: "questionResponses")
   List<QuestionResponses>? questionResponses;
-
+  @JsonKey(name: "skippedQuestions")
+  List<Questions>? skippedQuestions;
   @JsonKey(name: '_links')
   final Map<String, Link>? links;
 
   final Page? page;
 
-  PagedResponse(this.embedded, this.questionResponses,
+  PagedResponse(this.embedded, this.questionResponses, this.skippedQuestions,
       this.links, this.page);
 
   factory PagedResponse.fromJson(Map<String, dynamic> json) =>
