@@ -2,6 +2,7 @@ import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:VetScholar/service/context_utility.dart';
 import 'package:VetScholar/service/question_service.dart';
+import 'package:VetScholar/ui/flag_question.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -25,7 +26,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
   bool _isLastPage = false;
 
   // To track expansion state
-  Set<int> _expandedTiles = Set<int>();
+  Set<int> _expandedTiles = <int>{};
 
   @override
   void initState() {
@@ -74,7 +75,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
           _currentPage = 2; // Reset to the next page
         }
         // Initialize or update expansion state list
-        _expandedTiles = Set<int>();
+        _expandedTiles = <int>{};
       } else {
         _isLastPage = true;
         if (isLoadMore) {
@@ -116,9 +117,10 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) {
-              // Action for delete
-            },
+            // onPressed: (context) {
+            //   _showFlagOptions(context, questionResponse);
+            // },
+            onPressed: (context) => FlagQuestion.showFlagOptions(questionResponse),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.flag_outlined,
@@ -187,8 +189,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
                           ),
                           Expanded(
                             child: Text(
-                              questionResponse.question.answer.text ??
-                                  'No Answer Available',
+                              questionResponse.question.answer.text ,
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
@@ -262,6 +263,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
     });
     BookmarkService(ContextUtility.context!).removeBookmark(questionResponse[index].question.id);
   }
+  // Function to show flagging options in a modal bottom sheet
 
 
 
