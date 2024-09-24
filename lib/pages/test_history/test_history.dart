@@ -243,81 +243,94 @@ class TestHistoryPageState extends State<TestHistoryPage>
                     _fetchTestHistory();
                   },
                 )
-              : SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: () => _fetchTestHistory(isRefresh: true),
-                  enablePullUp: true,
-                  onLoading: () => _fetchTestHistory(isLoadMore: true),
-                  child: ListView.builder(
-                    itemCount: _filteredResults.length,
-                    itemBuilder: (context, index) {
-                      final testResult = _filteredResults[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+              : _filteredResults.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Nothing here',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 25,
                         ),
-                        elevation: 4,
-                        child: InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailedQuestionsPage(
-                                testResult.links["self"]!.href,
-                                testResult.testName,
-                              ),
+                      ),
+                    )
+                  : SmartRefresher(
+                      controller: _refreshController,
+                      onRefresh: () => _fetchTestHistory(isRefresh: true),
+                      enablePullUp: true,
+                      onLoading: () => _fetchTestHistory(isLoadMore: true),
+                      child: ListView.builder(
+                        itemCount: _filteredResults.length,
+                        itemBuilder: (context, index) {
+                          final testResult = _filteredResults[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      testResult.testName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                        'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                        'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
-                                    const SizedBox(height: 12),
-                                  ],
+                            elevation: 4,
+                            child: InkWell(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailedQuestionsPage(
+                                    testResult.links["self"]!.href,
+                                    testResult.testName,
+                                  ),
                                 ),
-                                Row(
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '${testResult.percentage.toStringAsFixed(2)}%',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: _getColor(testResult.remark),
-                                      ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          testResult.testName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                            'Score: ${testResult.correctAnswers} / ${testResult.totalQuestions}'),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                            'Appeared on: ${formatter.format(testResult.createdAt.toLocal())}'),
+                                        const SizedBox(height: 12),
+                                      ],
                                     ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 16,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${testResult.percentage.toStringAsFixed(2)}%',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: _getColor(testResult.remark),
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 16,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          );
+                        },
+                      ),
+                    ),
     );
   }
 

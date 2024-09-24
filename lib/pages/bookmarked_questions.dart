@@ -21,7 +21,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
   bool _isLoading = true;
   bool _hasError = false;
   final RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   int _currentPage = 0;
   bool _isLastPage = false;
 
@@ -43,7 +43,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
 
   void _disableLoadWithSuccess(List<QuestionResponses>? testResults) {
     setState(() {
-      _bookmarked = testResults!;
+      _bookmarked = testResults ?? [];
       _isLoading = false;
     });
   }
@@ -58,7 +58,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
     try {
       QuestionService services = QuestionService(context);
       List<QuestionResponses> newResults =
-      await services.getBookMarked(page: _currentPage);
+          await services.getBookMarked(page: _currentPage);
       if (newResults.isNotEmpty) {
         if (isRefresh) {
           _bookmarked = newResults;
@@ -104,7 +104,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
         children: [
           SlidableAction(
             onPressed: (context) {
-              _toggleBookmark(_bookmarked,index);
+              _toggleBookmark(_bookmarked, index);
             },
             backgroundColor: Colors.orange,
             foregroundColor: Colors.white,
@@ -117,10 +117,8 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            // onPressed: (context) {
-            //   _showFlagOptions(context, questionResponse);
-            // },
-            onPressed: (context) => FlagQuestion.showFlagOptions(questionResponse.question),
+            onPressed: (context) =>
+                FlagQuestion.showFlagOptions(questionResponse.question),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.flag_outlined,
@@ -143,7 +141,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
           children: [
             ListTile(
               contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               title: Text(
                 questionResponse.question.text,
                 style: const TextStyle(
@@ -154,7 +152,6 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-
                   Flexible(
                     child: Icon(
                       isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -169,46 +166,46 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
               curve: Curves.easeInOutBack,
               child: _expandedTiles.contains(index)
                   ? SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Answer: ',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary),
-                          ),
-                          Expanded(
-                            child: Text(
-                              questionResponse.question.answer.text ,
-                              style: const TextStyle(fontSize: 16),
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Answer: ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    questionResponse.question.answer.text,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: questionResponse.question.topics
+                                  .map((tag) => Chip(
+                                        label: Text(tag.name),
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: questionResponse.question.topics
-                            .map((tag) => Chip(
-                          label: Text(tag.name),
-                        ))
-                            .toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+                    )
                   : Container(),
             ),
           ],
@@ -227,45 +224,55 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
-          ? NoInternetPage(
-        onRetry: () {
-          setState(() {
-            _isLoading = true;
-            _hasError = false;
-          });
-          _fetchBookMarkedQuestions();
-        },
-      )
-          : SmartRefresher(
-        controller: _refreshController,
-        onRefresh: () => _fetchBookMarkedQuestions(isRefresh: true),
-        enablePullUp: true,
-        onLoading: () => _fetchBookMarkedQuestions(isLoadMore: true),
-        child: ListView.separated(
-          separatorBuilder: (context, index) {
-            return const Divider(height: 1.0);
-          },
-          itemCount: _bookmarked.length,
-          itemBuilder: (context, index) {
-            final bookmarked = _bookmarked[index];
-            bool isExpanded = _expandedTiles.contains(index);
-            return _buildQuestionTile(bookmarked, index, isExpanded);
-          },
-        ),
-      ),
+              ? NoInternetPage(
+                  onRetry: () {
+                    setState(() {
+                      _isLoading = true;
+                      _hasError = false;
+                    });
+                    _fetchBookMarkedQuestions();
+                  },
+                )
+              : _bookmarked.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Nothing here',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 25,
+                        ),
+                      ),
+                    )
+                  : SmartRefresher(
+                      controller: _refreshController,
+                      onRefresh: () =>
+                          _fetchBookMarkedQuestions(isRefresh: true),
+                      enablePullUp: true,
+                      onLoading: () =>
+                          _fetchBookMarkedQuestions(isLoadMore: true),
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return const Divider(height: 1.0);
+                        },
+                        itemCount: _bookmarked.length,
+                        itemBuilder: (context, index) {
+                          final bookmarked = _bookmarked[index];
+                          bool isExpanded = _expandedTiles.contains(index);
+                          return _buildQuestionTile(
+                              bookmarked, index, isExpanded);
+                        },
+                      ),
+                    ),
     );
   }
 
   void _toggleBookmark(List<QuestionResponses> questionResponse, int index) {
-    // Your implementation for toggling bookmark
     setState(() {
       questionResponse.removeAt(index);
     });
-    BookmarkService(ContextUtility.context!).removeBookmark(questionResponse[index].question.id);
+    BookmarkService(ContextUtility.context!)
+        .removeBookmark(questionResponse[index].question.id);
   }
-  // Function to show flagging options in a modal bottom sheet
-
-
 
   @override
   void dispose() {
