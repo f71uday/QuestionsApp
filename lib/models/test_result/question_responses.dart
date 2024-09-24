@@ -7,7 +7,7 @@ class QuestionResponses{
     @JsonKey(name: "question")
     Questions question;
     String? userAnswer;
-    Result result;
+    Result? result;
 
     QuestionResponses(this.question, this.userAnswer, this.result);
 

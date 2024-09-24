@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:VetScholar/models/test_result/question_responses.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/Questions/question.dart';
+import '../models/paged_response.dart';
 import '../models/test_result.dart';
 import 'authorized_client.dart';
 import 'fault_navigator.dart';
@@ -14,6 +17,7 @@ class QuestionService extends FaultNavigator {
   final HttpService _httpService = HttpService();
   final String? baseUrl = dotenv.env['BASE_URL'];
   final String? bookmarkPath = dotenv.env['BOOKMARK'];
+  final String? getBookmarkUrl = dotenv.env['BOOKMARKED_QUESTIONS'];
   var http_response;
 
   Future<List<Question>> fetchQuestions(String? subjectIds, String path) async {
@@ -78,5 +82,26 @@ class QuestionService extends FaultNavigator {
     final response = await HttpService().authorizedDELETE(path, {});
     log(response.statusCode.toString());
 
+  }
+  Future<List<QuestionResponses>> getBookMarked({required int page}) async{
+      String path = baseUrl! + getBookmarkUrl!;
+      final response = await HttpService().authorizedGET(path, {'page': page});
+      log('fetch subject response : $response.body');
+      _handleError(response);
+
+      PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
+      log('subjects loaded successfully. subjects: $response.data');
+      return pagedResponse.embedded!.bookmarkedQuestions!;
+  }
+
+  void _handleError(Response response) {
+    if (response.statusCode != 200 && response.statusCode != 401) {
+      log("Could not fetch test history response code : $response.statusCode and response body: $response.body");
+
+      //TODO:Handle to show No Internet Screen
+      throw Exception('An error occurred while connecting to server');
+    } else if (response.statusCode == 401) {
+      navigateToLoginScreen();
+    }
   }
 }

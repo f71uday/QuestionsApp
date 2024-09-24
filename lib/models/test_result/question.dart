@@ -11,7 +11,7 @@ class Questions {
   String text;
   Answer answer;
   @JsonKey(name: 'bookmarked')
-  bool isBookMarked;
+  bool? isBookMarked;
   final List<Topic> topics;
 
   Questions(this.text, this.answer, this.topics, this.isBookMarked, this.id);

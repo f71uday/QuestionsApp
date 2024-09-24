@@ -50,12 +50,12 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
   }
 
   _toggleBookmark(QuestionResponses question) {
-    question.question.isBookMarked
+    question.question.isBookMarked!
         ? BookmarkService(context).removeBookmark(question.question.id)
         : BookmarkService(context).addBookmark(question.question.id);
     setState(() {
       question.question.isBookMarked =
-          question.question.isBookMarked ? false : true;
+          question.question.isBookMarked! ? false : true;
     });
   }
 
@@ -220,14 +220,14 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
             onPressed: (context) {
               _toggleBookmark(questionResponse);
             },
-            backgroundColor: questionResponse.question.isBookMarked
+            backgroundColor: questionResponse.question.isBookMarked!
                 ? Colors.orange
                 : Colors.blue,
             foregroundColor: Colors.white,
-            icon: questionResponse.question.isBookMarked
+            icon: questionResponse.question.isBookMarked!
                 ? Icons.bookmark
                 : Icons.bookmark_add_outlined,
-            label: questionResponse.question.isBookMarked
+            label: questionResponse.question.isBookMarked!
                 ? 'Remove Bookmark'
                 : 'Add To Bookmark',
           ),
@@ -395,12 +395,12 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
               //_toggleBookmark(questionResponse);
             },
             backgroundColor:
-                skippedQuestion.isBookMarked ? Colors.orange : Colors.blue,
+                skippedQuestion.isBookMarked! ? Colors.orange : Colors.blue,
             foregroundColor: Colors.white,
-            icon: skippedQuestion.isBookMarked
+            icon: skippedQuestion.isBookMarked!
                 ? Icons.bookmark
                 : Icons.bookmark_add_outlined,
-            label: skippedQuestion.isBookMarked
+            label: skippedQuestion.isBookMarked!
                 ? 'Remove Bookmark'
                 : 'Add Bookmark',
           ),

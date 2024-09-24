@@ -10,9 +10,12 @@ class Embedded {
    List<TestResult>? testResponses;
   @JsonKey(name: "questionResponses")
   List<QuestionResponses>? questionResponses;
+  @JsonKey(name: 'questionBookmarks')
+  List<QuestionResponses>? bookmarkedQuestions;
 
 
-  Embedded(this.testResponses, this.questionResponses);
+  Embedded(
+      this.testResponses, this.questionResponses, this.bookmarkedQuestions);
 
   factory Embedded.fromJson(Map<String, dynamic> json) =>
       _$EmbeddedFromJson(json);

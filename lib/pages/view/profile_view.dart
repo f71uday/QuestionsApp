@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:VetScholar/pages/bookmarked_questions.dart';
 import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -235,11 +236,13 @@ class _ProfilePageState extends State<ProfileView>
                       ),
                       const SizedBox(height: 16),
                       InkWell(
-                        onTap: () {
-
-                        },
-                        child:  const Padding(
-                          padding:  EdgeInsets.all(8.0),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    const BookmarkedQuestionsPage())),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
