@@ -3,6 +3,7 @@ import 'package:VetScholar/models/test_result/question.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:VetScholar/pages/quiz_page.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
+import 'package:VetScholar/ui/flag_question.dart';
 import 'package:VetScholar/ui/vet_scholar_custom_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -59,22 +60,41 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
     });
   }
 
+  _toggleSkippedBookmark(Questions question) {
+    question.isBookMarked!
+        ? BookmarkService(context).removeBookmark(question.id)
+        : BookmarkService(context).addBookmark(question.id);
+    setState(() {
+      question.isBookMarked =
+      question.isBookMarked! ? false : true;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.testName),
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          QuizPage(selectedSubjects: null, testLink: _selfLink),
-                    ));
-              },
-              icon: const Icon(Icons.replay))
+          SizedBox(
+            width: 30,
+            height: 30,
+            child: IconButton.filled(
+              padding: const EdgeInsets.all(0.0),
+              iconSize: 18,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            QuizPage(selectedSubjects: null, testLink: _selfLink),
+                      ));
+                },
+                icon: const Icon(Icons.replay),color: Colors.white,),
+          ),
+          const SizedBox(width: 10,)
         ],
       ),
       body: _isLoading
@@ -238,7 +258,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         children: [
           SlidableAction(
             onPressed: (context) {
-              // Action for delete
+              FlagQuestion.showFlagOptions(questionResponse.question);
             },
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
@@ -392,7 +412,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         children: [
           SlidableAction(
             onPressed: (context) {
-              //_toggleBookmark(questionResponse);
+              _toggleSkippedBookmark(skippedQuestion);
             },
             backgroundColor:
                 skippedQuestion.isBookMarked! ? Colors.orange : Colors.blue,
@@ -411,7 +431,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         children: [
           SlidableAction(
             onPressed: (context) {
-              // Action for delete
+             FlagQuestion.showFlagOptions(skippedQuestion);
             },
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
@@ -509,4 +529,5 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
       ),
     );
   }
+
 }

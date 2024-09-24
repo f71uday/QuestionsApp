@@ -120,7 +120,7 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
             // onPressed: (context) {
             //   _showFlagOptions(context, questionResponse);
             // },
-            onPressed: (context) => FlagQuestion.showFlagOptions(questionResponse),
+            onPressed: (context) => FlagQuestion.showFlagOptions(questionResponse.question),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.flag_outlined,

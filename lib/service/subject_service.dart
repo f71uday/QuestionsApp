@@ -18,7 +18,7 @@ class SubjectService extends FaultNavigator{
     log('Request to fetch subject initialized.');
     final response = await _httpService.authorizedGet(Uri.parse('$baseUrl$subjects'));
 
-    log('fetch subject response : $response.body');
+    log('fetch subject response : ${response.body}');
 
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
@@ -28,8 +28,8 @@ class SubjectService extends FaultNavigator{
       return subjectsJson.map((json) => Subject.fromJson(json)).toList();
     }
       int code = response.statusCode;
-      String body = response.body;
-      log("Could not fetch Subject response code : $code and response body: $body");
+      String body = response.body.toString();
+      log("Could not send feedback: $code and response body: $body");
       navigateToLoginScreen();
       return [];
   }

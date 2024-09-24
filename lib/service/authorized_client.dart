@@ -51,6 +51,7 @@ class HttpService {
   Future<dio.Response> authorizedGET(
       String path, Map<String, dynamic> queryParams) async {
     String? sessionToken = await AuthService.getAccessToken();
+
     return await dioService.get(path,
         queryParameters: queryParams,
         options: dio.Options(

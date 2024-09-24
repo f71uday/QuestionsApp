@@ -6,16 +6,16 @@ import 'details.dart';
 part 'feedback.g.dart';
 
 @JsonSerializable()
-class Feedback {
+class UserFeedback {
   @JsonKey(name: "sentiment")
   Sentiment sentiment;
   @JsonKey(name: "details")
   Details details;
 
-  Feedback(this.sentiment, this.details);
+  UserFeedback(this.sentiment, this.details);
 
-  factory Feedback.fromJson(Map<String, dynamic> json) =>
-      _$FeedbackFromJson(json);
+  factory UserFeedback.fromJson(Map<String, dynamic> json) =>
+      _$UserFeedbackFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FeedbackToJson(this);
+  Map<String, dynamic> toJson() => _$UserFeedbackToJson(this);
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:VetScholar/models/feedback/feedback.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,11 +19,12 @@ class QuestionService extends FaultNavigator {
   final String? baseUrl = dotenv.env['BASE_URL'];
   final String? bookmarkPath = dotenv.env['BOOKMARK'];
   final String? getBookmarkUrl = dotenv.env['BOOKMARKED_QUESTIONS'];
+  final String? feedbackLink = dotenv.env['FEEDBACK_URL'];
   var http_response;
 
   Future<List<Question>> fetchQuestions(String? subjectIds, String path) async {
-    final response = await _httpService.authorizedGET('$baseUrl$path',
-        {'subjectIds': subjectIds, 'projection': 'app'});
+    final response = await _httpService.authorizedGET(
+        '$baseUrl$path', {'subjectIds': subjectIds, 'projection': 'app'});
 
     if (response.statusCode == 200) {
       http_response = response;
@@ -81,22 +83,33 @@ class QuestionService extends FaultNavigator {
         baseUrl! + bookmarkPath!.replaceFirst('{questionId}', id.toString());
     final response = await HttpService().authorizedDELETE(path, {});
     log(response.statusCode.toString());
-
   }
-  Future<List<QuestionResponses>> getBookMarked({required int page}) async{
-      String path = baseUrl! + getBookmarkUrl!;
-      final response = await HttpService().authorizedGET(path, {'page': page});
-      log('fetch subject response : $response.body');
-      _handleError(response);
 
-      PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
-      log('subjects loaded successfully. subjects: $response.data');
-      return pagedResponse.embedded!.bookmarkedQuestions!;
+  Future<List<QuestionResponses>> getBookMarked({required int page}) async {
+    String path = baseUrl! + getBookmarkUrl!;
+    final response = await HttpService().authorizedGET(path, {'page': page});
+    log('fetch subject response : $response.body');
+    _handleError(response);
+
+    PagedResponse pagedResponse = PagedResponse.fromJson(response.data);
+    log('subjects loaded successfully. subjects: $response.data');
+    return pagedResponse.embedded!.bookmarkedQuestions!;
+  }
+
+  void submitFeedBack(UserFeedback feedback) async {
+    String path = baseUrl! + feedbackLink!;
+    String body = jsonEncode(feedback.toJson());
+    log('sending flag : $body');
+    final response = await HttpService()
+        .authorizedPOST(path, {}, jsonEncode(feedback.toJson()));
+    log('flag response : ${response.data.toString()}');
+    _handleError(response);
+
   }
 
   void _handleError(Response response) {
-    if (response.statusCode != 200 && response.statusCode != 401) {
-      log("Could not fetch test history response code : $response.statusCode and response body: $response.body");
+    if (response.statusCode != 200 && response.statusCode != 401 && response.statusCode != 201) {
+      log("Could not send flag response : ${response.statusCode} and response body: ${response.data}");
 
       //TODO:Handle to show No Internet Screen
       throw Exception('An error occurred while connecting to server');

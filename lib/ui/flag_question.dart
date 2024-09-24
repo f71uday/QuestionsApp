@@ -1,11 +1,20 @@
-import 'package:VetScholar/service/context_utility.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
+import 'package:VetScholar/models/feedback/details.dart';
+import 'package:VetScholar/models/feedback/entity_detail.dart';
+import 'package:VetScholar/models/feedback/entity_type.dart';
+import 'package:VetScholar/models/feedback/sentiment.dart';
+import 'package:VetScholar/service/context_utility.dart';
+import 'package:VetScholar/service/question_service.dart';
+import 'package:VetScholar/ui/snack_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:VetScholar/models/feedback/feedback.dart';
+
+import '../models/test_result/question.dart';
 import '../models/test_result/question_responses.dart';
 
 class FlagQuestion {
-
-  static void showFlagOptions(QuestionResponses questionResponse) {
+  static void showFlagOptions(Questions questionResponse) {
     // List of flagging reasons
     final List<String> flagOptions = [
       'Incorrect Question',
@@ -34,9 +43,9 @@ class FlagQuestion {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                 const Text(
+                  const Text(
                     'Why are you flagging this content?',
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   const Divider(),
@@ -62,12 +71,18 @@ class FlagQuestion {
                     }).toList(),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      handleFlagging(selectedFlags, questionResponse);
-                      Navigator.pop(context);  // Close the bottom sheet after selection
-                    },
-                    child: const Text('Submit'),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: selectedFlags.isEmpty
+                          ? null
+                          : () {
+                              handleFlagging(selectedFlags, questionResponse);
+                              Navigator.pop(
+                                  context); // Close the bottom sheet after selection
+                            },
+                      child: const Text('Submit'),
+                    ),
                   ),
                 ],
               ),
@@ -78,10 +93,16 @@ class FlagQuestion {
     );
   }
 
-  static void handleFlagging(Set<String> selectedFlags, QuestionResponses questionResponse) {
+  static void handleFlagging(
+      Set<String> selectedFlags, Questions question) {
     // Logic for handling multiple flag selections
-    print('Flags submitted: ${selectedFlags.join(', ')}');
-    // Make API call or store the selected flags
+    log('Flags submitted: ${selectedFlags.join(', ')}');
+    UserFeedback feedback = UserFeedback(
+        Sentiment.NEGATIVE,
+        Details(null, null, null, selectedFlags.join(', '),
+            EntityDetail(EntityType.QUESTION, question.id)));
+    QuestionService(ContextUtility.context!).submitFeedBack(feedback);
+    CustomSnackBar().showCustomToastWithCloseButton(
+        ContextUtility.context!, Colors.orange, Icons.flag, 'Thank You for letting us know!');
   }
-
 }

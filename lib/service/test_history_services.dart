@@ -20,7 +20,7 @@ class TestHistoryServices extends FaultNavigator {
   Future<List<TestResult>?> fetchHistory({required int page}) async {
     log('Request to fetch test history initialized.');
     final response = await _httpService
-        .authorizedGET('$baseUrl$subjects', {'size': 6, 'page': page});
+        .authorizedGET('$baseUrl$subjects', {'size': 6, 'page': page, 'sort': 'createdAt,desc'});
     log('fetch subject response : $response.body');
     _handleError(response);
 
