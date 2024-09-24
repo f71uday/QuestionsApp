@@ -21,6 +21,9 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
   int _currentPage = 0;
   bool _isLastPage = false;
 
+  // To track expansion state
+  List<bool> _isExpandedList = [];
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,9 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
     setState(() {
       _bookmarked = testResults!;
       _isLoading = false;
+
+      // Initialize the expansion state list with 'false' values (collapsed)
+      _isExpandedList = List.filled(_bookmarked.length, false);
     });
   }
 
@@ -67,6 +73,8 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
           _refreshController.refreshCompleted();
           _currentPage = 2; // Reset to the next page
         }
+        // Update the expansion state list after loading new data
+        _isExpandedList = List.filled(_bookmarked.length, false);
       } else {
         _isLastPage = true;
         if (isLoadMore) {
@@ -110,25 +118,41 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
                   onRefresh: () => _fetchBookMarkedQuestions(isRefresh: true),
                   enablePullUp: true,
                   onLoading: () => _fetchBookMarkedQuestions(isLoadMore: true),
-                  child: ListView.builder(
-
-                    itemCount: _bookmarked.length,
-                    itemBuilder: (context, index) {
-                      final bookmarked = _bookmarked[index];
-                      return Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            bookmarked.question.text,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                  child: SingleChildScrollView(
+                    child: ExpansionPanelList(
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          _isExpandedList[index] = isExpanded;
+                        });
+                      },
+                      children: _bookmarked
+                          .asMap()
+                          .entries
+                          .map<ExpansionPanel>((entry) {
+                        int index = entry.key;
+                        QuestionResponses bookmarked = entry.value;
+                        return
+                          ExpansionPanel(
+                          headerBuilder:
+                              (BuildContext context, bool isExpanded) {
+                            return ListTile(
+                              title: Text(
+                                bookmarked.question.text,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            );
+                          },
+                          body: ListTile(
+                            title: Text(bookmarked.question.answer.text ??
+                                'No Answer Available'),
                           ),
-                        ),
-                      );
-                    },
+                          isExpanded: _isExpandedList[index],
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
     );
