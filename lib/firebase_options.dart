@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     projectId: 'testregister-ae4f8',
     databaseURL: 'https://testregister-ae4f8.firebaseio.com',
     storageBucket: 'testregister-ae4f8.appspot.com',
-    androidClientId: '583974691550-h72m22ro06q6b2rbfhr4lj6td8822522.apps.googleusercontent.com',
+    androidClientId: '583974691550-cjbuscpuoh1s5sscd4trgu3f2sad2ri9.apps.googleusercontent.com',
+    iosClientId: '583974691550-u4n6v43gkrvil1i7nj8cvg5lf59novrn.apps.googleusercontent.com',
     iosBundleId: 'com.uac.qu',
   );
 
@@ -78,7 +79,8 @@ class DefaultFirebaseOptions {
     projectId: 'testregister-ae4f8',
     databaseURL: 'https://testregister-ae4f8.firebaseio.com',
     storageBucket: 'testregister-ae4f8.appspot.com',
-    androidClientId: '583974691550-h72m22ro06q6b2rbfhr4lj6td8822522.apps.googleusercontent.com',
+    androidClientId: '583974691550-cjbuscpuoh1s5sscd4trgu3f2sad2ri9.apps.googleusercontent.com',
+    iosClientId: '583974691550-1ebo87nvtt2tem419l27rqselu30kmp5.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterApplication2',
   );
 

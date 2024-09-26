@@ -330,10 +330,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_macos
-      sha256: f42eacb83b318e183b1ae24eead1373ab1334084404c8c16e0354f9a3e55d385
+      sha256: cb284e267f8e2a45a904b5c094d2ba51d0aabfc20b1538ab786d9ef7dc2bf75c
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4"
+    version: "0.9.4+1"
   file_selector_platform_interface:
     dependency: transitive
     description:
@@ -353,10 +353,11 @@ packages:
   firebase_analytics:
     dependency: "direct main"
     description:
-      name: firebase_analytics
-      sha256: "9c52c099e9cbb852c7f1d2302c7eb34a15758834eca1877f7a779e6082f9882d"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_analytics/firebase_analytics"
+      ref: main
+      resolved-ref: b2500a974ec66c032de4686ac49ce625b7c97363
+      url: "https://github.com/firebase/flutterfire.git"
+    source: git
     version: "11.3.2"
   firebase_analytics_platform_interface:
     dependency: transitive
@@ -401,10 +402,11 @@ packages:
   firebase_crashlytics:
     dependency: "direct main"
     description:
-      name: firebase_crashlytics
-      sha256: "7821f9d8373b91f2a5ca8214226891d5870e196a7376f66350f65204387e9c15"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_crashlytics/firebase_crashlytics"
+      ref: main
+      resolved-ref: b2500a974ec66c032de4686ac49ce625b7c97363
+      url: "https://github.com/firebase/flutterfire.git"
+    source: git
     version: "4.1.2"
   firebase_crashlytics_platform_interface:
     dependency: transitive
@@ -417,10 +419,11 @@ packages:
   firebase_messaging:
     dependency: "direct main"
     description:
-      name: firebase_messaging
-      sha256: "32ce60b747e755b48d7112d728d4f736ba82acd98ec825626558d444d385fa3a"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_messaging/firebase_messaging"
+      ref: main
+      resolved-ref: b2500a974ec66c032de4686ac49ce625b7c97363
+      url: "https://github.com/firebase/flutterfire.git"
+    source: git
     version: "15.1.2"
   firebase_messaging_platform_interface:
     dependency: transitive
@@ -1422,10 +1425,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: d43c1d6b787bf0afad444700ae7f4db8827f701bc61c255ac8d328c6f4d52062
+      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   web_socket:
     dependency: transitive
     description:

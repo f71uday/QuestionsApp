@@ -10,10 +10,18 @@
       "client_info": {
         "mobilesdk_app_id": "1:583974691550:android:fb589993847b199979584f",
         "android_client_info": {
-          "package_name": "com.uacinfo.vetScholar"
+          "package_name": "com.example.flutter_application_2"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "583974691550-cjbuscpuoh1s5sscd4trgu3f2sad2ri9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_application_2",
+            "certificate_hash": "01da20779c50b85ef291c33a555f6ce5e4be32e1"
+          }
+        },
         {
           "client_id": "583974691550-11jt445lafpd973f422n8let5niqfngm.apps.googleusercontent.com",
           "client_type": 3
@@ -30,6 +38,13 @@
             {
               "client_id": "583974691550-11jt445lafpd973f422n8let5niqfngm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "583974691550-1ebo87nvtt2tem419l27rqselu30kmp5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterApplication2"
+              }
             }
           ]
         }
