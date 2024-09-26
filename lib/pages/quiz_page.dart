@@ -219,7 +219,7 @@ class QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (_showPreview) {
       return PopScope(
-        canPop: false,
+        canPop: true,
         child: Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: _startQuiz,
