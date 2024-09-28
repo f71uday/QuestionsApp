@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:VetScholar/pages/bookmarked_questions.dart';
+import 'package:VetScholar/pages/constants/string_constants.dart';
 import 'package:VetScholar/service/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,10 +24,10 @@ class ProfileView extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfileView>
     with AutomaticKeepAliveClientMixin {
-  String _name = "Loading...";
-  String _email = "Loading...";
+  String _name = StringConstants.loading;
+  String _email = StringConstants.loading;
   bool _isLoading = true;
-  String _appVersion = "1.0.0";
+  String _appVersion = StringConstants.intiVersion;
   bool _isDarkMode = false;
   bool _hasError = true;
   File? _imageFile; // For storing the picked image
@@ -64,12 +65,15 @@ class _ProfilePageState extends State<ProfileView>
           _hasError = false;
         });
       } else {
-        setState(() {
-          _name = 'Error loading name';
-          _email = 'Error loading email';
-          _isLoading = false;
-          _hasError = true;
-        });
+        NoInternetPage(
+          onRetry: () {
+            setState(() {
+              _isLoading = true;
+              _hasError = false;
+            });
+            _fetchProfileData();
+          },
+        );
       }
     } catch (_) {
       setState(() {
@@ -88,21 +92,21 @@ class _ProfilePageState extends State<ProfileView>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
+          title: const Text(StringConstants.logout),
+          content: const Text(StringConstants.logoutWarning),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _logout();
               },
-              child: const Text('Yes'),
+              child: const Text(StringConstants.yes),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('No'),
+              child: const Text(StringConstants.no),
             ),
           ],
         );
@@ -127,7 +131,7 @@ class _ProfilePageState extends State<ProfileView>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text(StringConstants.profile),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -182,7 +186,7 @@ class _ProfilePageState extends State<ProfileView>
                       const SizedBox(height: 16),
                       const Row(
                         children: [
-                          Text("Settings"),
+                          Text(StringConstants.settings),
                           SizedBox(
                             width: 8,
                           ),
@@ -206,7 +210,7 @@ class _ProfilePageState extends State<ProfileView>
                             const SizedBox(
                               width: 16,
                             ),
-                            const Text('Dark Mode'),
+                            const Text(StringConstants.darkMode),
                             const Spacer(),
                             Switch(
                               value: _isDarkMode,
@@ -222,7 +226,7 @@ class _ProfilePageState extends State<ProfileView>
                       ),
                       const Row(
                         children: [
-                          Text("Personal"),
+                          Text(StringConstants.personal),
                           SizedBox(
                             width: 8,
                           ),
@@ -250,7 +254,7 @@ class _ProfilePageState extends State<ProfileView>
                               SizedBox(
                                 width: 16,
                               ),
-                              Text('Bookmarks'),
+                              Text(StringConstants.bookMarks),
                               Spacer(),
                               Icon(Icons.arrow_forward)
                             ],
@@ -261,7 +265,7 @@ class _ProfilePageState extends State<ProfileView>
                       Center(
                         child: FilledButton.tonal(
                           onPressed: _showLogoutDialog,
-                          child: const Text('Logout'),
+                          child: const Text(StringConstants.logout),
                         ),
                       ),
                       Center(child: Text('Version: $_appVersion')),

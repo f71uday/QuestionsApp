@@ -39,4 +39,17 @@ class StringConstants {
   static const startQuiz = 'Start Quiz';
   static const subjects = 'Subjects';
   static const String selectAll = 'Select All';
+
+  //Profile consts
+  static const String loading = 'Loading...';
+  static const String intiVersion = "1.0.0";
+  static const String logout = 'Logout';
+  static const String logoutWarning = 'Are you sure you want to logout?';
+  static const String yes = 'Yes';
+  static const String no = 'No';
+  static const String profile = 'Profile';
+  static const String settings = 'Settings';
+  static const String darkMode = 'Dark Mode';
+  static const String personal = 'Personal';
+  static const String bookMarks = 'Bookmarks';
 }
