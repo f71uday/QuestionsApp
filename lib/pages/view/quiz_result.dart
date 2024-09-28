@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VetScholar/models/Remark.dart';
 import 'package:VetScholar/models/test_result.dart';
+import 'package:VetScholar/pages/constants/string_constants.dart';
 import 'package:VetScholar/pages/error/no_internet.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/service/question_service.dart';
@@ -66,7 +67,9 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
           _percentage = testResult.percentage;
           _isPass = (Remark.PASS == testResult.remark) ? true : false;
           _controller.forward();
-          _code = testResult.links['self']?.href.split('/').last;// Start animation after loading
+          _code = testResult.links['self']?.href
+              .split('/')
+              .last; // Start animation after loading
         });
       } else {
         throw Exception('null responses');
@@ -124,8 +127,8 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                       const SizedBox(height: 20),
                       Text(
                         !_isPass
-                            ? 'Better luck next time!'
-                            : 'Congratulations! You passed!',
+                            ? StringConstants.failNote
+                            : StringConstants.passNote,
                         style: const TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -145,13 +148,20 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FilledButton(onPressed: () {
-                              Share.share('Hey checkout this test from VetScholar https://vetscholar.app/?code=$_code I scored $_percentage% lets check yours.');
-                          }, child: const Row(children: [
-                            Icon(Icons.share),
-                            Text('Share Test')
-                          ],)),
-                          const SizedBox(width: 12,),
+                          FilledButton(
+                              onPressed: () {
+                                Share.share(
+                                    'Hey checkout this test from VetScholar https://vetscholar.app/?code=$_code I scored $_percentage% lets check yours.');
+                              },
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.share),
+                                  Text(StringConstants.share)
+                                ],
+                              )),
+                          const SizedBox(
+                            width: 12,
+                          ),
                           FilledButton.tonal(
                             onPressed: () {
                               Navigator.pushAndRemoveUntil(
@@ -166,13 +176,12 @@ class ColorAnimationPageState extends State<ColorAnimationPage>
                             child: const Row(
                               children: [
                                 Icon(Icons.home),
-                                 Text(' Home'),
+                                Text(StringConstants.home),
                               ],
                             ),
                           ),
                         ],
                       ),
-
                     ],
                   ),
                 );

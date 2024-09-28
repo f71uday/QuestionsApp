@@ -52,4 +52,10 @@ class StringConstants {
   static const String darkMode = 'Dark Mode';
   static const String personal = 'Personal';
   static const String bookMarks = 'Bookmarks';
+
+  //quizResultPage consts
+  static const String failNote = 'Better luck next time!';
+  static const String passNote = 'Congratulations! You passed!';
+  static const String share = 'Share Test';
+  static const String home = 'Home';
 }
