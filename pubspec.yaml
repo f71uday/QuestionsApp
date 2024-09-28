@@ -124,6 +124,8 @@ flutter:
     - assets/no-connection.png
     - assets/light_theme.json
     - assets/dark_theme.json
+    - assets/google_logo.png
+    - assets/app_logo.png
     #Env File assets
     - env/.dev.env
     - env/.qa.env

@@ -5,7 +5,6 @@ import 'package:VetScholar/service/logging_service.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,10 +12,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
@@ -125,9 +124,12 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+
         child: Column(
           children: <Widget>[
-            const Spacer(),
+            const SizedBox(height: 70,),
+            const Image(image: AssetImage('assets/app_logo.png')),
+            //const Spacer(),
             Expanded(
               flex: 2,
               child: Align(
@@ -141,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextFormField(
                           controller: _usernameController,
                           decoration: const InputDecoration(
+
                               labelText: 'E-mail',
                               border: OutlineInputBorder()),
                           validator: (value) {
@@ -192,11 +195,38 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ],
+
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+
+          ElevatedButton(
+            onPressed: () {
+             //TODO: implmenet signin logic
+            },
+            child: const Padding(
+              padding:  EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:  [
+                  Image(
+                    image: AssetImage("assets/google_logo.png"),
+                    height: 30.0,
+                    width: 30,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24, right: 8),
+                    child: Text(
+                      'Login with Google',
+
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
             const Spacer(),
             Column(
               children: [
