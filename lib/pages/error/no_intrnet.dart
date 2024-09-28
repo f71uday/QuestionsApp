@@ -1,9 +1,11 @@
+
+import 'package:VetScholar/pages/constants/string_constants.dart';
 import 'package:flutter/material.dart';
 
 class NoInternetPage extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const NoInternetPage({Key? key, required this.onRetry}) : super(key: key);
+  const NoInternetPage({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -14,31 +16,31 @@ class NoInternetPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.wifi_off,
                 size: 100,
                 color: Colors.grey,
               ),
               const SizedBox(height: 20),
               const Text(
-                'No Internet Connection',
+                StringConstants.noInternet,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Please check your network settings and try again.',
+                StringConstants.noInternetWarning,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: onRetry,
-                child: const Text('Try Again'),
                 style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsets>(
+                  padding: WidgetStateProperty.all<EdgeInsets>(
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   ),
                 ),
+                child: const Text(StringConstants.tryAgain),
               ),
             ],
           ),

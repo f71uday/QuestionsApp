@@ -1,3 +1,4 @@
+import 'package:VetScholar/pages/constants/string_constants.dart';
 import 'package:VetScholar/pages/test_history/detailed_questions.dart';
 import 'package:VetScholar/service/test_history_services.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../models/Remark.dart';
 import '../../models/test_result.dart';
-import '../error/no-intrnet.dart';
+import '../error/no_intrnet.dart';
 
 class TestHistoryPage extends StatefulWidget {
   const TestHistoryPage({super.key});
@@ -22,8 +23,8 @@ class TestHistoryPageState extends State<TestHistoryPage>
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   bool _isLoading = true;
   bool _hasError = false;
-  String _sortOption = 'Date'; // Default sort option
-  String _filterOption = 'All'; // Default filter option
+  String _sortOption = StringConstants.date; // Default sort option
+  String _filterOption = StringConstants.all; // Default filter option
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   int _currentPage = 0;
@@ -101,10 +102,10 @@ class TestHistoryPageState extends State<TestHistoryPage>
 
   void _sortTestResults() {
     switch (_sortOption) {
-      case 'Date':
+      case StringConstants.date:
         _filteredResults.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
-      case 'Percentage':
+      case StringConstants.percentage:
         _filteredResults.sort((a, b) => b.percentage.compareTo(a.percentage));
         break;
       default:
@@ -114,12 +115,12 @@ class TestHistoryPageState extends State<TestHistoryPage>
 
   void _applyFilter() {
     switch (_filterOption) {
-      case 'Pass':
+      case StringConstants.pass:
         _filteredResults = _testResults
             .where((result) => result.remark == Remark.PASS)
             .toList();
         break;
-      case 'Fail':
+      case StringConstants.fail:
         _filteredResults = _testResults
             .where((result) => result.remark == Remark.FAIL)
             .toList();
@@ -147,17 +148,20 @@ class TestHistoryPageState extends State<TestHistoryPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Filters & Sort',
+                StringConstants.filterAndSort,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 16),
               const Text(
-                'Sort by:',
+                StringConstants.sortBy,
                 style: TextStyle(fontSize: 16),
               ),
               Wrap(
                 spacing: 8.0,
-                children: ['Appeared on', 'Percentage'].map((String value) {
+                children: [
+                  StringConstants.appearedOn,
+                  StringConstants.percentage
+                ].map((String value) {
                   return ChoiceChip(
                     label: Text(value),
                     selected: _sortOption == value,
@@ -173,12 +177,16 @@ class TestHistoryPageState extends State<TestHistoryPage>
               ),
               const Divider(),
               const Text(
-                'Filter by:',
+                StringConstants.filterBy,
                 style: TextStyle(fontSize: 16),
               ),
               Wrap(
                 spacing: 8.0,
-                children: ['All', 'Pass', 'Fail'].map((String value) {
+                children: [
+                  StringConstants.all,
+                  StringConstants.pass,
+                  StringConstants.fail
+                ].map((String value) {
                   return ChoiceChip(
                     label: Text(value),
                     selected: _filterOption == value,
@@ -200,14 +208,14 @@ class TestHistoryPageState extends State<TestHistoryPage>
                     onPressed: () {
                       setState(() {
                         // Reset filter and sort options to default
-                        _sortOption = 'Appeared on';
-                        _filterOption = 'All';
+                        _sortOption = StringConstants.appearedOn;
+                        _filterOption = StringConstants.all;
                         _applyFilter(); // Apply the default filter
                         _sortTestResults(); // Sort with the default option
                       });
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: const Text('Reset'),
+                    child: const Text(StringConstants.reset),
                   ),
                 ],
               ),
@@ -223,7 +231,7 @@ class TestHistoryPageState extends State<TestHistoryPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: const Text(StringConstants.history),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_alt_outlined),
@@ -246,7 +254,7 @@ class TestHistoryPageState extends State<TestHistoryPage>
               : _filteredResults.isEmpty
                   ? const Center(
                       child: Text(
-                        'Nothing here',
+                        StringConstants.nothingHere,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 25,

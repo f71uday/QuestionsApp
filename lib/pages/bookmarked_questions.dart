@@ -6,7 +6,7 @@ import 'package:VetScholar/ui/flag_question.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'error/no-intrnet.dart';
+import 'error/no_intrnet.dart';
 
 class BookmarkedQuestionsPage extends StatefulWidget {
   const BookmarkedQuestionsPage({super.key});

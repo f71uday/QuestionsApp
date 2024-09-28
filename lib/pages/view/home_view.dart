@@ -1,4 +1,4 @@
-import 'package:VetScholar/pages/error/no-intrnet.dart';
+import 'package:VetScholar/pages/error/no_intrnet.dart';
 import 'package:VetScholar/service/subject_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

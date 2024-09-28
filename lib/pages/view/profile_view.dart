@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme_provider.dart';
 import '../../models/who_am_i.dart';
-import '../error/no-intrnet.dart';
+import '../error/no_intrnet.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

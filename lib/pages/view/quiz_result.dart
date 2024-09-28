@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:VetScholar/models/Remark.dart';
 import 'package:VetScholar/models/test_result.dart';
-import 'package:VetScholar/pages/error/no-intrnet.dart';
+import 'package:VetScholar/pages/error/no_intrnet.dart';
 import 'package:VetScholar/pages/subject_list_page.dart';
 import 'package:VetScholar/service/question_service.dart';
 import 'package:flutter/material.dart';

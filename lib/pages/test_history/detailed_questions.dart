@@ -1,6 +1,7 @@
 import 'package:VetScholar/models/paged_response.dart';
 import 'package:VetScholar/models/test_result/question.dart';
 import 'package:VetScholar/models/test_result/question_responses.dart';
+import 'package:VetScholar/pages/constants/string_constants.dart';
 import 'package:VetScholar/pages/quiz_page.dart';
 import 'package:VetScholar/service/bookmark_service.dart';
 import 'package:VetScholar/ui/flag_question.dart';
@@ -65,12 +66,9 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         ? BookmarkService(context).removeBookmark(question.id)
         : BookmarkService(context).addBookmark(question.id);
     setState(() {
-      question.isBookMarked =
-      question.isBookMarked! ? false : true;
+      question.isBookMarked = question.isBookMarked! ? false : true;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +82,27 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
             child: IconButton.filled(
               padding: const EdgeInsets.all(0.0),
               iconSize: 18,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            QuizPage(selectedSubjects: null, testLink: _selfLink),
-                      ));
-                },
-                icon: const Icon(Icons.replay),color: Colors.white,),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          QuizPage(selectedSubjects: null, testLink: _selfLink),
+                    ));
+              },
+              icon: const Icon(Icons.replay),
+              color: Colors.white,
+            ),
           ),
-          const SizedBox(width: 10,)
+          const SizedBox(
+            width: 10,
+          )
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
-              ? const Center(child: Text('Failed to load data.'))
+              ? const Center(child: Text(StringConstants.failedToLoad))
               : SingleChildScrollView(
                   child: Column(
                     children: [
@@ -136,7 +138,8 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                 ExpansionPanel(
                                   headerBuilder: (context, isExpanded) {
                                     return const ListTile(
-                                      title: Text("Skipped Questions"),
+                                      title: Text(
+                                          StringConstants.skippedQuestions),
                                     );
                                   },
                                   body: ListView.separated(
@@ -196,7 +199,8 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                                 ExpansionPanel(
                                   headerBuilder: (context, isExpanded) {
                                     return const ListTile(
-                                      title: Text("Attempted Questions"),
+                                      title: Text(
+                                          StringConstants.attemptedQuestions),
                                     );
                                   },
                                   body: ListView.separated(
@@ -248,8 +252,8 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                 ? Icons.bookmark
                 : Icons.bookmark_add_outlined,
             label: questionResponse.question.isBookMarked!
-                ? 'Remove Bookmark'
-                : 'Add To Bookmark',
+                ? StringConstants.removeBookmark
+                : StringConstants.addBookmark,
           ),
         ],
       ),
@@ -263,7 +267,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.flag_outlined,
-            label: 'Flag',
+            label: StringConstants.labelFlag,
           ),
         ],
       ),
@@ -321,7 +325,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                             Row(
                               children: [
                                 Text(
-                                  'Your Response: ',
+                                  StringConstants.yourResponses,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -342,7 +346,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                             Row(
                               children: [
                                 Text(
-                                  'Correct Answer: ',
+                                  StringConstants.correctAnswer,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -411,19 +415,18 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) {
-              _toggleSkippedBookmark(skippedQuestion);
-            },
-            backgroundColor:
-                skippedQuestion.isBookMarked! ? Colors.orange : Colors.blue,
-            foregroundColor: Colors.white,
-            icon: skippedQuestion.isBookMarked!
-                ? Icons.bookmark
-                : Icons.bookmark_add_outlined,
-            label: skippedQuestion.isBookMarked!
-                ? 'Remove Bookmark'
-                : 'Add Bookmark',
-          ),
+              onPressed: (context) {
+                _toggleSkippedBookmark(skippedQuestion);
+              },
+              backgroundColor:
+                  skippedQuestion.isBookMarked! ? Colors.orange : Colors.blue,
+              foregroundColor: Colors.white,
+              icon: skippedQuestion.isBookMarked!
+                  ? Icons.bookmark
+                  : Icons.bookmark_add_outlined,
+              label: skippedQuestion.isBookMarked!
+                  ? StringConstants.removeBookmark
+                  : StringConstants.addBookmark),
         ],
       ),
       endActionPane: ActionPane(
@@ -431,12 +434,12 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
         children: [
           SlidableAction(
             onPressed: (context) {
-             FlagQuestion.showFlagOptions(skippedQuestion);
+              FlagQuestion.showFlagOptions(skippedQuestion);
             },
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.flag_outlined,
-            label: 'Flag',
+            label: StringConstants.labelFlag,
           ),
         ],
       ),
@@ -492,7 +495,7 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
                             Row(
                               children: [
                                 Text(
-                                  'Correct Answer: ',
+                                  StringConstants.correctAnswer,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -529,5 +532,4 @@ class DetailedQuestionsPageState extends State<DetailedQuestionsPage> {
       ),
     );
   }
-
 }
