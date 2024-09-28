@@ -7,7 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../models/Remark.dart';
 import '../../models/test_result.dart';
-import '../error/no_intrnet.dart';
+import '../error/no_internet.dart';
 
 class TestHistoryPage extends StatefulWidget {
   const TestHistoryPage({super.key});

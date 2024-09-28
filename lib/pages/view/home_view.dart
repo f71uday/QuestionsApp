@@ -1,4 +1,5 @@
-import 'package:VetScholar/pages/error/no_intrnet.dart';
+import 'package:VetScholar/pages/constants/string_constants.dart';
+import 'package:VetScholar/pages/error/no_internet.dart';
 import 'package:VetScholar/service/subject_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -43,8 +44,9 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
       }
     });
   }
+
   String _getSubjectIds(List<Subject> selectedSubjects) {
-    return  selectedSubjects.map((subject) => subject.id).join(',');
+    return selectedSubjects.map((subject) => subject.id).join(',');
   }
 
   @override
@@ -64,11 +66,11 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                   ),
                 )
             : null, // Disable the button if no subject is selected
-        label: const Text('Start Quiz'),
-        icon: const  Icon(Icons.play_arrow),
+        label: const Text(StringConstants.startQuiz),
+        icon: const Icon(Icons.play_arrow),
       ),
       appBar: AppBar(
-        title: const Text('Subjects'),
+        title: const Text(StringConstants.subjects),
         automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Subject>>(
@@ -77,9 +79,9 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return NoInternetPage(onRetry: () {
-              
-            },);
+            return NoInternetPage(
+              onRetry: () {},
+            );
           } else {
             final allSubjects = snapshot.data ?? [];
 
@@ -89,7 +91,7 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: CheckboxListTile(
-                    title: const Text('Select All'),
+                    title: const Text(StringConstants.selectAll),
                     value: selectedSubjects.length == allSubjects.length,
                     onChanged: (isSelected) =>
                         _selectAll(isSelected ?? false, allSubjects),
@@ -121,7 +123,8 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
                               children: [
                                 Checkbox(
                                   value: selectedSubjects.contains(subject),
-                                  onChanged: (value) => _toggleSubjectSelection(subject),
+                                  onChanged: (value) =>
+                                      _toggleSubjectSelection(subject),
                                 ),
                                 const SizedBox(width: 8.0),
                                 Flexible(
@@ -148,6 +151,4 @@ class HomeViewPage extends State<HomeView> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => false;
-
-
 }

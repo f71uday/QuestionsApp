@@ -33,4 +33,10 @@ class StringConstants {
   static const String filterBy = 'Filter by:';
   static const String reset = 'Reset';
   static const String history = 'History';
+
+
+  //homeView consts
+  static const startQuiz = 'Start Quiz';
+  static const subjects = 'Subjects';
+  static const String selectAll = 'Select All';
 }
