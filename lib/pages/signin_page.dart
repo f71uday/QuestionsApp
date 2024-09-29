@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:VetScholar/models/intialize_login_flow/InitializeLogin.dart';
+import 'package:VetScholar/service/sign_in_service.dart';
 import 'package:VetScholar/service/logging_service.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-
-import 'google_singin_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -126,10 +125,11 @@ class LoginPageState extends State<LoginPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 70,),
+            const SizedBox(
+              height: 70,
+            ),
             const Image(image: AssetImage('assets/app_logo.png')),
             //const Spacer(),
             Expanded(
@@ -145,7 +145,6 @@ class LoginPageState extends State<LoginPage> {
                         child: TextFormField(
                           controller: _usernameController,
                           decoration: const InputDecoration(
-
                               labelText: 'E-mail',
                               border: OutlineInputBorder()),
                           validator: (value) {
@@ -196,37 +195,90 @@ class LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                    ],
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                              onPressed: _login,
+                              child: !_isLoading ? const Text('Login'):const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  color: Colors.white, // Match this to the button's text color
+                                ),
+                              ),
+                          )),
+                      const SizedBox(height: 20,),
+                      const Row(
+                        children: [
 
+                          Expanded(
+                            child: Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                          ),
+                          SizedBox(width: 8,),
+                          Text('OR'),
+
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      ElevatedButton(
+                        onPressed: () {
+                          SignInService().handleSignIn();
+
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(
+                                image: AssetImage("assets/google_logo.png"),
+                                height: 30.0,
+                                width: 30,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24, right: 8),
+                                child: Text(
+                                  'Continue with Google',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
             // TODO : GoogleSignInButton(flowID: String, Funxtion<KroatosLogin),
-            GoogleSignInButton(),
-            const Spacer(),
-            Column(
+
+
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (!_isLoading)
-                  SizedBox(
-                    width: double.infinity,
-                    // Make the button take the full width
-                    child: FilledButton(
-                      onPressed: _login,
-                      child: const Text('Login'),
-                    ),
-                  ),
-                if (_isLoading) const LinearProgressIndicator(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an Account?"),
-                    TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(
-                          context, dotenv.env['ROUTE_SIGNUP']!),
-                      child: const Text('SignUp'),
-                    ),
-                  ],
+                const Text("Don't have an Account?"),
+                TextButton(
+                  onPressed: () => Navigator.pushReplacementNamed(
+                      context, dotenv.env['ROUTE_SIGNUP']!),
+                  child: const Text('SignUp'),
                 ),
               ],
             ),

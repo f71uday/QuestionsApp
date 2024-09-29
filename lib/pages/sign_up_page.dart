@@ -1,4 +1,4 @@
-// signup_page.dart
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:VetScholar/ui/snack_bar.dart';
@@ -10,11 +10,13 @@ import 'package:http/http.dart' as http;
 import '../service/logging_service.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
-  _SignupPageState createState() => _SignupPageState();
+  SignupPageState createState() => SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();

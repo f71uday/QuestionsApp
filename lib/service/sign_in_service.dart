@@ -1,18 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class GoogleSignInButton extends StatefulWidget {
-  @override
-  _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
-}
-
-class _GoogleSignInButtonState extends State<GoogleSignInButton> {
+class SignInService {
   // Helper function to generate nonce
+
   String generateNonce([int length = 32]) {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -22,10 +17,10 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   }
 
   // https://pub.dev/packages/flutter_appauth
-  FlutterAppAuth appAuth = FlutterAppAuth();
+  FlutterAppAuth appAuth = const FlutterAppAuth();
   String? baseURL = (dotenv.env['BASE_URL'])?.trim();
 
-  Future<void> _handleSignIn() async {
+  Future<void> handleSignIn() async {
     final String nonce = generateNonce();
     try {
       final AuthorizationTokenResponse result =
@@ -65,34 +60,5 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     } catch (error) {
       print('Error signing in: $error');
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        _handleSignIn();
-      },
-      child: const Padding(
-        padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              image: AssetImage("assets/google_logo.png"),
-              height: 30.0,
-              width: 30,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 24, right: 8),
-              child: Text(
-                'Login with Google',
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
