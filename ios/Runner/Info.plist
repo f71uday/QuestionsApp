@@ -55,5 +55,18 @@
 		<string>We need access to your photo library to select images.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>We need microphone access for recording audio.</string>
+		<key>GIDClientID</key>
+        <string>1060248932526-u6tenjuuk7iqnis7ua64fm4h7uf37ebu.apps.googleusercontent.com</string>
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <string>com.googleusercontent.apps.1060248932526-u6tenjuuk7iqnis7ua64fm4h7uf37ebu</string>
+            </array>
+          </dict>
+        </array>
+        <key>GIDServerClientID</key>
+        <string>1060248932526-vdqm8bjd1pp5qsumnldbrssf98hughms.apps.googleusercontent.com</string>
 	</dict>
 </plist>

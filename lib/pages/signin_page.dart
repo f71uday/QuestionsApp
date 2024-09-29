@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import 'google_singin_button.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -200,33 +202,8 @@ class LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
-          ElevatedButton(
-            onPressed: () {
-             //TODO: implmenet signin logic
-            },
-            child: const Padding(
-              padding:  EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:  [
-                  Image(
-                    image: AssetImage("assets/google_logo.png"),
-                    height: 30.0,
-                    width: 30,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24, right: 8),
-                    child: Text(
-                      'Login with Google',
-
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+            // TODO : GoogleSignInButton(flowID: String, Funxtion<KroatosLogin),
+            GoogleSignInButton(),
             const Spacer(),
             Column(
               children: [
