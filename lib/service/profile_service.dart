@@ -46,7 +46,7 @@ class ProfileService {
     AuthService().deleteAccessToken();
     CustomSnackBar().showCustomToast(
         ContextUtility.context!, Colors.green, Icons.check, "Logged Out Successfully!");
-    FaultNavigator(ContextUtility.context!).navigateToLoginScreen();
+    Navigator.pushNamedAndRemoveUntil(ContextUtility.context!, dotenv.env['ROUTE_SIGN_IN']!,(r) => false);
   }
 
   Future<Response> fetchProfileData() async {

@@ -9,7 +9,7 @@ class FaultNavigator {
   void navigateToLoginScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 }
