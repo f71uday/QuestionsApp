@@ -159,14 +159,16 @@ class Identity {
 class Traits {
   final Name? name;
   final String? email;
-
+  final String? picture;
   Traits({
+    this.picture,
     this.name,
     this.email,
   });
 
   factory Traits.fromJson(Map<String, dynamic> json) {
     return Traits(
+      picture: json['picture'],
       name: json['name'] != null ? Name.fromJson(json['name']) : null,
       email: json['email'],
     );

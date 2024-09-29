@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfileView>
   bool _isDarkMode = false;
   bool _hasError = true;
   File? _imageFile; // For storing the picked image
-
+  String? _pictureUrl;
   final ImagePicker _picker = ImagePicker(); // ImagePicker instance
 
   @override
@@ -63,6 +63,7 @@ class _ProfilePageState extends State<ProfileView>
           _email = userSession.identity?.traits?.email ?? '';
           _isLoading = false;
           _hasError = false;
+          _pictureUrl = userSession.identity?.traits?.picture;
         });
       } else {
         NoInternetPage(
@@ -156,9 +157,7 @@ class _ProfilePageState extends State<ProfileView>
                           radius: 60,
                           backgroundImage: _imageFile != null
                               ? FileImage(_imageFile!)
-                              : const NetworkImage(
-                                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-                                ) as ImageProvider, // Show picked image or default image
+                              : NetworkImage(_pictureUrl ?? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg')  as ImageProvider, // Show picked image or default image
                           child: const Stack(
                             children: [
                               Align(

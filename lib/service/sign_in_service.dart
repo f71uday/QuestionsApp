@@ -1,13 +1,29 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:VetScholar/service/context_utility.dart';
+import 'package:VetScholar/ui/snack_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
+
+import '../models/intialize_login_flow/InitializeLogin.dart';
 
 class SignInService {
-  // Helper function to generate nonce
+  final FlutterAppAuth _appAuth = const FlutterAppAuth();
+  final String? _baseURL = (dotenv.env['BASE_URL'])?.trim();
+  final String? _initializeSignIn = dotenv.env['INITIALIZE_LOGIN'];
+  final dioService = dio.Dio();
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  String? sessionTokenKey = dotenv.env['SESSION_TOKEN_KEY'];
+  Future<dio.Response> initializeLogin() async {
+    return await dioService.get(_baseURL! + _initializeSignIn!);
+  }
 
+  // Helper function to generate nonce
   String generateNonce([int length = 32]) {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -17,14 +33,14 @@ class SignInService {
   }
 
   // https://pub.dev/packages/flutter_appauth
-  FlutterAppAuth appAuth = const FlutterAppAuth();
-  String? baseURL = (dotenv.env['BASE_URL'])?.trim();
 
   Future<void> handleSignIn() async {
+    final intiResponse = await initializeLogin();
+    final intData = IntializeLoginFlow.fromJson(intiResponse.data);
     final String nonce = generateNonce();
     try {
       final AuthorizationTokenResponse result =
-          await appAuth.authorizeAndExchangeCode(
+          await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
             '1060248932526-u6tenjuuk7iqnis7ua64fm4h7uf37ebu.apps.googleusercontent.com',
             'com.googleusercontent.apps.1060248932526-u6tenjuuk7iqnis7ua64fm4h7uf37ebu:/oauth2redirect/google',
@@ -34,11 +50,14 @@ class SignInService {
       );
 
       print(result);
-
+      if (intiResponse.statusCode!= 200){
+        CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to login. Try Again');
+        return;
+      }
       // Send the ID token to Ory Kratos
       final response = await http.post(
-        Uri.parse(
-            'https://api.uacinfo.com/idp/self-service/login?flow=7046485f-9a09-4176-8cb8-07d80af00912'),
+        Uri.parse(intData.ui.action
+            ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'method': 'oidc',
@@ -48,17 +67,23 @@ class SignInService {
         }),
       );
 
+      final loginData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        // Handle successful login
-        print("Successfully logged in");
+        await secureStorage.write(
+            key: sessionTokenKey!, value: loginData[sessionTokenKey!]);
+        Navigator.pushReplacementNamed(
+            ContextUtility.context!, dotenv.env['ROUTE_SUBJECTS']!);
       } else {
         // Handle error
         print("Failed to log in: ${response.body}");
+        CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
       }
     } on FlutterAppAuthUserCancelledException catch (e) {
       print('User cancelled google oauth: $e');
+      CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
     } catch (error) {
       print('Error signing in: $error');
+      CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
     }
   }
 }

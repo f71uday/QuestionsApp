@@ -42,11 +42,9 @@ class LoginPageState extends State<LoginPage> {
         _errorMessage = '';
       });
       try {
-        final url = Uri.parse(baseURL!).resolve(initializeSignIn!);
-        final response = await http.get(url);
+        final response = await SignInService().initializeLogin();
         if (response.statusCode == 200) {
-          final httpResponse = json.decode(response.body);
-          final intializeLogin = IntializeLoginFlow.fromJson(httpResponse);
+          final intializeLogin = IntializeLoginFlow.fromJson(response.data);
           final loginResponse = await http.post(
             Uri.parse(intializeLogin.ui.action),
             headers: {
