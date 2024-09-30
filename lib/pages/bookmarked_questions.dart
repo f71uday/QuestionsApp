@@ -267,11 +267,12 @@ class BookmarkedQuestionsPageState extends State<BookmarkedQuestionsPage>
   }
 
   void _toggleBookmark(List<QuestionResponses> questionResponse, int index) {
+
+    BookmarkService(ContextUtility.context!)
+        .removeBookmark(questionResponse[index].question.id);
     setState(() {
       questionResponse.removeAt(index);
     });
-    BookmarkService(ContextUtility.context!)
-        .removeBookmark(questionResponse[index].question.id);
   }
 
   @override
