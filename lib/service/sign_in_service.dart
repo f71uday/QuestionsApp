@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:VetScholar/service/context_utility.dart';
 import 'package:VetScholar/ui/snack_bar.dart';
@@ -49,7 +50,7 @@ class SignInService {
             nonce: nonce),
       );
 
-      print(result);
+      dev.log(result.toString());
       if (intiResponse.statusCode!= 200){
         CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to login. Try Again');
         return;
@@ -75,14 +76,14 @@ class SignInService {
             ContextUtility.context!, dotenv.env['ROUTE_SUBJECTS']!);
       } else {
         // Handle error
-        print("Failed to log in: ${response.body}");
+        dev.log("Failed to log in: ${response.body}");
         CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
       }
     } on FlutterAppAuthUserCancelledException catch (e) {
-      print('User cancelled google oauth: $e');
+      dev.log('User cancelled google oauth: $e');
       CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
     } catch (error) {
-      print('Error signing in: $error');
+      dev.log('Error signing in: $error');
       CustomSnackBar().showCustomToastWithCloseButton(ContextUtility.context!, Colors.red, Icons.close, 'Failed to Login');
     }
   }
